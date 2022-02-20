@@ -18,8 +18,8 @@ This API is built with [NestJS framework](https://nestjs.com) and writen in Type
 
 ## API Endpoint
 
-[sortby-query]: #query-param-sortby
-[sortorder-query]: #query-param-sortorder
+[sortby-query]: #sortby
+[sortorder-query]: #sortorder
 
 ### 1. Get All Provinces
 
@@ -169,25 +169,33 @@ GET /villages/{villageCode}
 
 ## Query Parameters
 
-### Query Param `sortBy`
+You can use query parameters to control what data is returned in endpoint responses.
+
+### `sortBy`
 
 ```
-GET /provinces?sortBy={code|name}
+GET /...?sortBy={code|name}
 ```
 
 - Add `sortBy` query to **sorting the result** by `code` or `name`.
 - The `sortBy` **can only be filled** by `code` or `name`. If not, you will get `400 Bad Request` response.
 - If `sortBy` **is not set**, sorting will be done by the `code`.
+- Usage example :
+  - At [`provinces`](#1-get-all-provinces) endpoint : http://localhost:3000/provinces?sortBy=name.
+  - At [`regencies`](#4-get-regencies-by-name) endpoint : http://localhost:3000/regencies?name=bandung&sortBy=code.
 
-### Query Param `sortOrder`
+### `sortOrder`
 
 ```
-GET /provinces?sortOrder={asc|desc}
+GET /...?sortOrder={asc|desc}
 ```
 
 - Add `sortOrder` query to **specify the sort order** whether ascending `asc` or descending `desc`.
 - The `sortOrder` **can only be filled** by `asc` or `desc`. If not, you will get `400 Bad Request` response.
 - If `sortOrder` **is not set**, sorting will be done in `asc` order.
+- Usage example :
+  - At [`districts`](#7-get-districts-by-name) endpoint : http://localhost:3000/districts?name=regol&sortOrder=desc.
+  - At [`villages`](#10-get-villages-by-name) endpoint : http://localhost:3000/villages?name=balong&sortOrder=asc.
 
 > These queries can be combined with other queries linked by `&` character.
 >
