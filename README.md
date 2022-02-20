@@ -93,6 +93,19 @@ GET /regencies/{regencyCode}
 - This endpoint **will return** the regency with the same code as `{regencyCode}`. Otherwise, you will get a `404 Not Found` response.
 - Usage example : http://localhost:3000/regencies/3273.
 
+### 6. Get All Districts in a Regency
+
+```
+GET /regencies/{regencyCode}/districts
+```
+
+- Use this endpoint to **get all districts in a regency**.
+- The `{regencyCode}` must be **4 numeric characters**. If not, you will get `400 Bad Request` response.
+- This endpoint **will return** the array of district if the `{regencyCode}` is exists. Otherwise, you will get a `404 Not Found` response.
+- Usage example : http://localhost:3000/regencies/3273/districts.
+
+> This endpoint also support [`sortBy`][sortby-query] and [`sortOrder`][sortorder-query] queries.
+
 ## Query Parameters
 
 ### Query Param `sortBy`
