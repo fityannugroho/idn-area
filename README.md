@@ -106,6 +106,19 @@ GET /regencies/{regencyCode}/districts
 
 > This endpoint also support [`sortBy`][sortby-query] and [`sortOrder`][sortorder-query] queries.
 
+### 7. Get Districts by Name
+
+```
+GET /districts?name={districtName}
+```
+
+- Use this endpoint to **get the districts by its name**.
+- The `{districtName}` **is required** and must be **at least 3 characters**. If not, you will get `400 Bad Request` response.
+- This endpoint **will return** an array of district, or an **empty array** `[]` if there are no district matched with the `{districtName}`.
+- Usage example : http://localhost:3000/districts?name=regol.
+
+> This endpoint also support [`sortBy`][sortby-query] and [`sortOrder`][sortorder-query] queries.
+
 ## Query Parameters
 
 ### Query Param `sortBy`
