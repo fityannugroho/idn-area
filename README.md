@@ -119,6 +119,17 @@ GET /districts?name={districtName}
 
 > This endpoint also support [`sortBy`][sortby-query] and [`sortOrder`][sortorder-query] queries.
 
+### 8. Get Specific District
+
+```
+GET districts/{districtCode}
+```
+
+- Use this endpoint to **get a specific district**.
+- The `{districtCode}` must be **6 numeric characters**. If not, you will get `400 Bad Request` response.
+- This endpoint **will return** the district with the same code as `{districtCode}`. Otherwise, you will get a `404 Not Found` response.
+- Usage example : http://localhost:3000/districts/327311.
+
 ## Query Parameters
 
 ### Query Param `sortBy`
