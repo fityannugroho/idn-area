@@ -122,13 +122,26 @@ GET /districts?name={districtName}
 ### 8. Get Specific District
 
 ```
-GET districts/{districtCode}
+GET /districts/{districtCode}
 ```
 
 - Use this endpoint to **get a specific district**.
 - The `{districtCode}` must be **6 numeric characters**. If not, you will get `400 Bad Request` response.
 - This endpoint **will return** the district with the same code as `{districtCode}`. Otherwise, you will get a `404 Not Found` response.
 - Usage example : http://localhost:3000/districts/327311.
+
+### 9. Get All Villages in a District
+
+```
+GET /districts/{districtCode}/villages
+```
+
+- Use this endpoint to **get all villages in a district**.
+- The `{districtCode}` must be **6 numeric characters**. If not, you will get `400 Bad Request` response.
+- This endpoint **will return** the array of village if the `{districtCode}` is exists. Otherwise, you will get a `404 Not Found` response.
+- Usage example : http://localhost:3000/districts/327311/villages.
+
+> This endpoint also support [`sortBy`][sortby-query] and [`sortOrder`][sortorder-query] queries.
 
 ## Query Parameters
 
