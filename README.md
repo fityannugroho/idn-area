@@ -143,6 +143,30 @@ GET /districts/{districtCode}/villages
 
 > This endpoint also support [`sortBy`][sortby-query] and [`sortOrder`][sortorder-query] queries.
 
+### 10. Get Villages by Name
+
+```
+GET /villages?name={villageName}
+```
+
+- Use this endpoint to **get the villages by its name**.
+- The `{villageName}` **is required** and must be **at least 3 characters**. If not, you will get `400 Bad Request` response.
+- This endpoint **will return** an array of village, or an **empty array** `[]` if there are no village matched with the `{villageName}`.
+- Usage example : http://localhost:3000/villages?name=balong.
+
+> This endpoint also support [`sortBy`][sortby-query] and [`sortOrder`][sortorder-query] queries.
+
+### 11. Get Specific Village
+
+```
+GET /villages/{villageCode}
+```
+
+- Use this endpoint to **get a specific village**.
+- The `{villageCode}` must be **10 numeric characters**. If not, you will get `400 Bad Request` response.
+- This endpoint **will return** the village with the same code as `{villageCode}`. Otherwise, you will get a `404 Not Found` response.
+- Usage example : http://localhost:3000/villages/3273111004.
+
 ## Query Parameters
 
 ### Query Param `sortBy`
