@@ -200,3 +200,34 @@ GET /...?sortOrder={asc|desc}
 > These queries can be combined with other queries linked by `&` character.
 >
 > For example : http://localhost:3000/provinces?name=jawa&sortBy=name&sortOrder=asc
+
+## Environment Settings
+
+**1. Create `.env` file**
+
+You can easily duplicate the `.env.example` file and rename it to `.env`.
+
+**2. Configure `HOST` and `PORT`**
+
+Open `.env` file, then :
+
+- Set `HOST` with the hostname of your app. The default is `localhost`.
+- Set `PORT` with port number you want to use. The default is `3000`.
+
+The default values of `HOST` and `PORT` is example values to used in **development** stage. You may have to **change it** later for production stage.
+
+**3. Configure the database connection**
+
+**4. App is ready**
+
+Now you are ready to run the app.
+
+## Running The App
+
+For run the app in development environment, use this command :
+
+```bash
+$ npm run start
+```
+
+See [nestjs.md](nestjs.md) for details.
