@@ -1,3 +1,4 @@
+import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import {
   FastifyAdapter,
@@ -35,6 +36,9 @@ async function bootstrap() {
   const docPath = '';
   // Setup the API documentation.
   SwaggerModule.setup(docPath, app, doc);
+
+  // Set auto-validation pipe.
+  app.useGlobalPipes(new ValidationPipe());
 
   // Configure app host and port.
   const host = process.env.HOST;
