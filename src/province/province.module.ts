@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Province, ProvinceSchema } from './province.schema';
 import { ProvinceService } from './province.service';
+import { ProvinceController } from './province.controller';
 
 @Module({
   imports: [
@@ -9,7 +10,7 @@ import { ProvinceService } from './province.service';
       { name: Province.name, schema: ProvinceSchema },
     ]),
   ],
-  controllers: [],
+  controllers: [ProvinceController],
   providers: [ProvinceService],
 })
 export class ProvinceModule {}
