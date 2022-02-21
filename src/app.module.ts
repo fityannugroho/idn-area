@@ -6,7 +6,9 @@ import { ProvinceModule } from './province/province.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    MongooseModule.forRoot(process.env.MONGODB_URI),
+    MongooseModule.forRootAsync({
+      useFactory: () => ({ uri: process.env.MONGODB_URI }),
+    }),
     ProvinceModule,
   ],
   controllers: [],
