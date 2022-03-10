@@ -10,7 +10,21 @@ export class ProvinceService {
     private readonly provinceModel: Model<ProvinceDocument>,
   ) {}
 
-  async findAll(): Promise<Province[]> {
-    return this.provinceModel.find().exec();
+  private sortQuery(
+    options: { sortBy?: string; sortOrder?: 'asc' | 'desc' } = {
+      sortBy: 'code',
+      sortOrder: 'asc',
+    },
+  ): string {
+    const { sortBy, sortOrder } = options;
+    return `${sortOrder === 'desc' ? '-' : ''}${sortBy}`;
+  }
+
+  async findAll(sort?: {
+    sortBy?: string;
+    sortOrder?: 'asc' | 'desc';
+  }): Promise<Province[]> {
+    const sortQuery = this.sortQuery(sort);
+    return this.provinceModel.find().sort(sortQuery).exec();
   }
 }
