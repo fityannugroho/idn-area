@@ -15,7 +15,18 @@ import { ProvinceService } from './province.service';
 export class ProvinceController {
   constructor(private readonly provinceService: ProvinceService) {}
 
-  @ApiOperation({ description: 'Get all provinces.' })
+  @ApiOperation({
+    description: `Get the provinces. If the \`name\` is empty, all provinces will be returned.
+      Otherwise, it will only return the provinces with the matching name.
+    `,
+  })
+  @ApiQuery({
+    name: 'name',
+    description: 'Get provinces by its name.',
+    required: false,
+    type: 'string',
+    example: 'jawa',
+  })
   @ApiQuery({
     name: 'sortBy',
     description: 'Sort by province code or name.',
@@ -34,8 +45,8 @@ export class ProvinceController {
   @ApiBadRequestResponse({ description: 'If there are invalid query values.' })
   @Get()
   async find(@Query() queries: ProvinceFindQueries): Promise<Province[]> {
-    const { sortBy, sortOrder } = queries;
-    return this.provinceService.findAll({
+    const { name, sortBy, sortOrder } = queries;
+    return this.provinceService.find(name, {
       sortBy: sortBy,
       sortOrder: sortOrder,
     });
