@@ -46,4 +46,8 @@ export class ProvinceService {
       .sort(this.sortQuery(sort))
       .exec();
   }
+
+  async findByCode(code: string): Promise<Province> {
+    return this.provinceModel.findOne({ code: code }).exec();
+  }
 }

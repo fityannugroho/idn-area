@@ -1,4 +1,9 @@
-import { IsOptional, Length } from 'class-validator';
+import {
+  IsAlphanumeric,
+  IsNotEmpty,
+  IsOptional,
+  Length,
+} from 'class-validator';
 import { EqualsAny } from 'src/common/decorator/EqualsAny';
 import { IsNotSymbol } from 'src/common/decorator/IsNotSymbol';
 
@@ -15,4 +20,11 @@ export class ProvinceFindQueries {
   @IsOptional()
   @EqualsAny(['asc', 'desc'])
   sortOrder: 'asc' | 'desc' = 'asc';
+}
+
+export class ProvinceFindByCodeParams {
+  @IsNotEmpty()
+  @IsAlphanumeric()
+  @Length(2, 2)
+  provinceCode: string;
 }
