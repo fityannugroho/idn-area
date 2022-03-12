@@ -30,12 +30,29 @@ export class RegencyController {
     type: 'string',
     example: 'bandung',
   })
+  @ApiQuery({
+    name: 'sortBy',
+    description: 'Sort by regency code or name.',
+    required: false,
+    type: 'string',
+    example: 'code',
+  })
+  @ApiQuery({
+    name: 'sortOrder',
+    description: 'Sort regencies in ascending or descending order.',
+    required: false,
+    type: 'string',
+    example: 'asc',
+  })
   @ApiOkResponse({ description: 'Returns array of regency.' })
-  @ApiBadRequestResponse({ description: 'If the `name` is invalid.' })
+  @ApiBadRequestResponse({ description: 'If there are invalid query values.' })
   @Get()
   async find(@Query() queries: RegencyFindQueries): Promise<Regency[]> {
-    const { name } = queries;
-    return this.regencyService.find(name);
+    const { name, sortBy, sortOrder } = queries;
+    return this.regencyService.find(name, {
+      sortBy: sortBy,
+      sortOrder: sortOrder,
+    });
   }
 
   @ApiOperation({ description: 'Get a regency by its code.' })
