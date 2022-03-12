@@ -13,6 +13,7 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
+import { Regency } from 'src/regency/regency.schema';
 import { ProvinceFindByCodeParams, ProvinceFindQueries } from './province.dto';
 import { Province } from './province.schema';
 import { ProvinceService } from './province.service';
@@ -81,5 +82,29 @@ export class ProvinceController {
         `There are no province with code '${provinceCode}'`,
       );
     return province;
+  }
+
+  @ApiOperation({ description: 'Get a province by its code.' })
+  @ApiParam({
+    name: 'provinceCode',
+    description: 'The province code',
+    required: true,
+    type: 'string',
+    example: '32',
+  })
+  @ApiOkResponse({ description: 'Returns a province.' })
+  @ApiBadRequestResponse({ description: 'If the `provinceCode` is invalid.' })
+  @Get(':provinceCode/regencies')
+  async findRegencies(
+    @Param() params: ProvinceFindByCodeParams,
+  ): Promise<Regency[]> {
+    const { provinceCode } = params;
+    const regencies = await this.provinceService.findRegencies(provinceCode);
+
+    if (regencies === false)
+      throw new NotFoundException(
+        `There are no province with code '${provinceCode}'`,
+      );
+    return regencies;
   }
 }

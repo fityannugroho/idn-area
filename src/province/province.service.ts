@@ -2,6 +2,7 @@ import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { Province, ProvinceDocument } from './province.schema';
 import { InjectModel } from '@nestjs/mongoose';
+import { Regency } from 'src/regency/regency.schema';
 
 @Injectable()
 export class ProvinceService {
@@ -47,7 +48,29 @@ export class ProvinceService {
       .exec();
   }
 
+  /**
+   * Find a province by its code.
+   * @param code The province code.
+   * @returns An province, or `null` if there are no match province.
+   */
   async findByCode(code: string): Promise<Province> {
     return this.provinceModel.findOne({ code: code }).exec();
+  }
+
+  /**
+   * Find all regencies in a province.
+   * @param provinceCode The province code.
+   * @returns Array of regency in the match province, or `false` if there are no province found.
+   */
+  async findRegencies(provinceCode: string): Promise<false | Regency[]> {
+    const regenciesVirtualName = 'regencies';
+    const province = await this.provinceModel
+      .findOne({ code: provinceCode })
+      .populate(regenciesVirtualName)
+      .exec();
+
+    return province === null
+      ? false
+      : (province[regenciesVirtualName] as Promise<Regency[]>);
   }
 }

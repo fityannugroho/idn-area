@@ -3,7 +3,7 @@ import { Document } from 'mongoose';
 
 export type ProvinceDocument = Province & Document;
 
-@Schema({ collection: 'provinces', _id: false })
+@Schema({ collection: 'provinces', toObject: { virtuals: true } })
 export class Province {
   @Prop({ isRequired: true, length: 2 })
   code: string;
@@ -12,4 +12,13 @@ export class Province {
   name: string;
 }
 
-export const ProvinceSchema = SchemaFactory.createForClass(Province);
+const ProvinceSchema = SchemaFactory.createForClass(Province);
+
+ProvinceSchema.virtual('regencies', {
+  ref: 'Regency',
+  localField: 'code',
+  foreignField: 'province_code',
+  justOne: false,
+});
+
+export { ProvinceSchema };
