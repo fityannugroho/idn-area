@@ -19,4 +19,13 @@ export class RegencyService {
   async find(name = ''): Promise<Regency[]> {
     return this.regencyModel.find({ name: new RegExp(name, 'i') }).exec();
   }
+
+  /**
+   * Find a regency by its code.
+   * @param code The regency code.
+   * @returns An regency, or null if there are no match regency.
+   */
+  async findByCode(code: string): Promise<Regency> {
+    return this.regencyModel.findOne({ code: code }).exec();
+  }
 }
