@@ -43,11 +43,17 @@ export class ProvinceService {
    * @param provinceCode The province code.
    * @returns Array of regency in the match province, or `false` if there are no province found.
    */
-  async findRegencies(provinceCode: string): Promise<false | Regency[]> {
+  async findRegencies(
+    provinceCode: string,
+    sort?: SortOptions,
+  ): Promise<false | Regency[]> {
     const regenciesVirtualName = 'regencies';
     const province = await this.provinceModel
       .findOne({ code: provinceCode })
-      .populate(regenciesVirtualName)
+      .populate({
+        path: regenciesVirtualName,
+        options: { sort: this.sortHelper.query(sort) },
+      })
       .exec();
 
     return province === null

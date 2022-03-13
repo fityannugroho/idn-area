@@ -28,3 +28,20 @@ export class ProvinceFindByCodeParams {
   @Length(2, 2)
   provinceCode: string;
 }
+
+export class ProvinceFindRegencyParams {
+  @IsNotEmpty()
+  @IsAlphanumeric()
+  @Length(2, 2)
+  provinceCode: string;
+}
+
+export class ProvinceFindRegencyQueries {
+  @IsOptional()
+  @EqualsAny(['code', 'name'])
+  sortBy: 'code' | 'name';
+
+  @IsOptional()
+  @EqualsAny(['asc', 'desc'])
+  sortOrder: 'asc' | 'desc';
+}
