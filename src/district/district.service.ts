@@ -27,4 +27,13 @@ export class DistrictService {
       .sort(this.sortHelper.query(sort))
       .exec();
   }
+
+  /**
+   * Find a district by its code.
+   * @param code The district code.
+   * @returns An district, or null if there are no match district.
+   */
+  async findByCode(code: string): Promise<District> {
+    return this.districtModel.findOne({ code: code }).exec();
+  }
 }

@@ -1,12 +1,20 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  NotFoundException,
+  Param,
+  Query,
+} from '@nestjs/common';
 import {
   ApiBadRequestResponse,
+  ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiParam,
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { DistrictFindQueries } from './district.dto';
+import { DistrictFindByCodeParams, DistrictFindQueries } from './district.dto';
 import { District } from './district.schema';
 import { DistrictService } from './district.service';
 
@@ -46,5 +54,32 @@ export class DistrictController {
       sortBy: sortBy,
       sortOrder: sortOrder,
     });
+  }
+
+  @ApiOperation({ description: 'Get a district by its code.' })
+  @ApiParam({
+    name: 'districtCode',
+    description: 'The district code',
+    required: true,
+    type: 'string',
+    example: '327325',
+  })
+  @ApiOkResponse({ description: 'Returns a district.' })
+  @ApiBadRequestResponse({ description: 'If the `districtCode` is invalid.' })
+  @ApiNotFoundResponse({
+    description: 'If no district matches the `districtCode`.',
+  })
+  @Get(':districtCode')
+  async findByCode(
+    @Param() params: DistrictFindByCodeParams,
+  ): Promise<District> {
+    const { districtCode } = params;
+    const district = await this.districtService.findByCode(districtCode);
+
+    if (district === null)
+      throw new NotFoundException(
+        `There are no district with code '${districtCode}'`,
+      );
+    return district;
   }
 }

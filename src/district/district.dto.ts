@@ -1,4 +1,9 @@
-import { IsNotEmpty, IsOptional, Length } from 'class-validator';
+import {
+  IsAlphanumeric,
+  IsNotEmpty,
+  IsOptional,
+  Length,
+} from 'class-validator';
 import { EqualsAny } from 'src/common/decorator/EqualsAny';
 import { IsNotSymbol } from 'src/common/decorator/IsNotSymbol';
 
@@ -15,4 +20,11 @@ export class DistrictFindQueries {
   @IsOptional()
   @EqualsAny(['asc', 'desc'])
   sortOrder: 'asc' | 'desc';
+}
+
+export class DistrictFindByCodeParams {
+  @IsNotEmpty()
+  @IsAlphanumeric()
+  @Length(6, 6)
+  districtCode: string;
 }
