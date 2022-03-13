@@ -28,3 +28,19 @@ export class DistrictFindByCodeParams {
   @Length(6, 6)
   districtCode: string;
 }
+
+export class DistrictFindVillageParams {
+  @IsNotEmpty()
+  @IsAlphanumeric()
+  @Length(6, 6)
+  districtCode: string;
+}
+export class DistrictFindVillageQueries {
+  @IsOptional()
+  @EqualsAny(['code', 'name'])
+  sortBy: 'code' | 'name';
+
+  @IsOptional()
+  @EqualsAny(['asc', 'desc'])
+  sortOrder: 'asc' | 'desc';
+}

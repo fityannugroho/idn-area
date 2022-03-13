@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { SortHelper, SortOptions } from 'src/helper/sort.helper';
+import { Village } from 'src/village/village.schema';
 import { District, DistrictDocument } from './district.schema';
 
 @Injectable()
@@ -35,5 +36,29 @@ export class DistrictService {
    */
   async findByCode(code: string): Promise<District> {
     return this.districtModel.findOne({ code: code }).exec();
+  }
+
+  /**
+   * Find all villages in a district.
+   * @param districtCode The district code.
+   * @param sort The sort query (optional).
+   * @returns Array of village in the match district, or `false` if there are no district found.
+   */
+  async findVillages(
+    districtCode: string,
+    sort?: SortOptions,
+  ): Promise<false | Village[]> {
+    const villagesVirtualName = 'villages';
+    const district = await this.districtModel
+      .findOne({ code: districtCode })
+      .populate({
+        path: villagesVirtualName,
+        options: { sort: this.sortHelper.query(sort) },
+      })
+      .exec();
+
+    return district === null
+      ? false
+      : (district[villagesVirtualName] as Promise<Village[]>);
   }
 }

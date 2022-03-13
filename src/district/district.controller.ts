@@ -14,7 +14,13 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { DistrictFindByCodeParams, DistrictFindQueries } from './district.dto';
+import { Village } from 'src/village/village.schema';
+import {
+  DistrictFindByCodeParams,
+  DistrictFindQueries,
+  DistrictFindVillageParams,
+  DistrictFindVillageQueries,
+} from './district.dto';
 import { District } from './district.schema';
 import { DistrictService } from './district.service';
 
@@ -81,5 +87,51 @@ export class DistrictController {
         `There are no district with code '${districtCode}'`,
       );
     return district;
+  }
+
+  @ApiOperation({ description: 'Get all villages in a district.' })
+  @ApiParam({
+    name: 'districtCode',
+    description: 'The district code',
+    required: true,
+    type: 'string',
+    example: '327325',
+  })
+  @ApiQuery({
+    name: 'sortBy',
+    description: 'Sort villages by its code or name.',
+    required: false,
+    type: 'string',
+    example: 'code',
+  })
+  @ApiQuery({
+    name: 'sortOrder',
+    description: 'Sort villages in ascending or descending order.',
+    required: false,
+    type: 'string',
+    example: 'asc',
+  })
+  @ApiOkResponse({ description: 'Returns array of villages.' })
+  @ApiBadRequestResponse({ description: 'If the `districtCode` is invalid.' })
+  @ApiNotFoundResponse({
+    description: 'If there are no district match with the `districtCode`.',
+  })
+  @Get(':districtCode/villages')
+  async findVillage(
+    @Param() params: DistrictFindVillageParams,
+    @Query() queries: DistrictFindVillageQueries,
+  ): Promise<Village[]> {
+    const { districtCode } = params;
+    const { sortBy, sortOrder } = queries;
+    const villages = await this.districtService.findVillages(districtCode, {
+      sortBy: sortBy,
+      sortOrder: sortOrder,
+    });
+
+    if (villages === false)
+      throw new NotFoundException(
+        `There are no district with code '${districtCode}'`,
+      );
+    return villages;
   }
 }
