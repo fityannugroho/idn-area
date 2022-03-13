@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ProvinceModule } from './province/province.module';
 import { RegencyModule } from './regency/regency.module';
+import { HelperModule } from './helper/helper.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { RegencyModule } from './regency/regency.module';
     }),
     ProvinceModule,
     RegencyModule,
+    HelperModule,
   ],
   controllers: [],
   providers: [],

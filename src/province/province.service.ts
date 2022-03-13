@@ -3,29 +3,16 @@ import { Injectable } from '@nestjs/common';
 import { Province, ProvinceDocument } from './province.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Regency } from 'src/regency/regency.schema';
+import { SortHelper, SortOptions } from 'src/helper/sort.helper';
 
 @Injectable()
 export class ProvinceService {
   constructor(
     @InjectModel(Province.name)
     private readonly provinceModel: Model<ProvinceDocument>,
-  ) {}
-
-  /**
-   * Generate sort query string. Minus `-` sign means descending order.
-   *
-   * For example: `-code` means sort by "code" field in descending order.
-   * @param options The sort options. The default value is 'asc' for sortOrder and 'code' for sortBy.
-   * @returns The sort query string.
-   */
-  private sortQuery(
-    options: { sortBy?: string; sortOrder?: 'asc' | 'desc' } = {
-      sortBy: 'code',
-      sortOrder: 'asc',
-    },
-  ): string {
-    const { sortBy, sortOrder } = options;
-    return `${sortOrder === 'desc' ? '-' : ''}${sortBy}`;
+    private readonly sortHelper: SortHelper,
+  ) {
+    this.sortHelper = new SortHelper({ sortBy: 'name', sortOrder: 'asc' });
   }
 
   /**
@@ -35,16 +22,10 @@ export class ProvinceService {
    * @param sort The sort query (optional).
    * @returns The array of provinces.
    */
-  async find(
-    name = '',
-    sort?: {
-      sortBy: string;
-      sortOrder?: 'asc' | 'desc';
-    },
-  ): Promise<Province[]> {
+  async find(name = '', sort?: SortOptions): Promise<Province[]> {
     return this.provinceModel
       .find({ name: new RegExp(name, 'i') })
-      .sort(this.sortQuery(sort))
+      .sort(this.sortHelper.query(sort))
       .exec();
   }
 
