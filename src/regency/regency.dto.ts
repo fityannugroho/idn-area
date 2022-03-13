@@ -15,11 +15,11 @@ export class RegencyFindQueries {
 
   @IsOptional()
   @EqualsAny(['code', 'name'])
-  sortBy: 'code' | 'name' = 'code';
+  sortBy: 'code' | 'name';
 
   @IsOptional()
   @EqualsAny(['asc', 'desc'])
-  sortOrder: 'asc' | 'desc' = 'asc';
+  sortOrder: 'asc' | 'desc';
 }
 
 export class RegencyFindByCodeParams {

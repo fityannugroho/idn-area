@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
+  ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiParam,
@@ -65,6 +66,9 @@ export class RegencyController {
   })
   @ApiOkResponse({ description: 'Returns a regency.' })
   @ApiBadRequestResponse({ description: 'If the `regencyCode` is invalid.' })
+  @ApiNotFoundResponse({
+    description: 'If no regency matches the `regencyCode`.',
+  })
   @Get(':regencyCode')
   async findByCode(@Param() params: RegencyFindByCodeParams): Promise<Regency> {
     const { regencyCode } = params;
