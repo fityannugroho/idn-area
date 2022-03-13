@@ -27,4 +27,13 @@ export class VillageService {
       .sort(this.sortHelper.query(sort))
       .exec();
   }
+
+  /**
+   * Find a village by its code.
+   * @param code The village code.
+   * @returns An village, or null if there are no match village.
+   */
+  async findByCode(code: string): Promise<Village> {
+    return this.villageModel.findOne({ code: code }).exec();
+  }
 }
