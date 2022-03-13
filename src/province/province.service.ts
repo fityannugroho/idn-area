@@ -12,7 +12,7 @@ export class ProvinceService {
     private readonly provinceModel: Model<ProvinceDocument>,
     private readonly sortHelper: SortHelper,
   ) {
-    this.sortHelper = new SortHelper({ sortBy: 'name', sortOrder: 'asc' });
+    this.sortHelper = new SortHelper({ sortBy: 'code', sortOrder: 'asc' });
   }
 
   /**
