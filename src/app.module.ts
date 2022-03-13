@@ -4,6 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ProvinceModule } from './province/province.module';
 import { RegencyModule } from './regency/regency.module';
 import { HelperModule } from './helper/helper.module';
+import { DistrictModule } from './district/district.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { HelperModule } from './helper/helper.module';
     }),
     ProvinceModule,
     RegencyModule,
+    DistrictModule,
     HelperModule,
   ],
   controllers: [],
