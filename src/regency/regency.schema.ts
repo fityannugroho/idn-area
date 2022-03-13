@@ -16,3 +16,10 @@ export class Regency {
 }
 
 export const RegencySchema = SchemaFactory.createForClass(Regency);
+
+RegencySchema.virtual('districts', {
+  ref: 'District',
+  localField: 'code',
+  foreignField: 'regency_code',
+  justOne: false,
+});

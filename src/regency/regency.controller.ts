@@ -14,7 +14,13 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { RegencyFindByCodeParams, RegencyFindQueries } from './regency.dto';
+import { District } from 'src/district/district.schema';
+import {
+  RegencyFindByCodeParams,
+  RegencyFindDistrictParams,
+  RegencyFindDistrictQueries,
+  RegencyFindQueries,
+} from './regency.dto';
 import { Regency } from './regency.schema';
 import { RegencyService } from './regency.service';
 
@@ -79,5 +85,51 @@ export class RegencyController {
         `There are no regency with code '${regencyCode}'`,
       );
     return regency;
+  }
+
+  @ApiOperation({ description: 'Get all districts in a regency.' })
+  @ApiParam({
+    name: 'regencyCode',
+    description: 'The regency code',
+    required: true,
+    type: 'string',
+    example: '3273',
+  })
+  @ApiQuery({
+    name: 'sortBy',
+    description: 'Sort districts by its code or name.',
+    required: false,
+    type: 'string',
+    example: 'code',
+  })
+  @ApiQuery({
+    name: 'sortOrder',
+    description: 'Sort districts in ascending or descending order.',
+    required: false,
+    type: 'string',
+    example: 'asc',
+  })
+  @ApiOkResponse({ description: 'Returns array of districts.' })
+  @ApiBadRequestResponse({ description: 'If the `regencyCode` is invalid.' })
+  @ApiNotFoundResponse({
+    description: 'If there are no regency match with the `regencyCode`.',
+  })
+  @Get(':regencyCode/districts')
+  async findDistrict(
+    @Param() params: RegencyFindDistrictParams,
+    @Query() queries: RegencyFindDistrictQueries,
+  ): Promise<District[]> {
+    const { regencyCode } = params;
+    const { sortBy, sortOrder } = queries;
+    const districts = await this.regencyService.findDistrics(regencyCode, {
+      sortBy: sortBy,
+      sortOrder: sortOrder,
+    });
+
+    if (districts === false)
+      throw new NotFoundException(
+        `There are no regency with code '${regencyCode}'`,
+      );
+    return districts;
   }
 }

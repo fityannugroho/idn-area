@@ -28,3 +28,19 @@ export class RegencyFindByCodeParams {
   @Length(4, 4)
   regencyCode: string;
 }
+
+export class RegencyFindDistrictParams {
+  @IsNotEmpty()
+  @IsAlphanumeric()
+  @Length(4, 4)
+  regencyCode: string;
+}
+export class RegencyFindDistrictQueries {
+  @IsOptional()
+  @EqualsAny(['code', 'name'])
+  sortBy: 'code' | 'name';
+
+  @IsOptional()
+  @EqualsAny(['asc', 'desc'])
+  sortOrder: 'asc' | 'desc';
+}

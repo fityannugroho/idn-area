@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { District } from 'src/district/district.schema';
 import { SortHelper, SortOptions } from 'src/helper/sort.helper';
 import { Regency, RegencyDocument } from './regency.schema';
 
@@ -35,5 +36,29 @@ export class RegencyService {
    */
   async findByCode(code: string): Promise<Regency> {
     return this.regencyModel.findOne({ code: code }).exec();
+  }
+
+  /**
+   * Find all districts in a regency.
+   * @param regencyCode The regency code.
+   * @param sort The sort query (optional).
+   * @returns Array of regency in the match regency, or `false` if there are no regency found.
+   */
+  async findDistrics(
+    regencyCode: string,
+    sort?: SortOptions,
+  ): Promise<false | District[]> {
+    const districtsVirtualName = 'districts';
+    const regency = await this.regencyModel
+      .findOne({ code: regencyCode })
+      .populate({
+        path: districtsVirtualName,
+        options: { sort: this.sortHelper.query(sort) },
+      })
+      .exec();
+
+    return regency === null
+      ? false
+      : (regency[districtsVirtualName] as Promise<District[]>);
   }
 }
