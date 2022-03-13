@@ -5,6 +5,7 @@ import { ProvinceModule } from './province/province.module';
 import { RegencyModule } from './regency/regency.module';
 import { HelperModule } from './helper/helper.module';
 import { DistrictModule } from './district/district.module';
+import { VillageModule } from './village/village.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { DistrictModule } from './district/district.module';
     RegencyModule,
     DistrictModule,
     HelperModule,
+    VillageModule,
   ],
   controllers: [],
   providers: [],
