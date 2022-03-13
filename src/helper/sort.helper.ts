@@ -18,8 +18,11 @@ export class SortHelper {
    * @returns The sort query string.
    */
   query(options?: SortOptions): string {
-    const usedOptions = options ?? this.defaultOptions;
-    const { sortBy, sortOrder } = usedOptions;
+    const {
+      sortBy = this.defaultOptions.sortBy,
+      sortOrder = this.defaultOptions.sortOrder,
+    } = options ?? this.defaultOptions;
+
     return `${sortOrder === 'desc' ? '-' : ''}${sortBy}`;
   }
 }
