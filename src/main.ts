@@ -37,6 +37,9 @@ async function bootstrap() {
   // Setup the API documentation.
   SwaggerModule.setup(docPath, app, doc);
 
+  // Enable CORS protocol
+  app.enableCors();
+
   // Set auto-validation pipe.
   app.useGlobalPipes(new ValidationPipe());
 
