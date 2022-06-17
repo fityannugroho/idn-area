@@ -1,0 +1,19 @@
+{
+  "name": "idn-area",
+  "description": "API that provides information about Indonesia administrative area.",
+  "scripts": {
+    "postdeploy": "npm run build"
+  },
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ],
+  "environments": {
+    "test": {
+      "scripts": {
+        "test": "npm run test"
+      }
+    }
+  }
+}

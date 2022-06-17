@@ -43,12 +43,11 @@ async function bootstrap() {
   // Set auto-validation pipe.
   app.useGlobalPipes(new ValidationPipe());
 
-  // Configure app host and port.
-  const host = process.env.HOST;
-  const port = process.env.PORT;
+  // Configure app port.
+  const port = process.env.PORT || 8080;
 
   // Start the app.
-  await app.listen(port, host);
+  await app.listen(port);
   console.log(`App run successfully on ${await app.getUrl()}.`);
 }
 bootstrap();
