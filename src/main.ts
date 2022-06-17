@@ -45,7 +45,7 @@ async function bootstrap() {
 
   // Configure app host and port.
   const host = process.env.HOST;
-  const port = process.env.PORT;
+  const port = process.env.PORT || 8080;
 
   // Start the app.
   await app.listen(port, host);
