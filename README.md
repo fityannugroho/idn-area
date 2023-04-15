@@ -29,7 +29,7 @@ GET /provinces
 
 - Use this endpoint to **get all of provinces**.
 - This endpoint will return an array of province.
-- Usage example : https://idn-area.herokuapp.com/provinces.
+- Usage example : {BASE_URL}/provinces.
 
 **Filter Provinces by `name`**
 
@@ -41,7 +41,7 @@ GET /provinces?name={provinceName}
 - For example, if you replace the `{provinceName}` with "jawa" then you will get all the provinces whose names contain the word "jawa".
 - The `{provinceName}` must be **at least 3 characters**. If not, you will get `400 Bad Request` response.
 - The response will be an **empty array** `[]` if there are no province matched with the `{provinceName}`.
-- Usage example : https://idn-area.herokuapp.com/provinces?name=jawa
+- Usage example : {BASE_URL}/provinces?name=jawa
 
 > This endpoint also support [`sortBy`][sortby-query] and [`sortOrder`][sortorder-query] queries.
 
@@ -54,7 +54,7 @@ GET /provinces/{provinceCode}
 - Use this endpoint to **get a specific province**.
 - The `{provinceCode}` must be **2 numeric characters**. If not, you will get `400 Bad Request` response.
 - This endpoint **will return** the province with the same code as `{provinceCode}`. Otherwise, you will get a `404 Not Found` response.
-- Usage example : https://idn-area.herokuapp.com/provinces/32.
+- Usage example : {BASE_URL}/provinces/32.
 
 ### 3. Get All Regencies in a Province
 
@@ -65,7 +65,7 @@ GET /provinces/{provinceCode}/regencies
 - Use this endpoint to **get all regencies in a province**.
 - The `{provinceCode}` must be **2 numeric characters**. If not, you will get `400 Bad Request` response.
 - This endpoint **will return** the array of regency if the `{provinceCode}` is exists. Otherwise, you will get a `404 Not Found` response.
-- Usage example : https://idn-area.herokuapp.com/provinces/32/regencies.
+- Usage example : {BASE_URL}/provinces/32/regencies.
 
 > This endpoint also support [`sortBy`][sortby-query] and [`sortOrder`][sortorder-query] queries.
 
@@ -78,7 +78,7 @@ GET /regencies?name={regencyName}
 - Use this endpoint to **get the regencies by its name**.
 - The `{regencyName}` **is required** and must be **at least 3 characters**. If not, you will get `400 Bad Request` response.
 - This endpoint **will return** an array of regency.
-- Usage example : https://idn-area.herokuapp.com/regencies?name=bandung.
+- Usage example : {BASE_URL}/regencies?name=bandung.
 
 > This endpoint also support [`sortBy`][sortby-query] and [`sortOrder`][sortorder-query] queries.
 
@@ -91,7 +91,7 @@ GET /regencies/{regencyCode}
 - Use this endpoint to **get a specific regency**.
 - The `{regencyCode}` must be **4 numeric characters**. If not, you will get `400 Bad Request` response.
 - This endpoint **will return** the regency with the same code as `{regencyCode}`. Otherwise, you will get a `404 Not Found` response.
-- Usage example : https://idn-area.herokuapp.com/regencies/3273.
+- Usage example : {BASE_URL}/regencies/3273.
 
 ### 6. Get All Districts in a Regency
 
@@ -102,7 +102,7 @@ GET /regencies/{regencyCode}/districts
 - Use this endpoint to **get all districts in a regency**.
 - The `{regencyCode}` must be **4 numeric characters**. If not, you will get `400 Bad Request` response.
 - This endpoint **will return** the array of district if the `{regencyCode}` is exists. Otherwise, you will get a `404 Not Found` response.
-- Usage example : https://idn-area.herokuapp.com/regencies/3273/districts.
+- Usage example : {BASE_URL}/regencies/3273/districts.
 
 > This endpoint also support [`sortBy`][sortby-query] and [`sortOrder`][sortorder-query] queries.
 
@@ -115,7 +115,7 @@ GET /districts?name={districtName}
 - Use this endpoint to **get the districts by its name**.
 - The `{districtName}` **is required** and must be **at least 3 characters**. If not, you will get `400 Bad Request` response.
 - This endpoint **will return** an array of district, or an **empty array** `[]` if there are no district matched with the `{districtName}`.
-- Usage example : https://idn-area.herokuapp.com/districts?name=regol.
+- Usage example : {BASE_URL}/districts?name=regol.
 
 > This endpoint also support [`sortBy`][sortby-query] and [`sortOrder`][sortorder-query] queries.
 
@@ -128,7 +128,7 @@ GET /districts/{districtCode}
 - Use this endpoint to **get a specific district**.
 - The `{districtCode}` must be **6 numeric characters**. If not, you will get `400 Bad Request` response.
 - This endpoint **will return** the district with the same code as `{districtCode}`. Otherwise, you will get a `404 Not Found` response.
-- Usage example : https://idn-area.herokuapp.com/districts/327311.
+- Usage example : {BASE_URL}/districts/327311.
 
 ### 9. Get All Villages in a District
 
@@ -139,7 +139,7 @@ GET /districts/{districtCode}/villages
 - Use this endpoint to **get all villages in a district**.
 - The `{districtCode}` must be **6 numeric characters**. If not, you will get `400 Bad Request` response.
 - This endpoint **will return** the array of village if the `{districtCode}` is exists. Otherwise, you will get a `404 Not Found` response.
-- Usage example : https://idn-area.herokuapp.com/districts/327311/villages.
+- Usage example : {BASE_URL}/districts/327311/villages.
 
 > This endpoint also support [`sortBy`][sortby-query] and [`sortOrder`][sortorder-query] queries.
 
@@ -152,7 +152,7 @@ GET /villages?name={villageName}
 - Use this endpoint to **get the villages by its name**.
 - The `{villageName}` **is required** and must be **at least 3 characters**. If not, you will get `400 Bad Request` response.
 - This endpoint **will return** an array of village, or an **empty array** `[]` if there are no village matched with the `{villageName}`.
-- Usage example : https://idn-area.herokuapp.com/villages?name=balong.
+- Usage example : {BASE_URL}/villages?name=balong.
 
 > This endpoint also support [`sortBy`][sortby-query] and [`sortOrder`][sortorder-query] queries.
 
@@ -165,7 +165,7 @@ GET /villages/{villageCode}
 - Use this endpoint to **get a specific village**.
 - The `{villageCode}` must be **10 numeric characters**. If not, you will get `400 Bad Request` response.
 - This endpoint **will return** the village with the same code as `{villageCode}`. Otherwise, you will get a `404 Not Found` response.
-- Usage example : https://idn-area.herokuapp.com/villages/3273111004.
+- Usage example : {BASE_URL}/villages/3273111004.
 
 ## Query Parameters
 
@@ -181,8 +181,8 @@ GET /...?sortBy={code|name}
 - The `sortBy` **can only be filled** by `code` or `name`. If not, you will get `400 Bad Request` response.
 - If `sortBy` **is not set**, sorting will be done by the `code`.
 - Usage example :
-  - At [`provinces`](#1-get-all-provinces) endpoint : https://idn-area.herokuapp.com/provinces?sortBy=name.
-  - At [`regencies`](#4-get-regencies-by-name) endpoint : https://idn-area.herokuapp.com/regencies?name=bandung&sortBy=code.
+  - At [`provinces`](#1-get-all-provinces) endpoint : {BASE_URL}/provinces?sortBy=name.
+  - At [`regencies`](#4-get-regencies-by-name) endpoint : {BASE_URL}/regencies?name=bandung&sortBy=code.
 
 ### `sortOrder`
 
@@ -194,12 +194,12 @@ GET /...?sortOrder={asc|desc}
 - The `sortOrder` **can only be filled** by `asc` or `desc`. If not, you will get `400 Bad Request` response.
 - If `sortOrder` **is not set**, sorting will be done in `asc` order.
 - Usage example :
-  - At [`districts`](#7-get-districts-by-name) endpoint : https://idn-area.herokuapp.com/districts?name=regol&sortOrder=desc.
-  - At [`villages`](#10-get-villages-by-name) endpoint : https://idn-area.herokuapp.com/villages?name=balong&sortOrder=asc.
+  - At [`districts`](#7-get-districts-by-name) endpoint : {BASE_URL}/districts?name=regol&sortOrder=desc.
+  - At [`villages`](#10-get-villages-by-name) endpoint : {BASE_URL}/villages?name=balong&sortOrder=asc.
 
 > These queries can be combined with other queries linked by `&` character.
 >
-> For example : https://idn-area.herokuapp.com/provinces?name=jawa&sortBy=name&sortOrder=asc
+> For example : {BASE_URL}/provinces?name=jawa&sortBy=name&sortOrder=asc
 
 ## Environment Settings
 
