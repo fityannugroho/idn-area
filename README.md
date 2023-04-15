@@ -21,6 +21,14 @@ This API is built with [NestJS framework](https://nestjs.com) and writen in Type
 [sortby-query]: #sortby
 [sortorder-query]: #sortorder
 
+### Documentation
+
+```
+GET /docs
+```
+
+- Use this endpoint to get generated **API documentation**.
+
 ### 1. Get All Provinces
 
 ```
