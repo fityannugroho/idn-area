@@ -242,4 +242,4 @@ See [nestjs.md](nestjs.md) for details.
 
 ## Live Demo
 
-You can try the API in by replacing the `http://localhost:3000` with `http://13.213.50.245:3000`.
+You can try the API by replacing the http://localhost:3000 with http://13.213.49.93.
