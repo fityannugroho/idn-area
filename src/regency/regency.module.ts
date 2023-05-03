@@ -1,16 +1,12 @@
 import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
 import { HelperModule } from 'src/helper/helper.module';
+import { PrismaService } from 'src/prisma.service';
 import { RegencyController } from './regency.controller';
-import { Regency, RegencySchema } from './regency.schema';
 import { RegencyService } from './regency.service';
 
 @Module({
-  imports: [
-    MongooseModule.forFeature([{ name: Regency.name, schema: RegencySchema }]),
-    HelperModule,
-  ],
+  imports: [HelperModule],
   controllers: [RegencyController],
-  providers: [RegencyService],
+  providers: [PrismaService, RegencyService],
 })
 export class RegencyModule {}
