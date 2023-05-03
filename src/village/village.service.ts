@@ -1,14 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
 import { SortHelper, SortOptions } from 'src/helper/sort.helper';
-import { Village, VillageDocument } from './village.schema';
+import { PrismaService } from 'src/prisma.service';
+import { Village } from '@prisma/client';
 
 @Injectable()
 export class VillageService {
   constructor(
-    @InjectModel(Village.name)
-    private readonly villageModel: Model<VillageDocument>,
+    private readonly prisma: PrismaService,
     private readonly sortHelper: SortHelper,
   ) {
     this.sortHelper = new SortHelper({ sortBy: 'code', sortOrder: 'asc' });
@@ -22,10 +20,15 @@ export class VillageService {
    * @returns The array of villages.
    */
   async find(name = '', sort?: SortOptions): Promise<Village[]> {
-    return this.villageModel
-      .find({ name: new RegExp(name, 'i') })
-      .sort(this.sortHelper.query(sort))
-      .exec();
+    return this.prisma.village.findMany({
+      where: {
+        name: {
+          contains: name,
+          mode: 'insensitive',
+        },
+      },
+      orderBy: this.sortHelper.object(sort),
+    });
   }
 
   /**
@@ -34,6 +37,10 @@ export class VillageService {
    * @returns An village, or null if there are no match village.
    */
   async findByCode(code: string): Promise<Village> {
-    return this.villageModel.findOne({ code: code }).exec();
+    return this.prisma.village.findUnique({
+      where: {
+        code: code,
+      },
+    });
   }
 }

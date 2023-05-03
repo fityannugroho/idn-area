@@ -1,16 +1,12 @@
 import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
 import { HelperModule } from 'src/helper/helper.module';
+import { PrismaService } from 'src/prisma.service';
 import { VillageController } from './village.controller';
-import { Village, VillageSchema } from './village.schema';
 import { VillageService } from './village.service';
 
 @Module({
-  imports: [
-    MongooseModule.forFeature([{ name: Village.name, schema: VillageSchema }]),
-    HelperModule,
-  ],
+  imports: [HelperModule],
   controllers: [VillageController],
-  providers: [VillageService],
+  providers: [PrismaService, VillageService],
 })
 export class VillageModule {}

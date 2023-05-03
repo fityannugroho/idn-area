@@ -14,8 +14,8 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
+import { Village } from '@prisma/client';
 import { VillageFindByCodeParams, VillageFindQueries } from './village.dto';
-import { Village } from './village.schema';
 import { VillageService } from './village.service';
 
 @ApiTags('Village')
