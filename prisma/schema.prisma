@@ -1,0 +1,49 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model District {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  code        String    @unique
+  name        String
+  regencyCode String    @map("regency_code")
+  regency     Regency   @relation(fields: [regencyCode], references: [code])
+  villages    Village[]
+
+  @@map("districts")
+}
+
+model Province {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  code      String    @unique
+  name      String
+  regencies Regency[]
+
+  @@map("provinces")
+}
+
+model Regency {
+  id           String     @id @default(auto()) @map("_id") @db.ObjectId
+  code         String     @unique
+  name         String
+  provinceCode String     @map("province_code")
+  districts    District[]
+  province     Province   @relation(fields: [provinceCode], references: [code])
+
+  @@map("regencies")
+}
+
+model Village {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  code         String   @unique
+  districtCode String   @map("district_code")
+  name         String
+  district     District @relation(fields: [districtCode], references: [code])
+
+  @@map("villages")
+}
