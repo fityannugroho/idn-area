@@ -1,15 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { District, Village } from '@prisma/client';
 import { SortHelper, SortOptions } from 'src/helper/sort.helper';
-import { Village } from 'src/village/village.schema';
-import { District, DistrictDocument } from './district.schema';
+import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class DistrictService {
   constructor(
-    @InjectModel(District.name)
-    private readonly districtModel: Model<DistrictDocument>,
+    private readonly prisma: PrismaService,
     private readonly sortHelper: SortHelper,
   ) {
     this.sortHelper = new SortHelper({ sortBy: 'code', sortOrder: 'asc' });
@@ -23,10 +20,15 @@ export class DistrictService {
    * @returns The array of district.
    */
   async find(name = '', sort?: SortOptions): Promise<District[]> {
-    return this.districtModel
-      .find({ name: new RegExp(name, 'i') })
-      .sort(this.sortHelper.query(sort))
-      .exec();
+    return this.prisma.district.findMany({
+      where: {
+        name: {
+          contains: name,
+          mode: 'insensitive',
+        },
+      },
+      orderBy: this.sortHelper.object(sort),
+    });
   }
 
   /**
@@ -35,7 +37,11 @@ export class DistrictService {
    * @returns An district, or null if there are no match district.
    */
   async findByCode(code: string): Promise<District> {
-    return this.districtModel.findOne({ code: code }).exec();
+    return this.prisma.district.findUnique({
+      where: {
+        code: code,
+      },
+    });
   }
 
   /**
@@ -48,17 +54,16 @@ export class DistrictService {
     districtCode: string,
     sort?: SortOptions,
   ): Promise<false | Village[]> {
-    const villagesVirtualName = 'villages';
-    const district = await this.districtModel
-      .findOne({ code: districtCode })
-      .populate({
-        path: villagesVirtualName,
-        options: { sort: this.sortHelper.query(sort) },
+    const villages = await this.prisma.district
+      .findUnique({
+        where: {
+          code: districtCode,
+        },
       })
-      .exec();
+      .villages({
+        orderBy: this.sortHelper.object(sort),
+      });
 
-    return district === null
-      ? false
-      : (district[villagesVirtualName] as Promise<Village[]>);
+    return villages ?? false;
   }
 }

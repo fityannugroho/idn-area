@@ -14,14 +14,13 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { Village } from 'src/village/village.schema';
+import { District, Village } from '@prisma/client';
 import {
   DistrictFindByCodeParams,
   DistrictFindQueries,
   DistrictFindVillageParams,
   DistrictFindVillageQueries,
 } from './district.dto';
-import { District } from './district.schema';
 import { DistrictService } from './district.service';
 
 @ApiTags('District')
