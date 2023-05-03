@@ -6,6 +6,10 @@ export interface SortOptions {
 export class SortHelper {
   defaultOptions: SortOptions;
 
+  /**
+   * Create a new instance of SortHelper.
+   * @param defaultOptions The default options
+   */
   constructor(defaultOptions: SortOptions) {
     this.defaultOptions = defaultOptions;
   }
@@ -24,5 +28,23 @@ export class SortHelper {
     } = options ?? this.defaultOptions;
 
     return `${sortOrder === 'desc' ? '-' : ''}${sortBy}`;
+  }
+
+  /**
+   * Generate sort query object.
+   *
+   * For example: `{ code: 'desc' }` means sort by "code" field in descending order.
+   * @param options The sort options. If `null`, the default options will be used.
+   * @returns The sort query object.
+   */
+  object(options?: SortOptions): Record<string, 'asc' | 'desc'> {
+    const {
+      sortBy = this.defaultOptions.sortBy,
+      sortOrder = this.defaultOptions.sortOrder,
+    } = options ?? this.defaultOptions;
+
+    return {
+      [sortBy]: sortOrder,
+    };
   }
 }
