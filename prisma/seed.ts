@@ -1,109 +1,92 @@
 import { PrismaClient } from '@prisma/client';
 import { join } from 'path';
 import { isDistrict, isRegency, isVillage, parseCsvFromLocal } from './helper';
-import { Areas, AreaByCollection, Collection } from './types';
+import {
+  Areas,
+  AreaByCollection,
+  Collection,
+  Regency,
+  District,
+  Village,
+} from './types';
 
 const prisma = new PrismaClient();
 
-const upsertData = async <T extends Areas>(data: T[]) => {
-  return await Promise.all(
-    data.map(async (record) => {
-      if (isRegency(record)) {
-        return await prisma.regency.upsert({
-          where: { code: record.code },
-          create: {
-            code: record.code,
-            name: record.name,
-            provinceCode: record.province_code,
-          },
-          update: {
-            name: record.name,
-            provinceCode: record.province_code,
-          },
-        });
-      }
-
-      if (isDistrict(record)) {
-        return await prisma.district.upsert({
-          where: { code: record.code },
-          create: {
-            code: record.code,
-            name: record.name,
-            regencyCode: record.regency_code,
-          },
-          update: {
-            name: record.name,
-            regencyCode: record.regency_code,
-          },
-        });
-      }
-
-      if (isVillage(record)) {
-        return await prisma.village.upsert({
-          where: { code: record.code },
-          create: {
-            code: record.code,
-            name: record.name,
-            districtCode: record.district_code,
-          },
-          update: {
-            name: record.name,
-            districtCode: record.district_code,
-          },
-        });
-      }
-
-      return await prisma.province.upsert({
-        where: { code: record.code },
-        create: record,
-        update: record,
-      });
-    }),
-  );
-};
-
-const deleteUnknownData = async <T extends Areas>(data: T[]) => {
-  const codes = data.map((record) => record.code);
-  const options = {
-    where: {
-      code: {
-        notIn: codes,
-      },
-    },
-  };
-
-  if (data.every(isRegency)) {
-    return await prisma.regency.deleteMany(options);
+const insertData = async <T extends Areas>(data: T[]) => {
+  if (data.every(isVillage)) {
+    return await prisma.village.createMany({
+      data: (data as Village[]).map((item) => ({
+        code: item.code,
+        name: item.name,
+        districtCode: item.district_code,
+      })),
+    });
   }
 
   if (data.every(isDistrict)) {
-    return await prisma.district.deleteMany(options);
+    return await prisma.district.createMany({
+      data: (data as District[]).map((item) => ({
+        code: item.code,
+        name: item.name,
+        regencyCode: item.regency_code,
+      })),
+    });
   }
 
-  if (data.every(isVillage)) {
-    return await prisma.village.deleteMany(options);
+  if (data.every(isRegency)) {
+    return await prisma.regency.createMany({
+      data: (data as Regency[]).map((item) => ({
+        code: item.code,
+        name: item.name,
+        provinceCode: item.province_code,
+      })),
+    });
   }
 
-  return await prisma.province.deleteMany(options);
+  return await prisma.province.createMany({ data });
 };
 
-const refreshData = <T extends Collection>(collection: T) => {
+/**
+ * Delete all data in a collection.
+ */
+const deleteAreaData = async (collection: Collection) => {
+  console.time(`delete-${collection}`);
+  const res = await prisma.$runCommandRaw({
+    delete: collection,
+    deletes: [
+      {
+        q: {},
+        limit: 0,
+      },
+    ],
+  });
+
+  console.timeEnd(`delete-${collection}`);
+  return res;
+};
+
+const insertAreaData = <T extends Collection>(collection: T) => {
   const filePath = join(__dirname, `../src/data/${collection}.csv`);
 
   parseCsvFromLocal<AreaByCollection<T>>(filePath, async (result) => {
-    console.log(`Start refreshing ${collection}...`);
-    console.time(`refresh-${collection}`);
+    console.time(`insert-${collection}`);
+    const res = await insertData(result.data);
 
-    await deleteUnknownData(result.data);
-    await upsertData(result.data);
-
-    console.log(`${collection} successfully refreshed.`);
-    console.timeEnd(`refresh-${collection}`);
+    console.timeEnd(`insert-${collection}`);
+    return res;
   });
 };
 
 async function main() {
-  refreshData('provinces');
+  await deleteAreaData('villages');
+  await deleteAreaData('districts');
+  await deleteAreaData('regencies');
+  await deleteAreaData('provinces');
+
+  insertAreaData('provinces');
+  insertAreaData('regencies');
+  insertAreaData('districts');
+  insertAreaData('villages');
 }
 
 main()
