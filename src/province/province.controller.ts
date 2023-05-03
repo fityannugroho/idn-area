@@ -14,14 +14,13 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { Regency } from 'src/regency/regency.schema';
+import { Province, Regency } from '@prisma/client';
 import {
   ProvinceFindByCodeParams,
   ProvinceFindQueries,
   ProvinceFindRegencyParams,
   ProvinceFindRegencyQueries,
 } from './province.dto';
-import { Province } from './province.schema';
 import { ProvinceService } from './province.service';
 
 @ApiTags('Province')

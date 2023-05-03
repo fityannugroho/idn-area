@@ -1,18 +1,12 @@
 import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
-import { Province, ProvinceSchema } from './province.schema';
-import { ProvinceService } from './province.service';
-import { ProvinceController } from './province.controller';
 import { HelperModule } from 'src/helper/helper.module';
+import { PrismaService } from 'src/prisma.service';
+import { ProvinceController } from './province.controller';
+import { ProvinceService } from './province.service';
 
 @Module({
-  imports: [
-    MongooseModule.forFeature([
-      { name: Province.name, schema: ProvinceSchema },
-    ]),
-    HelperModule,
-  ],
+  imports: [HelperModule],
   controllers: [ProvinceController],
-  providers: [ProvinceService],
+  providers: [PrismaService, ProvinceService],
 })
 export class ProvinceModule {}

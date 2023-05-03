@@ -1,15 +1,12 @@
-import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
-import { Province, ProvinceDocument } from './province.schema';
-import { InjectModel } from '@nestjs/mongoose';
-import { Regency } from 'src/regency/regency.schema';
+import { Province, Regency } from '@prisma/client';
 import { SortHelper, SortOptions } from 'src/helper/sort.helper';
+import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class ProvinceService {
   constructor(
-    @InjectModel(Province.name)
-    private readonly provinceModel: Model<ProvinceDocument>,
+    private readonly prisma: PrismaService,
     private readonly sortHelper: SortHelper,
   ) {
     this.sortHelper = new SortHelper({ sortBy: 'code', sortOrder: 'asc' });
@@ -23,10 +20,15 @@ export class ProvinceService {
    * @returns The array of provinces.
    */
   async find(name = '', sort?: SortOptions): Promise<Province[]> {
-    return this.provinceModel
-      .find({ name: new RegExp(name, 'i') })
-      .sort(this.sortHelper.query(sort))
-      .exec();
+    return this.prisma.province.findMany({
+      where: {
+        name: {
+          contains: name,
+          mode: 'insensitive',
+        },
+      },
+      orderBy: this.sortHelper.object(sort),
+    });
   }
 
   /**
@@ -35,7 +37,11 @@ export class ProvinceService {
    * @returns An province, or `null` if there are no match province.
    */
   async findByCode(code: string): Promise<Province> {
-    return this.provinceModel.findOne({ code: code }).exec();
+    return this.prisma.province.findUnique({
+      where: {
+        code: code,
+      },
+    });
   }
 
   /**
@@ -47,17 +53,16 @@ export class ProvinceService {
     provinceCode: string,
     sort?: SortOptions,
   ): Promise<false | Regency[]> {
-    const regenciesVirtualName = 'regencies';
-    const province = await this.provinceModel
-      .findOne({ code: provinceCode })
-      .populate({
-        path: regenciesVirtualName,
-        options: { sort: this.sortHelper.query(sort) },
+    const regencies = await this.prisma.province
+      .findUnique({
+        where: {
+          code: provinceCode,
+        },
       })
-      .exec();
+      .regencies({
+        orderBy: this.sortHelper.object(sort),
+      });
 
-    return province === null
-      ? false
-      : (province[regenciesVirtualName] as Promise<Regency[]>);
+    return regencies ?? false;
   }
 }
