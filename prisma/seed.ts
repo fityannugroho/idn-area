@@ -66,7 +66,7 @@ const deleteAreaData = async (collection: Collection) => {
 };
 
 const insertAreaData = <T extends Collection>(collection: T) => {
-  const filePath = join(__dirname, `../src/data/${collection}.csv`);
+  const filePath = join(__dirname, `../data/${collection}.csv`);
 
   parseCsvFromLocal<AreaByCollection<T>>(filePath, async (result) => {
     console.time(`insert-${collection}`);
