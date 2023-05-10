@@ -1,20 +1,64 @@
-<h1 align="">IDN Area API</h1>
+<h1 align="">Indonesian Area API (<i>API Wilayah Indonesia</i>)</h1>
 
 <p>
-  <img alt="NestJS" src="https://img.shields.io/badge/-NestJS-ea2845?style=flat-square&logo=nestjs&logoColor=white" />
-  <img alt="TypeScript" src="https://img.shields.io/badge/-TypeScript-007ACC?style=flat-square&logo=typescript&logoColor=white" />
-  <img alt="Fastify" src="https://img.shields.io/badge/-Fastify-202020?style=flat-square&logo=fastify&logoColor=white" />
-  <img alt="Prettier" src="https://img.shields.io/badge/-Prettier-1a2b34?style=flat-square&logo=prettier&logoColor=white" />
-  <img alt="Prettier" src="https://img.shields.io/badge/-Swagger-89bf04?style=flat-square&logo=swagger&logoColor=white" />
+  <a href="https://nestjs.com"><img alt="NestJS" src="https://img.shields.io/badge/-NestJS-ea2845?style=flat-square&logo=nestjs&logoColor=white" /></a>
+  <a href="https://www.typescriptlang.org"><img alt="TypeScript" src="https://img.shields.io/badge/-TypeScript-007ACC?style=flat-square&logo=typescript&logoColor=white" /></a>
+  <a href="https://www.prisma.io"><img alt="Prisma" src="https://img.shields.io/badge/-Prisma-1B222D?style=flat-square&logo=prisma&logoColor=white" /></a>
+  <a href="https://www.mongodb.com"><img alt="MongoDB" src="https://img.shields.io/badge/-MongoDB-47A248?style=flat-square&logo=mongodb&logoColor=white" /></a>
 </p>
 
-IDN Area API provides information on the **administrative areas of Indonesia**, from the provincial, district/city, sub-district, to village levels.
+API that provides information on the **administrative areas of Indonesia**, from the province, regency, district, to village levels.
 
-## Framework and Database
+Built with [NestJS framework](https://nestjs.com) and writen in TypeScript. [Prisma](https://www.prisma.io) is used as the ORM to interact with any kind of database (in future). For now, we use MongoDB.
 
-This API is built with [NestJS framework](https://nestjs.com) and writen in TypeScript. This API uses a relational database built on the following entity relationship diagram :
+<h2>Table of Content</h2>
 
-![Entity Relationship Diagram](assets/idn-area-api.jpg)
+- [Data](#data)
+- [Entity Relations](#entity-relations)
+- [Getting Started](#getting-started)
+- [API Endpoint](#api-endpoint)
+  - [Documentation](#documentation)
+  - [1. Get Provinces](#1-get-provinces)
+  - [2. Get Specific Province](#2-get-specific-province)
+  - [3. Get All Regencies in a Province](#3-get-all-regencies-in-a-province)
+  - [4. Get Regencies by Name](#4-get-regencies-by-name)
+  - [5. Get Specific Regency](#5-get-specific-regency)
+  - [6. Get All Districts in a Regency](#6-get-all-districts-in-a-regency)
+  - [7. Get Districts by Name](#7-get-districts-by-name)
+  - [8. Get Specific District](#8-get-specific-district)
+  - [9. Get All Villages in a District](#9-get-all-villages-in-a-district)
+  - [10. Get Villages by Name](#10-get-villages-by-name)
+  - [11. Get Specific Village](#11-get-specific-village)
+  - [Query Parameters](#query-parameters)
+    - [`sortBy`](#sortby)
+    - [`sortOrder`](#sortorder)
+- [Live Demo](#live-demo)
+
+---
+
+## Data
+
+The data used comes from [edwardsamuel/Wilayah-Administratif-Indonesia](https://github.com/edwardsamuel/Wilayah-Administratif-Indonesia), taken from *Badan Pusat Statistik* (BPS) data in 2018.
+
+The data is stored in separated csv files by the levels in [`data`](data) directory.
+
+> **📢 ANNOUNCEMENT!**
+>
+> Because the current data is very outdated, we plan to **update the data** based on the latest government regulations, issued by *Kementerian Dalam Negeri (Kemendagri)* in [Kepmendagri/050-145/2022](https://www.kemendagri.go.id/arsip/detail/10857/keputusan-menteri-dalam-negeri-nomor-050145-tahun-2022-tentang-pemberian-kode-data-wilayah-administrasi-pemerintahan-dan-pulau-tahun-2021) ([archieved here](https://archive.org/details/kepmendagri-050-145-tahun-2022)).
+>
+> As a reference, BPS has provided the relation mapping between the data used by BPS and Kemendagri in [here](https://sig.bps.go.id/bridging-kode/index).
+>
+> **Due to the large amount of data to be updated, we would be very grateful for your contribution 🙏**
+
+## Entity Relations
+
+The following diagram shows the relations between the entities in this app.
+
+![Entity Relations](assets/idn-area-api.jpg)
+
+## Getting Started
+
+Please read the guide to install and run this app in [here](docs/installation.md).
 
 ## API Endpoint
 
@@ -29,7 +73,7 @@ GET /docs
 
 - Use this endpoint to get generated **API documentation**.
 
-### 1. Get All Provinces
+### 1. Get Provinces
 
 ```
 GET /provinces
@@ -175,11 +219,11 @@ GET /villages/{villageCode}
 - This endpoint **will return** the village with the same code as `{villageCode}`. Otherwise, you will get a `404 Not Found` response.
 - Usage example: http://localhost:3000/villages/3273111004
 
-## Query Parameters
+### Query Parameters
 
 You can use query parameters to control what data is returned in endpoint responses.
 
-### `sortBy`
+#### `sortBy`
 
 ```
 GET /...?sortBy={code|name}
@@ -189,10 +233,10 @@ GET /...?sortBy={code|name}
 - The `sortBy` **can only be filled** by `code` or `name`. If not, you will get `400 Bad Request` response.
 - If `sortBy` **is not set**, sorting will be done by the `code`.
 - Usage example :
-  - At [`provinces`](#1-get-all-provinces) endpoint: http://localhost:3000/provinces?sortBy=name
+  - At [`provinces`](#1-get-provinces) endpoint: http://localhost:3000/provinces?sortBy=name
   - At [`regencies`](#4-get-regencies-by-name) endpoint: http://localhost:3000/regencies?name=bandung&sortBy=code
 
-### `sortOrder`
+#### `sortOrder`
 
 ```
 GET /...?sortOrder={asc|desc}
@@ -209,37 +253,6 @@ GET /...?sortOrder={asc|desc}
 >
 > For example : http://localhost:3000/provinces?name=jawa&sortBy=name&sortOrder=asc
 
-## Environment Settings
-
-**1. Create `.env` file**
-
-You can easily duplicate the `.env.example` file and rename it to `.env`.
-
-**2. Configure `HOST` and `PORT`**
-
-Open `.env` file, then :
-
-- Set `HOST` with the hostname of your app. The default is `localhost`.
-- Set `PORT` with port number you want to use. The default is `3000`.
-
-The default values of `HOST` and `PORT` is example values to used in **development** stage. You may have to **change it** later for production stage.
-
-**3. Configure the database connection**
-
-**4. App is ready**
-
-Now you are ready to run the app.
-
-## Running The App
-
-For run the app in development environment, use this command :
-
-```bash
-$ npm run start
-```
-
-See [nestjs.md](nestjs.md) for details.
-
 ## Live Demo
 
-You can try the API by replacing the http://localhost:3000 with http://13.213.49.93.
+You can try the API by replacing the http://localhost:3000 with the url provided in the description of this repository.
