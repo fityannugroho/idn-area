@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { SortHelper, SortOptions } from 'src/helper/sort.helper';
-import { PrismaService } from 'src/prisma.service';
 import { Village } from '@prisma/client';
+import { SortHelper, SortOptions } from '~/src/helper/sort.helper';
+import { PrismaService } from '~/src/prisma.service';
 
 @Injectable()
 export class VillageService {
