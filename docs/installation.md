@@ -31,18 +31,14 @@
 
       > You must grant **read-write access** to the database.
 
-2. Generate Prisma
+1. Generate the database
 
-    Use [`npx prisma generate`](https://www.prisma.io/docs/reference/api-reference/command-reference#generate) command, to generate the Prisma Client.
+    Use **`npm run db:migrate`** or [`npx prisma db push`](https://www.prisma.io/docs/reference/api-reference/command-reference#db-push) command, to generate the database.
 
-3. Generate the database
+1. Seed the data
 
-    Use [`npx prisma db push`](https://www.prisma.io/docs/reference/api-reference/command-reference#db-push) command, to generate the database.
+    Use **`npm run db:seed`** or [`npx prisma db seed`](https://www.prisma.io/docs/guides/migrate/seed-database#seeding-your-database-with-typescript-or-javascript) command, to seed the data.
 
-4. Seed the data
-
-    Use `npm run seed` command, to seed the data.
-
-5. Run the app
+1. Run the app
 
     Use `npm run start` command, to run the app.
