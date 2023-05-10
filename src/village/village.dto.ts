@@ -1,11 +1,11 @@
 import {
-  IsNotEmpty,
-  Length,
-  IsOptional,
   IsAlphanumeric,
+  IsNotEmpty,
+  IsOptional,
+  Length,
 } from 'class-validator';
-import { EqualsAny } from 'src/common/decorator/EqualsAny';
-import { IsNotSymbol } from 'src/common/decorator/IsNotSymbol';
+import { EqualsAny } from '~/src/common/decorator/EqualsAny';
+import { IsNotSymbol } from '~/src/common/decorator/IsNotSymbol';
 
 export class VillageFindQueries {
   @IsNotEmpty()
