@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { RegencyService } from './regency.service';
-import { HelperModule } from 'src/helper/helper.module';
-import { PrismaService } from 'src/prisma.service';
+import { HelperModule } from '~/src/helper/helper.module';
+import { PrismaService } from '~/src/prisma.service';
 import { RegencyController } from './regency.controller';
+import { RegencyService } from './regency.service';
 
 describe('RegencyService', () => {
   let service: RegencyService;

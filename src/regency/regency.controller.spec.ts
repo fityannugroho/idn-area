@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { HelperModule } from '~/src/helper/helper.module';
+import { PrismaService } from '~/src/prisma.service';
 import { RegencyController } from './regency.controller';
-import { HelperModule } from 'src/helper/helper.module';
-import { PrismaService } from 'src/prisma.service';
 import { RegencyService } from './regency.service';
 
 describe('RegencyController', () => {

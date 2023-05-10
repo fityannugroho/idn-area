@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ProvinceService } from './province.service';
-import { HelperModule } from 'src/helper/helper.module';
-import { PrismaService } from 'src/prisma.service';
+import { HelperModule } from '~/src/helper/helper.module';
+import { PrismaService } from '~/src/prisma.service';
 import { ProvinceController } from './province.controller';
+import { ProvinceService } from './province.service';
 
 describe('ProvinceService', () => {
   let service: ProvinceService;
