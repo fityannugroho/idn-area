@@ -1,5 +1,9 @@
 ## PR Checklist
+
 Please check if your PR fulfills the following requirements:
+
+> Put "x" to check
+
 - [ ] The commit message follows our [Contributing Guidelines](https://github.com/fityannugroho/idn-area/blob/main/CONTRIBUTING.md)
 - [ ] Tests for the changes have been added (**optional**, for bug fixes or features)
 - [ ] Docs have been added / updated (**optional**, for bug fixes or features)
@@ -8,7 +12,7 @@ Please check if your PR fulfills the following requirements:
 
 What kind of change does this PR introduce?
 
-> Please check the one that applies to this PR using "x"
+> Please check any kind of changes that applies to this PR using "x"
 
 - [ ] Bug fix
 - [ ] Feature
