@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { HelperModule } from 'src/helper/helper.module';
-import { PrismaService } from 'src/prisma.service';
+import { HelperModule } from '~/src/helper/helper.module';
+import { PrismaService } from '~/src/prisma.service';
 import { DistrictController } from './district.controller';
 import { DistrictService } from './district.service';
 

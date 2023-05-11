@@ -12,22 +12,22 @@ export const isVillage = (area: Areas): area is Village =>
   'district_code' in area;
 
 /**
- * Parse CSV from local file.
+ * Parse CSV from local file asynchronously.
  *
  * @param path Path to the CSV file.
- * @param onComplete The callback function that will be called when the parsing is complete.
  * @param config The configuration for the parser.
  */
 export const parseCsvFromLocal = <T = any>(
   path: string,
-  onComplete?: (result: Papa.ParseResult<T>) => void,
-  config?: Omit<Papa.ParseLocalConfig<T, Papa.LocalFile>, 'complete'>,
-) => {
+  config?: Omit<Papa.ParseLocalConfig<T, Papa.LocalFile>, 'complete' | 'error'>,
+): Promise<Papa.ParseResult<T>> => {
   const sourceFile = createReadStream(path);
 
-  Papa.parse<T>(sourceFile, {
-    header: true,
-    complete: onComplete,
-    ...config,
+  return new Promise<Papa.ParseResult<T>>((resolve, reject) => {
+    Papa.parse<T>(sourceFile, {
+      ...config,
+      complete: resolve,
+      error: reject,
+    });
   });
 };
