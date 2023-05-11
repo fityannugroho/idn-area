@@ -1,0 +1,19 @@
+name: "Tests"
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install modules
+      run: npm ci
+    - name: Run unit tests
+      run: npm run test
+    - name: Run e2e tests
+      run: npm run test:e2e
