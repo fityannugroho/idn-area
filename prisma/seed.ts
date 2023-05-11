@@ -2,11 +2,11 @@ import { PrismaClient } from '@prisma/client';
 import { join } from 'path';
 import { isDistrict, isRegency, isVillage, parseCsvFromLocal } from './helper';
 import {
-  Areas,
   AreaByCollection,
+  Areas,
   Collection,
-  Regency,
   District,
+  Regency,
   Village,
 } from './types';
 
@@ -65,16 +65,17 @@ const deleteAreaData = async (collection: Collection) => {
   return res;
 };
 
-const insertAreaData = <T extends Collection>(collection: T) => {
+const insertAreaData = async <T extends Collection>(collection: T) => {
+  console.time(`insert-${collection}`);
+
   const filePath = join(__dirname, `../data/${collection}.csv`);
-
-  parseCsvFromLocal<AreaByCollection<T>>(filePath, async (result) => {
-    console.time(`insert-${collection}`);
-    const res = await insertData(result.data);
-
-    console.timeEnd(`insert-${collection}`);
-    return res;
+  const parsed = await parseCsvFromLocal<AreaByCollection<T>>(filePath, {
+    header: true,
   });
+  const res = await insertData(parsed.data);
+
+  console.timeEnd(`insert-${collection}`);
+  return res;
 };
 
 async function main() {
@@ -83,10 +84,10 @@ async function main() {
   await deleteAreaData('regencies');
   await deleteAreaData('provinces');
 
-  insertAreaData('provinces');
-  insertAreaData('regencies');
-  insertAreaData('districts');
-  insertAreaData('villages');
+  await insertAreaData('provinces');
+  await insertAreaData('regencies');
+  await insertAreaData('districts');
+  await insertAreaData('villages');
 }
 
 main()
