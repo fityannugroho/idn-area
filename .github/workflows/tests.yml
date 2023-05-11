@@ -1,4 +1,4 @@
-name: "Tests"
+name: "Tests the App"
 env:
   DATABASE_URL: ${{ secrets.DATABASE_URL }}
 on:
@@ -9,7 +9,8 @@ on:
     branches:
       - main
 jobs:
-  build:
+  run_test:
+    name: "Run tests"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
