@@ -12,7 +12,7 @@ export class District {
   code: string;
 
   @IsNotEmpty()
-  @IsNotSymbol()
+  @IsNotSymbol("'()-./")
   @Length(3, 255)
   name: string;
 

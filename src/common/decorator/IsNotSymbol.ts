@@ -8,14 +8,18 @@ import {
 
 /**
  * Checks if value does not contain any symbols. Whitespace is allowed.
+ * @param allowedSymbols The allowed symbols in a string. For example: '!@#$%^'
  * @param validationOptions The validation options.
  */
-export function IsNotSymbol(validationOptions?: ValidationOptions) {
+export function IsNotSymbol(
+  allowedSymbols?: string,
+  validationOptions?: ValidationOptions,
+) {
   return function (object: object, propertyName: string) {
     registerDecorator({
       target: object.constructor,
       propertyName: propertyName,
-      constraints: [],
+      constraints: [allowedSymbols],
       options: validationOptions,
       validator: IsNotSymbolConstraint,
     });
@@ -24,12 +28,19 @@ export function IsNotSymbol(validationOptions?: ValidationOptions) {
 
 @ValidatorConstraint({ name: 'isNotSymbol' })
 export class IsNotSymbolConstraint implements ValidatorConstraintInterface {
-  validate(value: any): boolean {
-    const hasSymbolRegex = /[!-/:-@{-~!"^_`\[\]\\]/g;
-    return typeof value === 'string' && !hasSymbolRegex.test(value);
+  validate(value: any, args?: ValidationArguments): boolean {
+    const [allowedSymbols = ''] = args.constraints as [string, any];
+    const symbolRegex = new RegExp(`[^\\w\\s${allowedSymbols}]`, 'g');
+
+    return typeof value === 'string' && !symbolRegex.test(value);
   }
 
   defaultMessage(validationArguments?: ValidationArguments): string {
-    return `${validationArguments.property} must not contain any symbols except whitespace.`;
+    const { constraints, property } = validationArguments;
+    const [allowedSymbols = ''] = constraints as [string, any];
+
+    return allowedSymbols
+      ? `${property} must not contain any symbols except this: ${allowedSymbols}`
+      : `${property} must not contain any symbols`;
   }
 }

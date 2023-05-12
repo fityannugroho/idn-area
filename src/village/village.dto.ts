@@ -11,7 +11,7 @@ export class Village {
   code: string;
 
   @IsNotEmpty()
-  @IsNotSymbol()
+  @IsNotSymbol("'()-./")
   @Length(3, 255)
   name: string;
 
