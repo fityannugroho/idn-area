@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { District, Regency } from '@prisma/client';
-import { SortHelper, SortOptions } from '~/src/helper/sort.helper';
+import { SortHelper, SortOptions } from '~/src/common/helper/sort';
 import { PrismaService } from '~/src/prisma.service';
 
 type RegencySortKeys = keyof Regency;
