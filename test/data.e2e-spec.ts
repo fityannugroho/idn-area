@@ -7,7 +7,7 @@ import {
   Province,
   Regency,
   Village,
-} from '~/prisma/types';
+} from '~/prisma/utils';
 
 /**
  * Get data from local CSV file.

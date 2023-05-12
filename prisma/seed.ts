@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { join } from 'path';
-import { isDistrict, isRegency, isVillage, parseCsvFromLocal } from './helper';
+import { parseCsvFromLocal } from './helper';
 import {
   AreaByCollection,
   Areas,
@@ -8,7 +8,10 @@ import {
   District,
   Regency,
   Village,
-} from './types';
+  isDistrict,
+  isRegency,
+  isVillage,
+} from './utils';
 
 const prisma = new PrismaClient();
 
