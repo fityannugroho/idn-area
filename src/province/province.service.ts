@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Province, Regency } from '@prisma/client';
 import { SortHelper, SortOptions } from '~/src/common/helper/sort';
-import { PrismaService } from '~/src/prisma.service';
+import { PrismaService } from '~/src/common/services/prisma';
 
 type ProvinceSortKeys = keyof Province;
 

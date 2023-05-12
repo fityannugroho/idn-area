@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaService } from '~/src/prisma.service';
+import { PrismaService } from '~/src/common/services/prisma';
 import { ProvinceController } from './province.controller';
 import { ProvinceService } from './province.service';
 
