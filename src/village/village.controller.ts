@@ -58,26 +58,25 @@ export class VillageController {
 
   @ApiOperation({ description: 'Get a village by its code.' })
   @ApiParam({
-    name: 'villageCode',
+    name: 'code',
     description: 'The village code',
     required: true,
     type: 'string',
     example: '3204052004',
   })
   @ApiOkResponse({ description: 'Returns a village.' })
-  @ApiBadRequestResponse({ description: 'If the `villageCode` is invalid.' })
+  @ApiBadRequestResponse({ description: 'If the `code` is invalid.' })
   @ApiNotFoundResponse({
-    description: 'If no village matches the `villageCode`.',
+    description: 'If no village matches the `code`.',
   })
-  @Get(':villageCode')
+  @Get(':code')
   async findByCode(@Param() params: VillageFindByCodeParams): Promise<Village> {
-    const { villageCode } = params;
-    const village = await this.villageService.findByCode(villageCode);
+    const { code } = params;
+    const village = await this.villageService.findByCode(code);
 
     if (village === null)
-      throw new NotFoundException(
-        `There are no village with code '${villageCode}'`,
-      );
+      throw new NotFoundException(`There are no village with code '${code}'`);
+
     return village;
   }
 }

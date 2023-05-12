@@ -67,32 +67,31 @@ export class ProvinceController {
 
   @ApiOperation({ description: 'Get a province by its code.' })
   @ApiParam({
-    name: 'provinceCode',
+    name: 'code',
     description: 'The province code',
     required: true,
     type: 'string',
     example: '32',
   })
   @ApiOkResponse({ description: 'Returns a province.' })
-  @ApiBadRequestResponse({ description: 'If the `provinceCode` is invalid.' })
+  @ApiBadRequestResponse({ description: 'If the `code` is invalid.' })
   @ApiNotFoundResponse({ description: 'If there are no match province.' })
-  @Get(':provinceCode')
+  @Get(':code')
   async findByCode(
     @Param() params: ProvinceFindByCodeParams,
   ): Promise<Province> {
-    const { provinceCode } = params;
-    const province = await this.provinceService.findByCode(provinceCode);
+    const { code } = params;
+    const province = await this.provinceService.findByCode(code);
 
     if (province === null)
-      throw new NotFoundException(
-        `There are no province with code '${provinceCode}'`,
-      );
+      throw new NotFoundException(`There are no province with code '${code}'`);
+
     return province;
   }
 
   @ApiOperation({ description: 'Get all regencies in a province.' })
   @ApiParam({
-    name: 'provinceCode',
+    name: 'code',
     description: 'The province code',
     required: true,
     type: 'string',
@@ -113,26 +112,25 @@ export class ProvinceController {
     example: 'asc',
   })
   @ApiOkResponse({ description: 'Returns array of regencies.' })
-  @ApiBadRequestResponse({ description: 'If the `provinceCode` is invalid.' })
+  @ApiBadRequestResponse({ description: 'If the `code` is invalid.' })
   @ApiNotFoundResponse({
-    description: 'If there are no province match with the `provinceCode`.',
+    description: 'If there are no province match with the `code`.',
   })
-  @Get(':provinceCode/regencies')
+  @Get(':code/regencies')
   async findRegencies(
     @Param() params: ProvinceFindRegencyParams,
     @Query() queries?: ProvinceFindRegencyQueries,
   ): Promise<Regency[]> {
-    const { provinceCode } = params;
+    const { code } = params;
     const { sortBy, sortOrder } = queries ?? {};
-    const regencies = await this.provinceService.findRegencies(provinceCode, {
+    const regencies = await this.provinceService.findRegencies(code, {
       sortBy: sortBy,
       sortOrder: sortOrder,
     });
 
     if (regencies === false)
-      throw new NotFoundException(
-        `There are no province with code '${provinceCode}'`,
-      );
+      throw new NotFoundException(`There are no province with code '${code}'`);
+
     return regencies;
   }
 }

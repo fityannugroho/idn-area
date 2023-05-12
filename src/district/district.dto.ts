@@ -1,46 +1,43 @@
-import {
-  IsAlphanumeric,
-  IsNotEmpty,
-  IsOptional,
-  Length,
-} from 'class-validator';
+import { IsNotEmpty, IsNumberString, Length } from 'class-validator';
 import { EqualsAny } from '~/src/common/decorator/EqualsAny';
 import { IsNotSymbol } from '~/src/common/decorator/IsNotSymbol';
+import { SortQuery } from '../common/helper/sort';
+import { IntersectionType, PickType } from '@nestjs/mapped-types';
+import { VillageSortQuery } from '../village/village.dto';
 
-export class DistrictFindQueries {
+export class District {
+  @IsNotEmpty()
+  @IsNumberString()
+  @Length(6, 6)
+  code: string;
+
   @IsNotEmpty()
   @IsNotSymbol()
   @Length(3, 255)
-  name?: string;
+  name: string;
 
-  @IsOptional()
-  @EqualsAny(['code', 'name'])
-  sortBy?: 'code' | 'name';
-
-  @IsOptional()
-  @EqualsAny(['asc', 'desc'])
-  sortOrder?: 'asc' | 'desc';
-}
-
-export class DistrictFindByCodeParams {
   @IsNotEmpty()
-  @IsAlphanumeric()
-  @Length(6, 6)
-  districtCode: string;
+  @IsNumberString()
+  @Length(4, 4)
+  regencyCode: string;
 }
 
-export class DistrictFindVillageParams {
-  @IsNotEmpty()
-  @IsAlphanumeric()
-  @Length(6, 6)
-  districtCode: string;
-}
-export class DistrictFindVillageQueries {
-  @IsOptional()
+export class DistrictSortQuery extends SortQuery<'code' | 'name'> {
   @EqualsAny(['code', 'name'])
-  sortBy?: 'code' | 'name';
-
-  @IsOptional()
-  @EqualsAny(['asc', 'desc'])
-  sortOrder?: 'asc' | 'desc';
+  sortBy: 'code' | 'name';
 }
+
+export class DistrictFindQueries extends IntersectionType(
+  PickType(District, ['name'] as const),
+  DistrictSortQuery,
+) {}
+
+export class DistrictFindByCodeParams extends PickType(District, [
+  'code',
+] as const) {}
+
+export class DistrictFindVillageParams extends PickType(District, [
+  'code',
+] as const) {}
+
+export class DistrictFindVillageQueries extends VillageSortQuery {}
