@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { join } from 'path';
-import { parseCsvFromLocal } from './helper';
+import { CsvParser } from '~/src/common/helper/csv-parser';
 import {
   AreaByCollection,
   Areas,
@@ -72,7 +72,7 @@ const insertAreaData = async <T extends Collection>(collection: T) => {
   console.time(`insert-${collection}`);
 
   const filePath = join(__dirname, `../data/${collection}.csv`);
-  const parsed = await parseCsvFromLocal<AreaByCollection<T>>(filePath, {
+  const parsed = await CsvParser.parse<AreaByCollection<T>>(filePath, {
     header: true,
   });
   const res = await insertData(parsed.data);

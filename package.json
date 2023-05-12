@@ -28,7 +28,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "prisma": {
-    "seed": "ts-node --transpile-only prisma/seed.ts"
+    "seed": "ts-node -r tsconfig-paths/register --transpile-only prisma/seed.ts"
   },
   "dependencies": {
     "@fastify/static": "^6.10.1",
