@@ -1,7 +1,26 @@
-export type SortOptions<T extends string | number | symbol = string> = {
+import { IsOptional, IsString } from 'class-validator';
+import { EqualsAny } from '../../decorator/EqualsAny';
+
+export type SortOptions<T extends string = string> = {
   sortBy?: T;
   sortOrder?: 'asc' | 'desc';
 };
+
+/**
+ * The validator class for the sort query.
+ *
+ * You may need to inherit this class and use `@EqualsAny()` decorator
+ * for `sortBy` property to accept only specific values.
+ */
+export class SortQuery<T extends string = string> implements SortOptions<T> {
+  @IsOptional()
+  @IsString()
+  sortBy?: T;
+
+  @IsOptional()
+  @EqualsAny(['asc', 'desc'])
+  sortOrder?: 'asc' | 'desc';
+}
 
 export class SortHelper<T extends string = string> {
   defaultOptions: Required<SortOptions<T>>;
