@@ -48,8 +48,8 @@ export class VillageController {
   @ApiOkResponse({ description: 'Returns array of village.' })
   @ApiBadRequestResponse({ description: 'If there are invalid query values.' })
   @Get()
-  async find(@Query() queries: VillageFindQueries): Promise<Village[]> {
-    const { name, sortBy, sortOrder } = queries;
+  async find(@Query() queries?: VillageFindQueries): Promise<Village[]> {
+    const { name, sortBy, sortOrder } = queries ?? {};
     return this.villageService.find(name, {
       sortBy: sortBy,
       sortOrder: sortOrder,

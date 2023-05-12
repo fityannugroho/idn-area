@@ -53,8 +53,8 @@ export class RegencyController {
   @ApiOkResponse({ description: 'Returns array of regency.' })
   @ApiBadRequestResponse({ description: 'If there are invalid query values.' })
   @Get()
-  async find(@Query() queries: RegencyFindQueries): Promise<Regency[]> {
-    const { name, sortBy, sortOrder } = queries;
+  async find(@Query() queries?: RegencyFindQueries): Promise<Regency[]> {
+    const { name, sortBy, sortOrder } = queries ?? {};
     return this.regencyService.find(name, {
       sortBy: sortBy,
       sortOrder: sortOrder,
@@ -116,10 +116,10 @@ export class RegencyController {
   @Get(':regencyCode/districts')
   async findDistrict(
     @Param() params: RegencyFindDistrictParams,
-    @Query() queries: RegencyFindDistrictQueries,
+    @Query() queries?: RegencyFindDistrictQueries,
   ): Promise<District[]> {
     const { regencyCode } = params;
-    const { sortBy, sortOrder } = queries;
+    const { sortBy, sortOrder } = queries ?? {};
     const districts = await this.regencyService.findDistrics(regencyCode, {
       sortBy: sortBy,
       sortOrder: sortOrder,

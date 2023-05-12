@@ -66,8 +66,7 @@ The following is the list of supported scopes:
 - `data/[level]`: for changes made on `data` directory. Replace `level` with 'provinces', 'regencies', 'districts', or 'villages'. For example: `data/provinces`.
 - `docs`: for changes made on `docs` directory.
 - `test`: for changes made on `test` directory.
-- `common`: for changes made on `src/common` directory.
-- `helper`: for changes made on `src/helper` directory.
+- `common/[sub-scope]`: for changes made on `src/common` directory. Replace `sub-scope` with available sub-directory in `common`, like 'decorator', 'helper', etc. For example: `common/decorator`.
 - `province`: for changes made on `src/province` directory.
 - `regency`: for changes made on `src/regency` directory.
 - `district`: for changes made on `src/district` directory.

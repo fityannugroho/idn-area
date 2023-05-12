@@ -41,7 +41,11 @@ async function bootstrap() {
   app.enableCors();
 
   // Set auto-validation pipe.
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+    }),
+  );
 
   // Configure app host and port.
   const host = process.env.HOST || '0.0.0.0';

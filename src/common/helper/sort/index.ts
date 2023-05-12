@@ -1,16 +1,16 @@
-export interface SortOptions {
-  sortBy: string;
-  sortOrder: 'asc' | 'desc';
-}
+export type SortOptions<T extends string | number | symbol = string> = {
+  sortBy?: T;
+  sortOrder?: 'asc' | 'desc';
+};
 
-export class SortHelper {
-  defaultOptions: SortOptions;
+export class SortHelper<T extends string = string> {
+  defaultOptions: Required<SortOptions<T>>;
 
   /**
    * Create a new instance of SortHelper.
    * @param defaultOptions The default options
    */
-  constructor(defaultOptions: SortOptions) {
+  constructor(defaultOptions: Required<SortOptions<T>>) {
     this.defaultOptions = defaultOptions;
   }
 
@@ -21,7 +21,7 @@ export class SortHelper {
    * @param options The sort options. If `null`, the default options will be used.
    * @returns The sort query string.
    */
-  query(options?: SortOptions): string {
+  query(options?: SortOptions<T>): string {
     const {
       sortBy = this.defaultOptions.sortBy,
       sortOrder = this.defaultOptions.sortOrder,
@@ -37,7 +37,7 @@ export class SortHelper {
    * @param options The sort options. If `null`, the default options will be used.
    * @returns The sort query object.
    */
-  object(options?: SortOptions): Record<string, 'asc' | 'desc'> {
+  object(options?: SortOptions<T>): Record<string, 'asc' | 'desc'> {
     const {
       sortBy = this.defaultOptions.sortBy,
       sortOrder = this.defaultOptions.sortOrder,

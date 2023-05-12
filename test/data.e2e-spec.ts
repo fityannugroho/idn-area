@@ -1,5 +1,4 @@
 import { join } from 'path';
-import { parseCsvFromLocal } from '~/prisma/helper';
 import {
   AreaByCollection,
   Collection,
@@ -7,7 +6,8 @@ import {
   Province,
   Regency,
   Village,
-} from '~/prisma/types';
+} from '~/prisma/utils';
+import { CsvParser } from '~/src/common/helper/csv-parser';
 
 /**
  * Get data from local CSV file.
@@ -18,7 +18,7 @@ const getData = async <C extends Collection>(
   collection: C,
 ): Promise<AreaByCollection<C>[]> => {
   const filePath = join(__dirname, `../data/${collection}.csv`);
-  const result = await parseCsvFromLocal<AreaByCollection<C>>(filePath, {
+  const result = await CsvParser.parse<AreaByCollection<C>>(filePath, {
     header: true,
   });
 

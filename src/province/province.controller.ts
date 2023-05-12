@@ -57,8 +57,8 @@ export class ProvinceController {
   @ApiOkResponse({ description: 'Returns array of province.' })
   @ApiBadRequestResponse({ description: 'If there are invalid query values.' })
   @Get()
-  async find(@Query() queries: ProvinceFindQueries): Promise<Province[]> {
-    const { name, sortBy, sortOrder } = queries;
+  async find(@Query() queries?: ProvinceFindQueries): Promise<Province[]> {
+    const { name, sortBy, sortOrder } = queries ?? {};
     return this.provinceService.find(name, {
       sortBy: sortBy,
       sortOrder: sortOrder,
@@ -120,10 +120,10 @@ export class ProvinceController {
   @Get(':provinceCode/regencies')
   async findRegencies(
     @Param() params: ProvinceFindRegencyParams,
-    @Query() queries: ProvinceFindRegencyQueries,
+    @Query() queries?: ProvinceFindRegencyQueries,
   ): Promise<Regency[]> {
     const { provinceCode } = params;
-    const { sortBy, sortOrder } = queries;
+    const { sortBy, sortOrder } = queries ?? {};
     const regencies = await this.provinceService.findRegencies(provinceCode, {
       sortBy: sortBy,
       sortOrder: sortOrder,

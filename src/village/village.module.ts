@@ -1,11 +1,10 @@
 import { Module } from '@nestjs/common';
-import { HelperModule } from '~/src/helper/helper.module';
-import { PrismaService } from '~/src/prisma.service';
+import { PrismaService } from '~/src/common/services/prisma';
 import { VillageController } from './village.controller';
 import { VillageService } from './village.service';
 
 @Module({
-  imports: [HelperModule],
+  imports: [],
   controllers: [VillageController],
   providers: [PrismaService, VillageService],
 })

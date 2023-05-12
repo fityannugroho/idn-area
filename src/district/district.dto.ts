@@ -11,15 +11,15 @@ export class DistrictFindQueries {
   @IsNotEmpty()
   @IsNotSymbol()
   @Length(3, 255)
-  name: string;
+  name?: string;
 
   @IsOptional()
   @EqualsAny(['code', 'name'])
-  sortBy: 'code' | 'name';
+  sortBy?: 'code' | 'name';
 
   @IsOptional()
   @EqualsAny(['asc', 'desc'])
-  sortOrder: 'asc' | 'desc';
+  sortOrder?: 'asc' | 'desc';
 }
 
 export class DistrictFindByCodeParams {
@@ -38,9 +38,9 @@ export class DistrictFindVillageParams {
 export class DistrictFindVillageQueries {
   @IsOptional()
   @EqualsAny(['code', 'name'])
-  sortBy: 'code' | 'name';
+  sortBy?: 'code' | 'name';
 
   @IsOptional()
   @EqualsAny(['asc', 'desc'])
-  sortOrder: 'asc' | 'desc';
+  sortOrder?: 'asc' | 'desc';
 }
