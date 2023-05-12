@@ -11,15 +11,15 @@ export class RegencyFindQueries {
   @IsNotEmpty()
   @IsNotSymbol()
   @Length(3, 255)
-  name: string;
+  name?: string;
 
   @IsOptional()
   @EqualsAny(['code', 'name'])
-  sortBy: 'code' | 'name';
+  sortBy?: 'code' | 'name';
 
   @IsOptional()
   @EqualsAny(['asc', 'desc'])
-  sortOrder: 'asc' | 'desc';
+  sortOrder?: 'asc' | 'desc';
 }
 
 export class RegencyFindByCodeParams {
@@ -38,9 +38,9 @@ export class RegencyFindDistrictParams {
 export class RegencyFindDistrictQueries {
   @IsOptional()
   @EqualsAny(['code', 'name'])
-  sortBy: 'code' | 'name';
+  sortBy?: 'code' | 'name';
 
   @IsOptional()
   @EqualsAny(['asc', 'desc'])
-  sortOrder: 'asc' | 'desc';
+  sortOrder?: 'asc' | 'desc';
 }

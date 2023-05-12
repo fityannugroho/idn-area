@@ -3,13 +3,17 @@ import { District, Regency } from '@prisma/client';
 import { SortHelper, SortOptions } from '~/src/helper/sort.helper';
 import { PrismaService } from '~/src/prisma.service';
 
+type RegencySortKeys = keyof Regency;
+
 @Injectable()
 export class RegencyService {
-  constructor(
-    private readonly prisma: PrismaService,
-    private readonly sortHelper: SortHelper,
-  ) {
-    this.sortHelper = new SortHelper({ sortBy: 'code', sortOrder: 'asc' });
+  private readonly sortHelper: SortHelper<RegencySortKeys>;
+
+  constructor(private readonly prisma: PrismaService) {
+    this.sortHelper = new SortHelper<RegencySortKeys>({
+      sortBy: 'code',
+      sortOrder: 'asc',
+    });
   }
 
   /**
@@ -19,7 +23,10 @@ export class RegencyService {
    * @param sort The sort query (optional).
    * @returns The array of regencies.
    */
-  async find(name = '', sort?: SortOptions): Promise<Regency[]> {
+  async find(
+    name = '',
+    sort?: SortOptions<RegencySortKeys>,
+  ): Promise<Regency[]> {
     return this.prisma.regency.findMany({
       where: {
         name: {
@@ -52,7 +59,7 @@ export class RegencyService {
    */
   async findDistrics(
     regencyCode: string,
-    sort?: SortOptions,
+    sort?: SortOptions<RegencySortKeys>,
   ): Promise<false | District[]> {
     const districts = await this.prisma.regency
       .findUnique({

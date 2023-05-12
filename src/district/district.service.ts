@@ -3,13 +3,17 @@ import { District, Village } from '@prisma/client';
 import { SortHelper, SortOptions } from '~/src/helper/sort.helper';
 import { PrismaService } from '~/src/prisma.service';
 
+type DistrictSortKeys = keyof District;
+
 @Injectable()
 export class DistrictService {
-  constructor(
-    private readonly prisma: PrismaService,
-    private readonly sortHelper: SortHelper,
-  ) {
-    this.sortHelper = new SortHelper({ sortBy: 'code', sortOrder: 'asc' });
+  private readonly sortHelper: SortHelper<DistrictSortKeys>;
+
+  constructor(private readonly prisma: PrismaService) {
+    this.sortHelper = new SortHelper<DistrictSortKeys>({
+      sortBy: 'code',
+      sortOrder: 'asc',
+    });
   }
 
   /**
@@ -19,7 +23,10 @@ export class DistrictService {
    * @param sort The sort query (optional).
    * @returns The array of district.
    */
-  async find(name = '', sort?: SortOptions): Promise<District[]> {
+  async find(
+    name = '',
+    sort?: SortOptions<DistrictSortKeys>,
+  ): Promise<District[]> {
     return this.prisma.district.findMany({
       where: {
         name: {
@@ -52,7 +59,7 @@ export class DistrictService {
    */
   async findVillages(
     districtCode: string,
-    sort?: SortOptions,
+    sort?: SortOptions<DistrictSortKeys>,
   ): Promise<false | Village[]> {
     const villages = await this.prisma.district
       .findUnique({

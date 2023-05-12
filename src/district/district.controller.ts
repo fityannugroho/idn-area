@@ -53,8 +53,8 @@ export class DistrictController {
   @ApiOkResponse({ description: 'Returns array of district.' })
   @ApiBadRequestResponse({ description: 'If there are invalid query values.' })
   @Get()
-  async find(@Query() queries: DistrictFindQueries): Promise<District[]> {
-    const { name, sortBy, sortOrder } = queries;
+  async find(@Query() queries?: DistrictFindQueries): Promise<District[]> {
+    const { name, sortBy, sortOrder } = queries ?? {};
     return this.districtService.find(name, {
       sortBy: sortBy,
       sortOrder: sortOrder,
@@ -118,10 +118,10 @@ export class DistrictController {
   @Get(':districtCode/villages')
   async findVillage(
     @Param() params: DistrictFindVillageParams,
-    @Query() queries: DistrictFindVillageQueries,
+    @Query() queries?: DistrictFindVillageQueries,
   ): Promise<Village[]> {
     const { districtCode } = params;
-    const { sortBy, sortOrder } = queries;
+    const { sortBy, sortOrder } = queries ?? {};
     const villages = await this.districtService.findVillages(districtCode, {
       sortBy: sortBy,
       sortOrder: sortOrder,
