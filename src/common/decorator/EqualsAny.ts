@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-types */
 import {
   registerDecorator,
   ValidationArguments,
@@ -16,15 +15,12 @@ export function EqualsAny(
   validValues: string[],
   validationOptions?: ValidationOptions,
 ) {
-  return function (object: Object, propertyName: string) {
+  return function (object: object, propertyName: string) {
     registerDecorator({
       target: object.constructor,
       propertyName: propertyName,
       constraints: [validValues],
-      options: Object.assign(
-        { message: '$property must equals one of these: $constraint1' },
-        validationOptions,
-      ),
+      options: validationOptions,
       validator: EqualsAnyConstraint,
     });
   };
@@ -35,5 +31,12 @@ export class EqualsAnyConstraint implements ValidatorConstraintInterface {
   validate(value: any, args?: ValidationArguments): boolean {
     const [validValues] = args.constraints as [string[], any];
     return typeof value === 'string' && validValues.includes(value);
+  }
+
+  defaultMessage(validationArguments?: ValidationArguments): string {
+    const { constraints, property } = validationArguments;
+    return `${property} must equals one of these: ${(
+      constraints[0] as string[]
+    ).join(', ')}.`;
   }
 }
