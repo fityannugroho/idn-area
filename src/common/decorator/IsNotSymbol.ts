@@ -1,6 +1,6 @@
-/* eslint-disable @typescript-eslint/ban-types */
 import {
   registerDecorator,
+  ValidationArguments,
   ValidationOptions,
   ValidatorConstraint,
   ValidatorConstraintInterface,
@@ -11,17 +11,12 @@ import {
  * @param validationOptions The validation options.
  */
 export function IsNotSymbol(validationOptions?: ValidationOptions) {
-  return function (object: Object, propertyName: string) {
+  return function (object: object, propertyName: string) {
     registerDecorator({
       target: object.constructor,
       propertyName: propertyName,
       constraints: [],
-      options: Object.assign(
-        {
-          message: '$property must not contain any symbols except whitespace.',
-        },
-        validationOptions,
-      ),
+      options: validationOptions,
       validator: IsNotSymbolConstraint,
     });
   };
@@ -32,5 +27,9 @@ export class IsNotSymbolConstraint implements ValidatorConstraintInterface {
   validate(value: any): boolean {
     const hasSymbolRegex = /[!-/:-@{-~!"^_`\[\]\\]/g;
     return typeof value === 'string' && !hasSymbolRegex.test(value);
+  }
+
+  defaultMessage(validationArguments?: ValidationArguments): string {
+    return `${validationArguments.property} must not contain any symbols except whitespace.`;
   }
 }
