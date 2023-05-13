@@ -49,6 +49,7 @@ describe('Regency (e2e)', () => {
           expect.objectContaining({
             code: expect.any(String),
             name: expect.stringMatching(new RegExp(testName, 'i')),
+            provinceCode: expect.any(String),
           }),
         ]),
       );
@@ -80,6 +81,13 @@ describe('Regency (e2e)', () => {
   describe(`GET ${baseUrl}/{code}/districts`, () => {
     it('should return 400 if the `code` is invalid', async () => {
       await expectBadRegencyCode((code) => `${baseUrl}/${code}/districts`);
+    });
+
+    it('should return 400 if any districts sort query is invalid', async () => {
+      await tester.expectBadSortQuery(
+        (sortQueryStr) => `${baseUrl}?${sortQueryStr}`,
+        ['', 'unknown'],
+      );
     });
 
     it('should return 404 if the `code` does not match with any regency', async () => {
