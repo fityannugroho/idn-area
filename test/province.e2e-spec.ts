@@ -1,12 +1,6 @@
 import { ValidationPipe } from '@nestjs/common';
-import {
-  FastifyAdapter,
-  NestFastifyApplication,
-} from '@nestjs/platform-fastify';
-import { Test, TestingModule } from '@nestjs/testing';
 import { Province } from '~/prisma/utils';
-import { AppModule } from '~/src/app.module';
-import { RequestTester } from '~/src/common/helper/request-tester';
+import { AppTester } from '~/src/common/helper/app-tester';
 
 describe('Province (e2e)', () => {
   const testedProvince: Province = {
@@ -14,137 +8,128 @@ describe('Province (e2e)', () => {
     name: 'JAWA BARAT',
   };
 
-  const expectBadProvinceCode = (url: (code: string) => string) => {
-    return tester.expectBadCode(url, ['x', 'xxx']);
+  const expectBadProvinceCode = async (url: (code: string) => string) => {
+    await tester.expectBadCode(url, ['x', 'xxx']);
   };
 
-  let tester: RequestTester;
+  let tester: AppTester;
 
   beforeAll(async () => {
-    const moduleRef: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
+    tester = await AppTester.make();
 
-    const app = moduleRef.createNestApplication<NestFastifyApplication>(
-      new FastifyAdapter(),
-    );
-
-    app.enableCors();
-    app.useGlobalPipes(
+    tester.app.enableCors();
+    tester.app.useGlobalPipes(
       new ValidationPipe({
         transform: true,
       }),
     );
 
-    await app.init();
-    await app.getHttpAdapter().getInstance().ready();
-
-    tester = new RequestTester(app.getHttpServer());
+    await tester.bootApp();
   });
 
   describe('GET /provinces', () => {
-    it('should return array of provinces', () => {
-      return tester.expectOk('/provinces').expect((res) => {
-        expect(res.body).toEqual(
-          expect.arrayContaining([
-            expect.objectContaining({
-              code: expect.any(String),
-              name: expect.any(String),
-            }),
-          ]),
-        );
-      });
+    it('should return array of provinces', async () => {
+      const res = await tester.expectOk('/provinces');
+
+      expect(res.json()).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            code: expect.any(String),
+            name: expect.any(String),
+          }),
+        ]),
+      );
     });
 
-    it('should return 400 if any sort query is invalid', () => {
-      tester.expectBadSortQuery(
+    it('should return 400 if any sort query is invalid', async () => {
+      await tester.expectBadSortQuery(
         (sortQueryStr) => `/provinces?${sortQueryStr}`,
         ['', 'unknown'],
       );
     });
 
     describe('GET /provinces?name=:name', () => {
-      it('should return array of provinces with the appropriate `name` (case insensitive)', () => {
-        return tester.expectOk('/provinces?name=jawa').expect((res) => {
-          expect(res.body).toEqual(
-            expect.arrayContaining([
-              expect.objectContaining({
-                code: expect.any(String),
-                name: expect.stringMatching(/jawa/i),
-              }),
-            ]),
-          );
-        });
+      it('should return array of provinces with the appropriate `name` (case insensitive)', async () => {
+        const res = await tester.expectOk('/provinces?name=jawa');
+
+        expect(res.json()).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              code: expect.any(String),
+              name: expect.stringMatching(/jawa/i),
+            }),
+          ]),
+        );
       });
 
-      it('should return empty array when the `name` does not match any provinces', () => {
-        return tester.expectOk('/provinces?name=unknown').expect([]);
+      it('should return empty array when the `name` does not match any provinces', async () => {
+        const res = await tester.expectOk('/provinces?name=unknown');
+
+        expect(res.json()).toEqual([]);
       });
 
-      it('should return 400 if the `name` is invalid', () => {
+      it('should return 400 if the `name` is invalid', async () => {
         const invalidNames = ['xx', 'j@wa'];
 
-        return Promise.all(
-          invalidNames.map((invalidName) =>
-            tester.expectBadRequest(`/provinces?name=${invalidName}`),
-          ),
-        );
+        for (const name of invalidNames) {
+          await tester.expectBadRequest(`/provinces?name=${name}`);
+        }
       });
     });
   });
 
   describe('GET /provinces/:code', () => {
-    it('should return a province', () => {
-      return tester
-        .expectOk(`/provinces/${testedProvince.code}`)
-        .expect((res) => {
-          expect(res.body).toEqual(
-            expect.objectContaining({
-              code: expect.any(String),
-              name: expect.any(String),
-            }),
-          );
+    it('should return a province', async () => {
+      const res = await tester.expectOk(`/provinces/${testedProvince.code}`);
 
-          expect(res.body.code).toEqual(testedProvince.code);
-        });
+      expect(res.json()).toEqual(
+        expect.objectContaining({
+          code: testedProvince.code,
+          name: expect.any(String),
+        }),
+      );
     });
 
-    it('should return 400 if the `code` is invalid', () => {
-      return expectBadProvinceCode((code) => `/provinces/${code}`);
+    it('should return 400 if the `code` is invalid', async () => {
+      await expectBadProvinceCode((code) => `/provinces/${code}`);
     });
 
-    it('should return 404 if the `code` does not exists', () => {
-      return tester.expectNotFound('/provinces/00');
+    it('should return 404 if the `code` does not exists', async () => {
+      await tester.expectNotFound('/provinces/00');
     });
   });
 
   describe('GET /provinces/:code/regencies', () => {
-    it('should return array of regencies from specific province', () => {
-      return tester
-        .expectOk(`/provinces/${testedProvince.code}/regencies`)
-        .expect((res) => {
-          expect(res.body).toEqual(
-            expect.arrayContaining([
-              expect.objectContaining({
-                code: expect.any(String),
-                name: expect.any(String),
-                provinceCode: testedProvince.code,
-              }),
-            ]),
-          );
-        });
+    it('should return array of regencies from specific province', async () => {
+      const res = await tester.expectOk(
+        `/provinces/${testedProvince.code}/regencies`,
+      );
+
+      expect(res.json()).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            code: expect.any(String),
+            name: expect.any(String),
+            provinceCode: testedProvince.code,
+          }),
+        ]),
+      );
     });
 
-    it('should return 400 if the `code` is invalid', () => {
-      return expectBadProvinceCode((code) => `/provinces/${code}/regencies`);
+    it('should return 400 if the `code` is invalid', async () => {
+      await expectBadProvinceCode((code) => `/provinces/${code}/regencies`);
     });
 
-    it('should return 400 if sort query is invalid', () => {
-      tester.expectBadSortQuery(
+    it('should return 400 if sort query is invalid', async () => {
+      await tester.expectBadSortQuery(
         (sortQueryStr) =>
           `/provinces/${testedProvince.code}/regencies?${sortQueryStr}`,
         ['', 'unknown'],
       );
     });
+  });
+
+  afterAll(async () => {
+    await tester.closeApp();
   });
 });
