@@ -1,18 +1,14 @@
 import { ValidationPipe } from '@nestjs/common';
-import { Province } from '~/prisma/utils';
 import { AppTester } from '~/src/common/helper/app-tester';
 
 describe('Province (e2e)', () => {
-  const testedProvince: Province = {
-    code: '32',
-    name: 'JAWA BARAT',
-  };
+  const baseUrl = '/provinces';
+  const testCode = '32';
+  let tester: AppTester;
 
   const expectBadProvinceCode = async (url: (code: string) => string) => {
-    await tester.expectBadCode(url, ['x', 'xxx']);
+    await tester.expectBadCode(url, ['1', '123', 'ab']);
   };
-
-  let tester: AppTester;
 
   beforeAll(async () => {
     tester = await AppTester.make();
@@ -27,9 +23,16 @@ describe('Province (e2e)', () => {
     await tester.bootApp();
   });
 
-  describe('GET /provinces', () => {
-    it('should return array of provinces', async () => {
-      const res = await tester.expectOk('/provinces');
+  describe(`GET ${baseUrl}`, () => {
+    it('should return 400 if any provinces sort query is invalid', async () => {
+      await tester.expectBadSortQuery(
+        (sortQueryStr) => `${baseUrl}?${sortQueryStr}`,
+        ['', 'unknown'],
+      );
+    });
+
+    it('should return all provinces', async () => {
+      const res = await tester.expectOk(baseUrl);
 
       expect(res.json()).toEqual(
         expect.arrayContaining([
@@ -41,90 +44,81 @@ describe('Province (e2e)', () => {
       );
     });
 
-    it('should return 400 if any sort query is invalid', async () => {
-      await tester.expectBadSortQuery(
-        (sortQueryStr) => `/provinces?${sortQueryStr}`,
-        ['', 'unknown'],
-      );
-    });
+    describe(`GET ${baseUrl}?name={name}`, () => {
+      it('should return 400 if the `name` is empty, less than 3 chars, more than 255 chars, or contains any symbols', async () => {
+        const invalidNames = ['', 'ab', 'x'.repeat(256), 'j@wa'];
 
-    describe('GET /provinces?name=:name', () => {
-      it('should return array of provinces with the appropriate `name` (case insensitive)', async () => {
-        const res = await tester.expectOk('/provinces?name=jawa');
+        for (const name of invalidNames) {
+          await tester.expectBadRequest(`${baseUrl}?name=${name}`);
+        }
+      });
+
+      it('should return empty array if there are no any provinces match with the `name`', async () => {
+        const res = await tester.expectOk(`${baseUrl}?name=unknown`);
+
+        expect(res.json()).toEqual([]);
+      });
+
+      it('should return array of provinces that match with the `name`', async () => {
+        const testName = 'jawa';
+        const res = await tester.expectOk(`${baseUrl}?name=${testName}`);
 
         expect(res.json()).toEqual(
           expect.arrayContaining([
             expect.objectContaining({
               code: expect.any(String),
-              name: expect.stringMatching(/jawa/i),
+              name: expect.stringMatching(new RegExp(testName, 'i')),
             }),
           ]),
         );
       });
-
-      it('should return empty array when the `name` does not match any provinces', async () => {
-        const res = await tester.expectOk('/provinces?name=unknown');
-
-        expect(res.json()).toEqual([]);
-      });
-
-      it('should return 400 if the `name` is invalid', async () => {
-        const invalidNames = ['xx', 'j@wa'];
-
-        for (const name of invalidNames) {
-          await tester.expectBadRequest(`/provinces?name=${name}`);
-        }
-      });
     });
   });
 
-  describe('GET /provinces/:code', () => {
-    it('should return a province', async () => {
-      const res = await tester.expectOk(`/provinces/${testedProvince.code}`);
+  describe(`GET ${baseUrl}/{code}`, () => {
+    it('should return 400 if the `code` is invalid', async () => {
+      await expectBadProvinceCode((code) => `${baseUrl}/${code}`);
+    });
+
+    it('should return 404 if the `code` does not exists', async () => {
+      await tester.expectNotFound(`${baseUrl}/00`);
+    });
+
+    it('should return a province that match with the `code`', async () => {
+      const res = await tester.expectOk(`${baseUrl}/${testCode}`);
 
       expect(res.json()).toEqual(
         expect.objectContaining({
-          code: testedProvince.code,
+          code: testCode,
           name: expect.any(String),
         }),
       );
     });
-
-    it('should return 400 if the `code` is invalid', async () => {
-      await expectBadProvinceCode((code) => `/provinces/${code}`);
-    });
-
-    it('should return 404 if the `code` does not exists', async () => {
-      await tester.expectNotFound('/provinces/00');
-    });
   });
 
-  describe('GET /provinces/:code/regencies', () => {
-    it('should return array of regencies from specific province', async () => {
-      const res = await tester.expectOk(
-        `/provinces/${testedProvince.code}/regencies`,
+  describe(`GET ${baseUrl}/{code}/regencies`, () => {
+    it('should return 400 if the `code` is invalid', async () => {
+      await expectBadProvinceCode((code) => `${baseUrl}/${code}/regencies`);
+    });
+
+    it('should return 400 if regencies sort query is invalid', async () => {
+      await tester.expectBadSortQuery(
+        (sortQueryStr) => `${baseUrl}/${testCode}/regencies?${sortQueryStr}`,
+        ['', 'unknown'],
       );
+    });
+
+    it('should return array of regencies from specific province', async () => {
+      const res = await tester.expectOk(`${baseUrl}/${testCode}/regencies`);
 
       expect(res.json()).toEqual(
         expect.arrayContaining([
           expect.objectContaining({
             code: expect.any(String),
             name: expect.any(String),
-            provinceCode: testedProvince.code,
+            provinceCode: testCode,
           }),
         ]),
-      );
-    });
-
-    it('should return 400 if the `code` is invalid', async () => {
-      await expectBadProvinceCode((code) => `/provinces/${code}/regencies`);
-    });
-
-    it('should return 400 if sort query is invalid', async () => {
-      await tester.expectBadSortQuery(
-        (sortQueryStr) =>
-          `/provinces/${testedProvince.code}/regencies?${sortQueryStr}`,
-        ['', 'unknown'],
       );
     });
   });
