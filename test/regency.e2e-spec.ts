@@ -1,4 +1,3 @@
-import { ValidationPipe } from '@nestjs/common';
 import { AppTester } from '~/src/common/helper/app-tester';
 
 describe('Regency (e2e)', () => {
@@ -12,14 +11,6 @@ describe('Regency (e2e)', () => {
 
   beforeAll(async () => {
     tester = await AppTester.make();
-
-    tester.app.enableCors();
-    tester.app.useGlobalPipes(
-      new ValidationPipe({
-        transform: true,
-      }),
-    );
-
     await tester.bootApp();
   });
 

@@ -1,3 +1,4 @@
+import { ValidationPipe } from '@nestjs/common';
 import {
   FastifyAdapter,
   NestFastifyApplication,
@@ -37,10 +38,16 @@ export class AppTester {
   }
 
   /**
-   * Only boot after all app settings
-   * like enabling CORS and set global pipes has already done.
+   * Only boot after all app settings (like enabling CORS, etc) has already done.
+   *
+   * This function also automatically enable validation pipe globally.
    */
   async bootApp() {
+    this.app.useGlobalPipes(
+      new ValidationPipe({
+        transform: true,
+      }),
+    );
     await this.app.init();
     await this.app.getHttpAdapter().getInstance().ready();
   }
