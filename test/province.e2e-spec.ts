@@ -7,7 +7,7 @@ describe('Province (e2e)', () => {
   let tester: AppTester;
 
   const expectBadProvinceCode = async (url: (code: string) => string) => {
-    await tester.expectBadCode(url, ['1', '123', 'ab']);
+    await tester.expectBadCode(url, ['', '1', '123', 'ab']);
   };
 
   beforeAll(async () => {
@@ -108,7 +108,7 @@ describe('Province (e2e)', () => {
       );
     });
 
-    it('should return array of regencies from specific province', async () => {
+    it('should return all regencies from specific province', async () => {
       const res = await tester.expectOk(`${baseUrl}/${testCode}/regencies`);
 
       expect(res.json()).toEqual(
