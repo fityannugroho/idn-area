@@ -33,6 +33,7 @@ Built with [NestJS framework](https://nestjs.com) and writen in TypeScript. [Pri
     - [`sortBy`](#sortby)
     - [`sortOrder`](#sortorder)
 - [Live Demo](#live-demo)
+- [Contributing](#contributing)
 
 ---
 
@@ -252,3 +253,7 @@ GET /...?sortOrder={asc|desc}
 ## Live Demo
 
 You can try the API by replacing the http://localhost:3000 with the url provided in the description of this repository.
+
+## Contributing
+
+If you find a bug in the source code, wrong data source, or just want to request a new feature, you can help us by [submitting an issue](CONTRIBUTING.md#submitting-an-issue). Even better, you can [submit a Pull Request](CONTRIBUTING.md#submitting-a-pull-request) to help us solve that issue.
