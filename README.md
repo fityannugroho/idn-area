@@ -13,9 +13,9 @@ Built with [NestJS framework](https://nestjs.com) and writen in TypeScript. [Pri
 
 <h2>Table of Content</h2>
 
+- [Getting Started](#getting-started)
 - [Data](#data)
 - [Entity Relations](#entity-relations)
-- [Getting Started](#getting-started)
 - [API Endpoint](#api-endpoint)
   - [Documentation](#documentation)
   - [1. Get Provinces](#1-get-provinces)
@@ -36,6 +36,10 @@ Built with [NestJS framework](https://nestjs.com) and writen in TypeScript. [Pri
 
 ---
 
+## Getting Started
+
+Please read the guide to install and run this app in [here](docs/installation.md).
+
 ## Data
 
 The data we used is based on official data from the government.
@@ -51,10 +55,6 @@ The data is stored in separated csv files by the levels in [`data`](data) direct
 The following diagram shows the relations between the entities in this app.
 
 ![Entity Relations](assets/idn-area-api.jpg)
-
-## Getting Started
-
-Please read the guide to install and run this app in [here](docs/installation.md).
 
 ## API Endpoint
 
