@@ -1,47 +1,38 @@
-import {
-  IsAlphanumeric,
-  IsNotEmpty,
-  IsOptional,
-  Length,
-} from 'class-validator';
+import { IntersectionType, PartialType, PickType } from '@nestjs/mapped-types';
+import { IsNotEmpty, IsNumberString, Length } from 'class-validator';
 import { EqualsAny } from '~/src/common/decorator/EqualsAny';
 import { IsNotSymbol } from '~/src/common/decorator/IsNotSymbol';
+import { SortQuery } from '../common/helper/sort';
+import { RegencySortQuery } from '../regency/regency.dto';
 
-export class ProvinceFindQueries {
-  @IsOptional()
+export class Province {
+  @IsNotEmpty()
+  @IsNumberString()
+  @Length(2, 2)
+  code: string;
+
+  @IsNotEmpty()
   @IsNotSymbol()
   @Length(3, 255)
   name: string;
+}
 
-  @IsOptional()
+export class ProvinceSortQuery extends SortQuery<'code' | 'name'> {
   @EqualsAny(['code', 'name'])
   sortBy: 'code' | 'name';
-
-  @IsOptional()
-  @EqualsAny(['asc', 'desc'])
-  sortOrder: 'asc' | 'desc';
 }
 
-export class ProvinceFindByCodeParams {
-  @IsNotEmpty()
-  @IsAlphanumeric()
-  @Length(2, 2)
-  provinceCode: string;
-}
+export class ProvinceFindQueries extends IntersectionType(
+  PartialType(PickType(Province, ['name'] as const)),
+  ProvinceSortQuery,
+) {}
 
-export class ProvinceFindRegencyParams {
-  @IsNotEmpty()
-  @IsAlphanumeric()
-  @Length(2, 2)
-  provinceCode: string;
-}
+export class ProvinceFindByCodeParams extends PickType(Province, [
+  'code',
+] as const) {}
 
-export class ProvinceFindRegencyQueries {
-  @IsOptional()
-  @EqualsAny(['code', 'name'])
-  sortBy: 'code' | 'name';
+export class ProvinceFindRegencyParams extends PickType(Province, [
+  'code',
+] as const) {}
 
-  @IsOptional()
-  @EqualsAny(['asc', 'desc'])
-  sortOrder: 'asc' | 'desc';
-}
+export class ProvinceFindRegencyQueries extends RegencySortQuery {}

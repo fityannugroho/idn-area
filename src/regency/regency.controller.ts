@@ -63,32 +63,31 @@ export class RegencyController {
 
   @ApiOperation({ description: 'Get a regency by its code.' })
   @ApiParam({
-    name: 'regencyCode',
+    name: 'code',
     description: 'The regency code',
     required: true,
     type: 'string',
     example: '3273',
   })
   @ApiOkResponse({ description: 'Returns a regency.' })
-  @ApiBadRequestResponse({ description: 'If the `regencyCode` is invalid.' })
+  @ApiBadRequestResponse({ description: 'If the `code` is invalid.' })
   @ApiNotFoundResponse({
-    description: 'If no regency matches the `regencyCode`.',
+    description: 'If no regency matches the `code`.',
   })
-  @Get(':regencyCode')
+  @Get(':code')
   async findByCode(@Param() params: RegencyFindByCodeParams): Promise<Regency> {
-    const { regencyCode } = params;
-    const regency = await this.regencyService.findByCode(regencyCode);
+    const { code } = params;
+    const regency = await this.regencyService.findByCode(code);
 
     if (regency === null)
-      throw new NotFoundException(
-        `There are no regency with code '${regencyCode}'`,
-      );
+      throw new NotFoundException(`There are no regency with code '${code}'`);
+
     return regency;
   }
 
   @ApiOperation({ description: 'Get all districts in a regency.' })
   @ApiParam({
-    name: 'regencyCode',
+    name: 'code',
     description: 'The regency code',
     required: true,
     type: 'string',
@@ -109,26 +108,25 @@ export class RegencyController {
     example: 'asc',
   })
   @ApiOkResponse({ description: 'Returns array of districts.' })
-  @ApiBadRequestResponse({ description: 'If the `regencyCode` is invalid.' })
+  @ApiBadRequestResponse({ description: 'If the `code` is invalid.' })
   @ApiNotFoundResponse({
-    description: 'If there are no regency match with the `regencyCode`.',
+    description: 'If there are no regency match with the `code`.',
   })
-  @Get(':regencyCode/districts')
+  @Get(':code/districts')
   async findDistrict(
     @Param() params: RegencyFindDistrictParams,
     @Query() queries?: RegencyFindDistrictQueries,
   ): Promise<District[]> {
-    const { regencyCode } = params;
+    const { code } = params;
     const { sortBy, sortOrder } = queries ?? {};
-    const districts = await this.regencyService.findDistrics(regencyCode, {
+    const districts = await this.regencyService.findDistrics(code, {
       sortBy: sortBy,
       sortOrder: sortOrder,
     });
 
     if (districts === false)
-      throw new NotFoundException(
-        `There are no regency with code '${regencyCode}'`,
-      );
+      throw new NotFoundException(`There are no regency with code '${code}'`);
+
     return districts;
   }
 }

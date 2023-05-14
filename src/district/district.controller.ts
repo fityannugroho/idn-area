@@ -63,34 +63,33 @@ export class DistrictController {
 
   @ApiOperation({ description: 'Get a district by its code.' })
   @ApiParam({
-    name: 'districtCode',
+    name: 'code',
     description: 'The district code',
     required: true,
     type: 'string',
     example: '327325',
   })
   @ApiOkResponse({ description: 'Returns a district.' })
-  @ApiBadRequestResponse({ description: 'If the `districtCode` is invalid.' })
+  @ApiBadRequestResponse({ description: 'If the `code` is invalid.' })
   @ApiNotFoundResponse({
-    description: 'If no district matches the `districtCode`.',
+    description: 'If no district matches the `code`.',
   })
-  @Get(':districtCode')
+  @Get(':code')
   async findByCode(
     @Param() params: DistrictFindByCodeParams,
   ): Promise<District> {
-    const { districtCode } = params;
-    const district = await this.districtService.findByCode(districtCode);
+    const { code } = params;
+    const district = await this.districtService.findByCode(code);
 
     if (district === null)
-      throw new NotFoundException(
-        `There are no district with code '${districtCode}'`,
-      );
+      throw new NotFoundException(`There are no district with code '${code}'`);
+
     return district;
   }
 
   @ApiOperation({ description: 'Get all villages in a district.' })
   @ApiParam({
-    name: 'districtCode',
+    name: 'code',
     description: 'The district code',
     required: true,
     type: 'string',
@@ -111,26 +110,25 @@ export class DistrictController {
     example: 'asc',
   })
   @ApiOkResponse({ description: 'Returns array of villages.' })
-  @ApiBadRequestResponse({ description: 'If the `districtCode` is invalid.' })
+  @ApiBadRequestResponse({ description: 'If the `code` is invalid.' })
   @ApiNotFoundResponse({
-    description: 'If there are no district match with the `districtCode`.',
+    description: 'If there are no district match with the `code`.',
   })
-  @Get(':districtCode/villages')
+  @Get(':code/villages')
   async findVillage(
     @Param() params: DistrictFindVillageParams,
     @Query() queries?: DistrictFindVillageQueries,
   ): Promise<Village[]> {
-    const { districtCode } = params;
+    const { code } = params;
     const { sortBy, sortOrder } = queries ?? {};
-    const villages = await this.districtService.findVillages(districtCode, {
+    const villages = await this.districtService.findVillages(code, {
       sortBy: sortBy,
       sortOrder: sortOrder,
     });
 
     if (villages === false)
-      throw new NotFoundException(
-        `There are no district with code '${districtCode}'`,
-      );
+      throw new NotFoundException(`There are no district with code '${code}'`);
+
     return villages;
   }
 }

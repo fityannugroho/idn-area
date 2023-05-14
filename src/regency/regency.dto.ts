@@ -1,46 +1,43 @@
-import {
-  IsAlphanumeric,
-  IsNotEmpty,
-  IsOptional,
-  Length,
-} from 'class-validator';
+import { IsNotEmpty, IsNumberString, Length } from 'class-validator';
 import { EqualsAny } from '~/src/common/decorator/EqualsAny';
 import { IsNotSymbol } from '~/src/common/decorator/IsNotSymbol';
+import { SortQuery } from '../common/helper/sort';
+import { IntersectionType, PickType } from '@nestjs/mapped-types';
+import { DistrictSortQuery } from '../district/district.dto';
 
-export class RegencyFindQueries {
+export class Regency {
+  @IsNotEmpty()
+  @IsNumberString()
+  @Length(4, 4)
+  code: string;
+
   @IsNotEmpty()
   @IsNotSymbol()
   @Length(3, 255)
-  name?: string;
+  name: string;
 
-  @IsOptional()
-  @EqualsAny(['code', 'name'])
-  sortBy?: 'code' | 'name';
-
-  @IsOptional()
-  @EqualsAny(['asc', 'desc'])
-  sortOrder?: 'asc' | 'desc';
-}
-
-export class RegencyFindByCodeParams {
   @IsNotEmpty()
-  @IsAlphanumeric()
-  @Length(4, 4)
-  regencyCode: string;
+  @IsNumberString()
+  @Length(2, 2)
+  provinceCode: string;
 }
 
-export class RegencyFindDistrictParams {
-  @IsNotEmpty()
-  @IsAlphanumeric()
-  @Length(4, 4)
-  regencyCode: string;
-}
-export class RegencyFindDistrictQueries {
-  @IsOptional()
+export class RegencySortQuery extends SortQuery<'code' | 'name'> {
   @EqualsAny(['code', 'name'])
-  sortBy?: 'code' | 'name';
-
-  @IsOptional()
-  @EqualsAny(['asc', 'desc'])
-  sortOrder?: 'asc' | 'desc';
+  sortBy: 'code' | 'name';
 }
+
+export class RegencyFindQueries extends IntersectionType(
+  PickType(Regency, ['name'] as const),
+  RegencySortQuery,
+) {}
+
+export class RegencyFindByCodeParams extends PickType(Regency, [
+  'code',
+] as const) {}
+
+export class RegencyFindDistrictParams extends PickType(Regency, [
+  'code',
+] as const) {}
+
+export class RegencyFindDistrictQueries extends DistrictSortQuery {}
