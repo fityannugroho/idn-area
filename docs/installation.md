@@ -4,6 +4,7 @@
 
 - [Prerequisite](#prerequisite)
 - [Installation Steps](#installation-steps)
+- [Run the Test](#run-the-test)
 
 ---
 
@@ -42,3 +43,15 @@
 1. Run the app
 
     Use `npm run start` command, to run the app.
+
+## Run the Test
+
+To run the test, you can use the following command:
+
+```shell
+# Run unit tests
+npm run test
+
+# Run e2e test
+npm run test:e2e
+```

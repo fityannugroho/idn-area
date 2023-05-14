@@ -11,6 +11,8 @@
   - [Body](#body)
   - [Footer](#footer)
   - [Commit Message Example](#commit-message-example)
+- [Submitting an Issue](#submitting-an-issue)
+- [Submitting a Pull Request](#submitting-a-pull-request)
 
 ---
 
@@ -99,3 +101,56 @@ Add `/provinces/new` endpoint to create new province.
 
 Closes #123
 ```
+
+## Submitting an Issue
+
+Before you submit an issue, please search the issue tracker, maybe an issue for your problem already exists and the discussion might inform you of workarounds readily available.
+
+You can report the issues by filling out the [new issue form](https://github.com/fityannugroho/idn-area/issues/new). Please select the right form template:
+- **Bug Report**: if you found a bug in the source code.
+- **Feature Request**: if you want a new feature or enhancement.
+
+## Submitting a Pull Request
+
+Before you submit your Pull Request (PR) consider the following guidelines:
+
+1. Search [GitHub Pull Requests](https://github.com/fityannugroho/idn-area/pulls) for an open or closed PR that relates to your submission. You don't want to duplicate effort.
+
+1. Fork this repository.
+
+1. Make your changes in a new git branch:
+
+    ```shell
+    git checkout -b my-fix-branch master
+    ```
+
+1. Follow the [installation guides](docs/installation.md).
+
+1. Create your patch, **including appropriate test cases**.
+
+1. Make sure you follow our [Code Styles](#code-styles) and [Commit Message Guidelines](#commit-message-guidelines).
+
+1. Run the [full test suite](docs/installation.md#run-the-test) and ensure that all tests pass.
+
+1. Commit your changes using a descriptive commit message that follows our [commit message conventions](#commit-message-guidelines). Adherence to these conventions is necessary because release notes are automatically generated from these messages.
+
+1. Push your branch to GitHub:
+
+    ```shell
+    git push origin my-fix-branch
+    ```
+
+1. In GitHub, send a pull request to `idn-area:main`.
+
+1. If we suggest changes then:
+
+  - Make the required updates.
+  - Re-run the [full test suite](docs/installation.md#run-the-test) to ensure tests are still passing.
+  - Rebase your branch and force push to your GitHub repository (this will update your Pull Request):
+
+    ```shell
+    git rebase master -i
+    git push -f
+    ```
+
+That's it! Thank you for your contribution!

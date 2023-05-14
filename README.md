@@ -13,9 +13,9 @@ Built with [NestJS framework](https://nestjs.com) and writen in TypeScript. [Pri
 
 <h2>Table of Content</h2>
 
+- [Getting Started](#getting-started)
 - [Data](#data)
 - [Entity Relations](#entity-relations)
-- [Getting Started](#getting-started)
 - [API Endpoint](#api-endpoint)
   - [Documentation](#documentation)
   - [1. Get Provinces](#1-get-provinces)
@@ -33,32 +33,29 @@ Built with [NestJS framework](https://nestjs.com) and writen in TypeScript. [Pri
     - [`sortBy`](#sortby)
     - [`sortOrder`](#sortorder)
 - [Live Demo](#live-demo)
+- [Contributing](#contributing)
 
 ---
 
+## Getting Started
+
+Please read the guide to install and run this app in [here](docs/installation.md).
+
 ## Data
 
-The data used comes from [edwardsamuel/Wilayah-Administratif-Indonesia](https://github.com/edwardsamuel/Wilayah-Administratif-Indonesia), taken from *Badan Pusat Statistik* (BPS) data in 2018.
+The data we used is based on official data from the government.
+
+> The latest official data we got is:
+>
+> [Keputusan Menteri Dalam Negeri Nomor 050-145 Tahun 2022 Tentang Pemberian dan Pemutakhiran Kode, Data Wilayah Administrasi Pemerintahan, dan Pulau Tahun 2021](https://www.kemendagri.go.id/arsip/detail/10857/keputusan-menteri-dalam-negeri-nomor-050145-tahun-2022-tentang-pemberian-kode-data-wilayah-administrasi-pemerintahan-dan-pulau-tahun-2021) ([archieved here](https://archive.org/details/kepmendagri-050-145-tahun-2022))
 
 The data is stored in separated csv files by the levels in [`data`](data) directory.
-
-> **📢 ANNOUNCEMENT!**
->
-> Because the current data is very outdated, we plan to **update the data** based on the latest government regulations, issued by *Kementerian Dalam Negeri (Kemendagri)* in [Kepmendagri/050-145/2022](https://www.kemendagri.go.id/arsip/detail/10857/keputusan-menteri-dalam-negeri-nomor-050145-tahun-2022-tentang-pemberian-kode-data-wilayah-administrasi-pemerintahan-dan-pulau-tahun-2021) ([archieved here](https://archive.org/details/kepmendagri-050-145-tahun-2022)).
->
-> As a reference, BPS has provided the relation mapping between the data used by BPS and Kemendagri in [here](https://sig.bps.go.id/bridging-kode/index).
->
-> **Due to the large amount of data to be updated, we would be very grateful for your contribution 🙏**
 
 ## Entity Relations
 
 The following diagram shows the relations between the entities in this app.
 
 ![Entity Relations](assets/idn-area-api.jpg)
-
-## Getting Started
-
-Please read the guide to install and run this app in [here](docs/installation.md).
 
 ## API Endpoint
 
@@ -256,3 +253,7 @@ GET /...?sortOrder={asc|desc}
 ## Live Demo
 
 You can try the API by replacing the http://localhost:3000 with the url provided in the description of this repository.
+
+## Contributing
+
+If you find a bug in the source code, wrong data source, or just want to request a new feature, you can help us by [submitting an issue](CONTRIBUTING.md#submitting-an-issue). Even better, you can [submit a Pull Request](CONTRIBUTING.md#submitting-a-pull-request) to help us solve that issue.
