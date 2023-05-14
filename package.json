@@ -38,7 +38,7 @@
     "@nestjs/mapped-types": "^1.2.2",
     "@nestjs/platform-fastify": "^9.4.0",
     "@nestjs/swagger": "^6.3.0",
-    "@prisma/client": "^4.13.0",
+    "@prisma/client": "^4.14.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "fastify-swagger": "^5.2.0",
