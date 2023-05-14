@@ -88,7 +88,7 @@ GET /provinces?name={provinceName}
 
 - Add `name` query to **filter the provinces by its name**.
 - For example, if you replace the `{provinceName}` with "jawa" then you will get all the provinces whose names contain the word "jawa".
-- The `{provinceName}` must be **at least 3 characters**. If not, you will get `400 Bad Request` response.
+- The `{provinceName}` must be **at least 3 characters**, maximum 255 characters, and does not contains any symbols. If not, you will get `400 Bad Request` response.
 - The response will be an **empty array** `[]` if there are no province matched with the `{provinceName}`.
 - Usage example: http://localhost:3000/provinces?name=jawa
 
@@ -125,7 +125,7 @@ GET /regencies?name={regencyName}
 ```
 
 - Use this endpoint to **get the regencies by its name**.
-- The `{regencyName}` **is required** and must be **at least 3 characters**. If not, you will get `400 Bad Request` response.
+- The `{regencyName}` **is required** and must be **at least 3 characters**, maximum 255 characters, and does not contains any symbols. If not, you will get `400 Bad Request` response.
 - This endpoint **will return** an array of regency.
 - Usage example: http://localhost:3000/regencies?name=bandung
 
@@ -162,7 +162,7 @@ GET /districts?name={districtName}
 ```
 
 - Use this endpoint to **get the districts by its name**.
-- The `{districtName}` **is required** and must be **at least 3 characters**. If not, you will get `400 Bad Request` response.
+- The `{districtName}` **is required** and must be **at least 3 characters**, maximum 255 characters, and does not contains any other symbols besides `'()-./`. If not, you will get `400 Bad Request` response.
 - This endpoint **will return** an array of district, or an **empty array** `[]` if there are no district matched with the `{districtName}`.
 - Usage example: http://localhost:3000/districts?name=regol
 
@@ -199,7 +199,7 @@ GET /villages?name={villageName}
 ```
 
 - Use this endpoint to **get the villages by its name**.
-- The `{villageName}` **is required** and must be **at least 3 characters**. If not, you will get `400 Bad Request` response.
+- The `{villageName}` **is required** and must be **at least 3 characters**, maximum 255 characters, and does not contains any other symbols besides `'()-./`. If not, you will get `400 Bad Request` response.
 - This endpoint **will return** an array of village, or an **empty array** `[]` if there are no village matched with the `{villageName}`.
 - Usage example: http://localhost:3000/villages?name=balong
 
