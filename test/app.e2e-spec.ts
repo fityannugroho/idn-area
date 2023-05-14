@@ -1,32 +1,24 @@
-import {
-  FastifyAdapter,
-  NestFastifyApplication,
-} from '@nestjs/platform-fastify';
-import { Test, TestingModule } from '@nestjs/testing';
-import * as request from 'supertest';
-import { AppModule } from '~/src/app.module';
+import { AppTester } from '~/src/common/helper/app-tester';
 
 describe('AppController (e2e)', () => {
-  let app: NestFastifyApplication;
+  let tester: AppTester;
 
-  beforeEach(async () => {
-    const moduleRef: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
-
-    app = moduleRef.createNestApplication<NestFastifyApplication>(
-      new FastifyAdapter(),
-    );
-
-    await app.init();
-    await app.getHttpAdapter().getInstance().ready();
+  beforeAll(async () => {
+    tester = await AppTester.make();
+    await tester.bootApp();
   });
 
-  it('/ (GET)', () => {
-    return request(app.getHttpServer()).get('/').expect(200).expect({
+  it('/ (GET)', async () => {
+    const res = await tester.expectOk('/');
+
+    expect(res.json()).toEqual({
       message: 'Welcome to Indonesia Area API.',
       version: '1.0.0',
       docs: '/docs',
     });
+  });
+
+  afterAll(async () => {
+    await tester.closeApp();
   });
 });
