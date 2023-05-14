@@ -38,17 +38,13 @@ Built with [NestJS framework](https://nestjs.com) and writen in TypeScript. [Pri
 
 ## Data
 
-The data used comes from [edwardsamuel/Wilayah-Administratif-Indonesia](https://github.com/edwardsamuel/Wilayah-Administratif-Indonesia), taken from *Badan Pusat Statistik* (BPS) data in 2018.
+The data we used is based on official data from the government.
+
+> The latest official data we got is:
+>
+> [Keputusan Menteri Dalam Negeri Nomor 050-145 Tahun 2022 Tentang Pemberian dan Pemutakhiran Kode, Data Wilayah Administrasi Pemerintahan, dan Pulau Tahun 2021](https://www.kemendagri.go.id/arsip/detail/10857/keputusan-menteri-dalam-negeri-nomor-050145-tahun-2022-tentang-pemberian-kode-data-wilayah-administrasi-pemerintahan-dan-pulau-tahun-2021) ([archieved here](https://archive.org/details/kepmendagri-050-145-tahun-2022))
 
 The data is stored in separated csv files by the levels in [`data`](data) directory.
-
-> **📢 ANNOUNCEMENT!**
->
-> Because the current data is very outdated, we plan to **update the data** based on the latest government regulations, issued by *Kementerian Dalam Negeri (Kemendagri)* in [Kepmendagri/050-145/2022](https://www.kemendagri.go.id/arsip/detail/10857/keputusan-menteri-dalam-negeri-nomor-050145-tahun-2022-tentang-pemberian-kode-data-wilayah-administrasi-pemerintahan-dan-pulau-tahun-2021) ([archieved here](https://archive.org/details/kepmendagri-050-145-tahun-2022)).
->
-> As a reference, BPS has provided the relation mapping between the data used by BPS and Kemendagri in [here](https://sig.bps.go.id/bridging-kode/index).
->
-> **Due to the large amount of data to be updated, we would be very grateful for your contribution 🙏**
 
 ## Entity Relations
 
