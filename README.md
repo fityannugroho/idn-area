@@ -254,6 +254,8 @@ GET /...?sortOrder={asc|desc}
 
 You can try the API by replacing the http://localhost:3000 with the url provided in the description of this repository.
 
+You can see an example of implementing this API on the website in [here](https://fityannugroho.github.io/idn-area-example) ([go to the repository](https://github.com/fityannugroho/idn-area-example)).
+
 ## Contributing
 
 If you find a bug in the source code, wrong data source, or just want to request a new feature, you can help us by [submitting an issue](CONTRIBUTING.md#submitting-an-issue). Even better, you can [submit a Pull Request](CONTRIBUTING.md#submitting-a-pull-request) to help us solve that issue.
