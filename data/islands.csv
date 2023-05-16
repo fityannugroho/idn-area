@@ -5,3 +5,11 @@ code,regency_code,coordinate,is_populated,is_outermost_small,name
 110140004,1101,02°54'25.11" N 097°26'18.51" E,false,false,Pulau Mangki
 110140005,1101,02°53'16.00" N 097°30'54.00" E,false,false,Pulau Tengku
 110140006,1101,02°48'34.67" N 097°35'36.51" E,false,false,Pulau Trumon
+110340001,1103,04°36'48.74" N 098°00'31.21" E,false,false,Pulau Bangka Matee
+110340002,1103,05°09'12.80" N 097°34'56.08" E,false,false,Pulau Gosongsungaibelah
+110340003,1103,04°36'19.18" N 098°01'02.04" E,false,false,Pulau Krueng Beukah
+110340004,1103,04°41'35.16" N 097°57'59.15" E,false,false,Pulau Kuala Parek
+110340005,1103,05°06'37.00" N 097°37'35.00" E,true,false,Pulau Nebukserdang
+110340006,1103,04°38'21.32" N 097°59'38.64" E,false,false,Pulau Pusong Broh
+110340007,1103,04°35'50.74" N 097°57'59.07" E,false,false,Pulau Pusong Brooh
+110340008,1103,04°35'38.25" N 098°01'09.57" E,false,false,Pulau Ujongperleng
