@@ -41,7 +41,7 @@ const isStrNumber = (value: string, digits?: number): value is string =>
  * @param value The string to be checked
  */
 const isStrBoolean = (value: string): value is string =>
-  value.toLowerCase() === 'true' || value.toLowerCase() === 'false';
+  ['true', 'false', '0', '1'].includes(value.toLowerCase());
 
 /**
  * Check if the coordinate is valid.
