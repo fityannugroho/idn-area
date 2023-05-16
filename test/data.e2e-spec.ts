@@ -3,6 +3,7 @@ import {
   AreaByCollection,
   Collection,
   District,
+  Island,
   Province,
   Regency,
   Village,
@@ -33,6 +34,35 @@ const getData = async <C extends Collection>(
  */
 const isStrNumber = (value: string, digits?: number): value is string =>
   /^\d+$/.test(value) && (!digits || value.length === digits);
+
+/**
+ * Check if a string is a boolean ("true" or "false").
+ *
+ * @param value The string to be checked
+ */
+const isStrBoolean = (value: string): value is string =>
+  value.toLowerCase() === 'true' || value.toLowerCase() === 'false';
+
+/**
+ * Check if the coordinate is valid.
+ *
+ * Valid format: `{a}°{b}'{c}" {d} {w}°{x}'{y}" {z}`
+ * - `{a}` should be 2 digit integer from 00 to 90
+ * - `{b}` should be 2 digit integer from 00 to 60
+ * - `{c}` should be 2 digit integer with 2 decimal points from 00.00 to 60.00
+ * - `{d}` should be N or S
+ * - `{w}` should be 3 digit integer from 000 to 180
+ * - `{x}` should be 2 digit integer from 00 to 60
+ * - `{y}` should be 2 digit integer with 2 decimal points from 00.00 to 60.00
+ * - `{z}` should be E or W
+ *
+ * Tested here: https://regex101.com/r/GQe8WT
+ */
+const isValidCoordinate = (coordinate: string) => {
+  const regex =
+    /^([0-8][0-9]|90)°([0-5][0-9]|60)'(([0-5][0-9].[0-9]{2})|60.00)"\s(N|S)\s(0\d{2}|1([0-7][0-9]|80))°([0-5][0-9]|60)'(([0-5][0-9].[0-9]{2})|60.00)"\s(E|W)$/;
+  return regex.test(coordinate);
+};
 
 // Test provinces data
 let provinces: Province[];
@@ -170,5 +200,42 @@ describe('villages data', () => {
     ].sort();
 
     expect(uniqueVillageDistrictCodes).toEqual(districtCodes);
+  });
+});
+
+// Test islands data
+let islands: Island[];
+
+describe('islands data', () => {
+  beforeAll(async () => {
+    islands = await getData('islands');
+  });
+
+  it('should be defined', () => {
+    expect(islands).toBeDefined();
+  });
+
+  it('should have valid island object', () => {
+    const regencyCodes = regencies.map((regency) => regency.code);
+    const validIslands = islands.filter(
+      (island) =>
+        isStrNumber(island.code, 9) &&
+        isStrNumber(island.regency_code, 4) &&
+        regencyCodes.includes(island.regency_code) &&
+        isValidCoordinate(island.coordinate) &&
+        isStrBoolean(island.is_populated) &&
+        isStrBoolean(island.is_outermost_small) &&
+        !!island.name,
+    );
+
+    expect(islands).toEqual(validIslands);
+    expect(validIslands.length).toBeGreaterThan(0);
+  });
+
+  it('should have unique code', () => {
+    const codes = islands.map((island) => island.code);
+    const uniqueIds = [...new Set(codes)];
+
+    expect(codes).toEqual(uniqueIds);
   });
 });
