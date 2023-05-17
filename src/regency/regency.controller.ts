@@ -129,4 +129,28 @@ export class RegencyController {
 
     return districts;
   }
+
+  @ApiOperation({ description: 'Get all islands in a regency.' })
+  @ApiParam({
+    name: 'code',
+    description: 'The regency code',
+    required: true,
+    type: 'string',
+    example: '3273',
+  })
+  @ApiOkResponse({ description: 'Returns array of islands.' })
+  @ApiBadRequestResponse({ description: 'If the `code` is invalid.' })
+  @ApiNotFoundResponse({
+    description: 'If there are no regency match with the `code`.',
+  })
+  @Get(':code/islands')
+  async findIslands(@Param() params: RegencyFindByCodeParams) {
+    const { code } = params;
+    const islands = await this.regencyService.findIslands(code);
+
+    if (islands === false)
+      throw new NotFoundException(`There are no regency with code '${code}'`);
+
+    return islands;
+  }
 }

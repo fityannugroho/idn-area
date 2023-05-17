@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { District, Regency } from '@prisma/client';
+import { District, Island, Regency } from '@prisma/client';
 import { SortHelper, SortOptions } from '~/src/common/helper/sort';
 import { PrismaService } from '~/src/common/services/prisma';
+import CoordinateConverter from '../common/helper/coordinate-converter';
 
 type RegencySortKeys = keyof Regency;
 
@@ -55,7 +56,7 @@ export class RegencyService {
    * Find all districts in a regency.
    * @param regencyCode The regency code.
    * @param sort The sort query (optional).
-   * @returns Array of regency in the match regency, or `false` if there are no regency found.
+   * @returns Array of districts in the match regency, or `false` if there are no regency found.
    */
   async findDistrics(
     regencyCode: string,
@@ -72,5 +73,33 @@ export class RegencyService {
       });
 
     return districts ?? false;
+  }
+
+  /**
+   * Find all islands in a regency.
+   * @param regencyCode The regency code.
+   * @returns Array of islands in the match regency, or `false` if there are no regency found.
+   */
+  async findIslands(regencyCode: string): Promise<false | Island[]> {
+    const coordinateConverter = new CoordinateConverter();
+    const islands = await this.prisma.regency
+      .findUnique({
+        where: {
+          code: regencyCode,
+        },
+      })
+      .islands();
+
+    if (!islands) {
+      return false;
+    }
+
+    return islands.map((island) => {
+      const [latitude, longitude] = coordinateConverter.convertToNumber(
+        island.coordinate,
+      );
+
+      return { ...island, latitude, longitude };
+    });
   }
 }
