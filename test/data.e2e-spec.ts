@@ -8,6 +8,7 @@ import {
   Regency,
   Village,
 } from '~/prisma/utils';
+import CoordinateConverter from '~/src/common/helper/coordinate-converter';
 import { CsvParser } from '~/src/common/helper/csv-parser';
 
 /**
@@ -43,26 +44,7 @@ const isStrNumber = (value: string, digits?: number): value is string =>
 const isStrBoolean = (value: string): value is string =>
   ['true', 'false', '0', '1'].includes(value.toLowerCase());
 
-/**
- * Check if the coordinate is valid.
- *
- * Valid format: `{a}°{b}'{c}" {d} {w}°{x}'{y}" {z}`
- * - `{a}` should be 2 digit integer from 00 to 90
- * - `{b}` should be 2 digit integer from 00 to 60
- * - `{c}` should be 2 digit integer with 2 decimal points from 00.00 to 60.00
- * - `{d}` should be N or S
- * - `{w}` should be 3 digit integer from 000 to 180
- * - `{x}` should be 2 digit integer from 00 to 60
- * - `{y}` should be 2 digit integer with 2 decimal points from 00.00 to 60.00
- * - `{z}` should be E or W
- *
- * Tested here: https://regex101.com/r/GQe8WT
- */
-const isValidCoordinate = (coordinate: string) => {
-  const regex =
-    /^([0-8][0-9]|90)°([0-5][0-9]|60)'(([0-5][0-9].[0-9]{2})|60.00)"\s(N|S)\s(0\d{2}|1([0-7][0-9]|80))°([0-5][0-9]|60)'(([0-5][0-9].[0-9]{2})|60.00)"\s(E|W)$/;
-  return regex.test(coordinate);
-};
+const coordinateConverter = new CoordinateConverter();
 
 // Test provinces data
 let provinces: Province[];
@@ -222,7 +204,7 @@ describe('islands data', () => {
         isStrNumber(island.code, 9) &&
         isStrNumber(island.regency_code, 4) &&
         regencyCodes.includes(island.regency_code) &&
-        isValidCoordinate(island.coordinate) &&
+        coordinateConverter.isValid(island.coordinate) &&
         isStrBoolean(island.is_populated) &&
         isStrBoolean(island.is_outermost_small) &&
         !!island.name,
