@@ -18,6 +18,19 @@ model District {
   @@map("districts")
 }
 
+model Island {
+  id               String  @id @default(auto()) @map("_id") @db.ObjectId
+  code             String  @unique
+  coordinate       String
+  isOutermostSmall Boolean @map("is_outermost_small")
+  isPopulated      Boolean @map("is_populated")
+  name             String
+  regencyCode      String  @map("regency_code")
+  regency          Regency @relation(fields: [regencyCode], references: [code])
+
+  @@map("islands")
+}
+
 model Province {
   id        String    @id @default(auto()) @map("_id") @db.ObjectId
   code      String    @unique
@@ -32,6 +45,7 @@ model Regency {
   code         String     @unique
   name         String
   provinceCode String     @map("province_code")
+  islands      Island[]
   districts    District[]
   province     Province   @relation(fields: [provinceCode], references: [code])
 

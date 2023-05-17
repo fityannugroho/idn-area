@@ -6,9 +6,11 @@ import {
   Areas,
   Collection,
   District,
+  Island,
   Regency,
   Village,
   isDistrict,
+  isIsland,
   isRegency,
   isVillage,
 } from './utils';
@@ -42,6 +44,19 @@ const insertData = async <T extends Areas>(data: T[]) => {
         code: item.code,
         name: item.name,
         provinceCode: item.province_code,
+      })),
+    });
+  }
+
+  if (data.every(isIsland)) {
+    return await prisma.island.createMany({
+      data: (data as Island[]).map((item) => ({
+        code: item.code,
+        coordinate: item.coordinate,
+        isOutermostSmall: item.is_outermost_small === 'true',
+        isPopulated: item.is_populated === 'true',
+        name: item.name,
+        regencyCode: item.regency_code,
       })),
     });
   }
@@ -84,11 +99,13 @@ const insertAreaData = async <T extends Collection>(collection: T) => {
 async function main() {
   await deleteAreaData('villages');
   await deleteAreaData('districts');
+  await deleteAreaData('islands');
   await deleteAreaData('regencies');
   await deleteAreaData('provinces');
 
   await insertAreaData('provinces');
   await insertAreaData('regencies');
+  await insertAreaData('islands');
   await insertAreaData('districts');
   await insertAreaData('villages');
 }
