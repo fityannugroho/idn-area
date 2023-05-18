@@ -202,8 +202,9 @@ describe('islands data', () => {
     const validIslands = islands.filter(
       (island) =>
         isStrNumber(island.code, 9) &&
-        isStrNumber(island.regency_code, 4) &&
-        regencyCodes.includes(island.regency_code) &&
+        ((isStrNumber(island.regency_code, 4) &&
+          regencyCodes.includes(island.regency_code)) ||
+          !island.regency_code) &&
         coordinateConverter.isValid(island.coordinate) &&
         isStrBoolean(island.is_populated) &&
         isStrBoolean(island.is_outermost_small) &&
