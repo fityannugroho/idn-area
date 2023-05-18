@@ -30,7 +30,7 @@ export class IslandService {
   }
 
   async find(name = '', sort?: SortOptions<IslandSortKeys>): Promise<Island[]> {
-    return this.prisma.island.findMany({
+    const islands = await this.prisma.island.findMany({
       where: {
         name: {
           contains: name,
@@ -39,6 +39,8 @@ export class IslandService {
       },
       orderBy: this.sortHelper.object(sort),
     });
+
+    return islands.map(this.addLatLong);
   }
 
   /**
