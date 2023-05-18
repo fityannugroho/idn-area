@@ -48,3 +48,7 @@ export class IslandFindQueries extends IntersectionType(
   PickType(Island, ['name'] as const),
   IslandSortQuery,
 ) {}
+
+export class IslandFindByCodeParams extends PickType(Island, [
+  'code',
+] as const) {}
