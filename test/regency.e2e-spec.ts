@@ -109,6 +109,41 @@ describe('Regency (e2e)', () => {
     });
   });
 
+  describe(`GET ${baseUrl}/{code}/islands`, () => {
+    it('should return 400 if the `code` is invalid', async () => {
+      await expectBadRegencyCode((code) => `${baseUrl}/${code}/islands`);
+    });
+
+    it('should return 404 if the `code` does not match with any regency', async () => {
+      await tester.expectNotFound(`${baseUrl}/0000/islands`);
+    });
+
+    it('should return all islands from specific regency', async () => {
+      const res = await tester.expectOk(`${baseUrl}/1101/islands`);
+
+      expect(res.json()).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            code: expect.any(String),
+            coordinate: expect.any(String),
+            isOutermostSmall: expect.any(Boolean),
+            isPopulated: expect.any(Boolean),
+            latitude: expect.any(Number),
+            longitude: expect.any(Number),
+            name: expect.any(String),
+            regencyCode: '1101',
+          }),
+        ]),
+      );
+    });
+
+    it('should return empty array if there are no any island in the regency', async () => {
+      const res = await tester.expectOk(`${baseUrl}/1102/islands`);
+
+      expect(res.json()).toEqual([]);
+    });
+  });
+
   afterAll(async () => {
     await tester.closeApp();
   });
