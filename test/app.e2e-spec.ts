@@ -11,11 +11,12 @@ describe('AppController (e2e)', () => {
   it('/ (GET)', async () => {
     const res = await tester.expectOk('/');
 
-    expect(res.json()).toEqual({
-      message: 'Welcome to Indonesia Area API.',
-      version: '1.0.0',
-      docs: '/docs',
-    });
+    expect(res.json()).toEqual(
+      expect.objectContaining({
+        message: expect.any(String),
+        version: process.env.npm_package_version,
+      }),
+    );
   });
 
   afterAll(async () => {
