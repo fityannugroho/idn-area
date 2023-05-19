@@ -16,6 +16,12 @@ jobs:
     - uses: actions/checkout@v3
     - name: Install modules
       run: npm ci
+    - name: Migrate the database
+      run: npm run db:migrate
+    - name: Run data tests
+      run: npm run test:data
+    - name: Seed the data
+      run: npm run db:seed
     - name: Run unit tests
       run: npm run test
     - name: Run e2e tests
