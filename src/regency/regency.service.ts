@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { District, Regency } from '@prisma/client';
+import { District, Island, Regency } from '@prisma/client';
 import { SortHelper, SortOptions } from '~/src/common/helper/sort';
 import { PrismaService } from '~/src/common/services/prisma';
+import { IslandService, IslandSortKeys } from '../island/island.service';
 
 type RegencySortKeys = keyof Regency;
 
@@ -9,7 +10,10 @@ type RegencySortKeys = keyof Regency;
 export class RegencyService {
   private readonly sortHelper: SortHelper<RegencySortKeys>;
 
-  constructor(private readonly prisma: PrismaService) {
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly islandService: IslandService,
+  ) {
     this.sortHelper = new SortHelper<RegencySortKeys>({
       sortBy: 'code',
       sortOrder: 'asc',
@@ -55,7 +59,7 @@ export class RegencyService {
    * Find all districts in a regency.
    * @param regencyCode The regency code.
    * @param sort The sort query (optional).
-   * @returns Array of regency in the match regency, or `false` if there are no regency found.
+   * @returns Array of districts in the match regency, or `false` if there are no regency found.
    */
   async findDistrics(
     regencyCode: string,
@@ -72,5 +76,31 @@ export class RegencyService {
       });
 
     return districts ?? false;
+  }
+
+  /**
+   * Find all islands in a regency.
+   * @param regencyCode The regency code.
+   * @returns Array of islands in the match regency, or `false` if there are no regency found.
+   */
+  async findIslands(
+    regencyCode: string,
+    sort?: SortOptions<IslandSortKeys>,
+  ): Promise<false | Island[]> {
+    const islands = await this.prisma.regency
+      .findUnique({
+        where: {
+          code: regencyCode,
+        },
+      })
+      .islands({
+        orderBy: this.islandService.sortHelper.object(sort),
+      });
+
+    if (!islands) {
+      return false;
+    }
+
+    return islands.map(this.islandService.addDecimalCoordinate);
   }
 }

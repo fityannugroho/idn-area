@@ -19,14 +19,14 @@ model District {
 }
 
 model Island {
-  id               String  @id @default(auto()) @map("_id") @db.ObjectId
-  code             String  @unique
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  code             String   @unique
   coordinate       String
-  isOutermostSmall Boolean @map("is_outermost_small")
-  isPopulated      Boolean @map("is_populated")
+  isOutermostSmall Boolean  @map("is_outermost_small")
+  isPopulated      Boolean  @map("is_populated")
   name             String
-  regencyCode      String  @map("regency_code")
-  regency          Regency @relation(fields: [regencyCode], references: [code])
+  regencyCode      String?  @map("regency_code")
+  regency          Regency? @relation(fields: [regencyCode], references: [code])
 
   @@map("islands")
 }
