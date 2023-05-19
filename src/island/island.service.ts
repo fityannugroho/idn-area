@@ -9,7 +9,6 @@ type IslandSortKeys = keyof Island;
 @Injectable()
 export class IslandService {
   private readonly sortHelper: SortHelper<IslandSortKeys>;
-  private readonly coordinateConverter = new CoordinateConverter();
 
   constructor(private readonly prisma: PrismaService) {
     this.sortHelper = new SortHelper<IslandSortKeys>({
@@ -22,7 +21,8 @@ export class IslandService {
    * Add latitude and longitude to the response.
    */
   addLatLong(island: Island) {
-    const [latitude, longitude] = this.coordinateConverter.convertToNumber(
+    const coordinateConverter = new CoordinateConverter();
+    const [latitude, longitude] = coordinateConverter.convertToNumber(
       island.coordinate,
     );
 
