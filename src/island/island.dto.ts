@@ -2,6 +2,7 @@ import {
   IsBooleanString,
   IsNotEmpty,
   IsNumberString,
+  IsOptional,
   IsString,
   Length,
 } from 'class-validator';
@@ -17,26 +18,26 @@ export class Island {
   code: string;
 
   @IsNotEmpty()
-  @IsNotSymbol()
-  @Length(3, 255)
-  name: string;
-
-  @IsNotEmpty()
-  @IsNumberString()
-  @Length(4, 4)
-  regencyCode: string;
-
-  @IsNotEmpty()
   @IsString()
   coordinate: string;
+
+  @IsNotEmpty()
+  @IsBooleanString()
+  isOutermostSmall: boolean;
 
   @IsNotEmpty()
   @IsBooleanString()
   isPopulated: boolean;
 
   @IsNotEmpty()
-  @IsBooleanString()
-  isOutermostSmall: boolean;
+  @IsNotSymbol()
+  @Length(3, 255)
+  name: string;
+
+  @IsOptional()
+  @IsNumberString()
+  @Length(4, 4)
+  regencyCode?: string;
 }
 
 export class IslandSortQuery extends SortQuery<'code' | 'name' | 'coordinate'> {
