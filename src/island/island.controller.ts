@@ -74,7 +74,7 @@ export class IslandController {
   @Get(':code')
   async findByCode(@Param() params: IslandFindByCodeParams): Promise<Island> {
     const { code } = params;
-    const island = await this.islandService.findByCode(code, true);
+    const island = await this.islandService.findByCode(code);
 
     if (!island) {
       throw new NotFoundException(`Island with code ${code} not found.`);

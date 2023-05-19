@@ -12,15 +12,15 @@ export class IslandService {
 
   constructor(private readonly prisma: PrismaService) {
     this.sortHelper = new SortHelper<IslandSortKeys>({
-      sortBy: 'name',
+      sortBy: 'code',
       sortOrder: 'asc',
     });
   }
 
   /**
-   * Add latitude and longitude to the response.
+   * Add decimal latitude and longitude to the island object.
    */
-  addLatLong(island: Island) {
+  addDecimalCoordinate(island: Island) {
     const coordinateConverter = new CoordinateConverter();
     const [latitude, longitude] = coordinateConverter.convertToNumber(
       island.coordinate,
@@ -40,7 +40,7 @@ export class IslandService {
       orderBy: this.sortHelper.object(sort),
     });
 
-    return islands.map(this.addLatLong);
+    return islands.map(this.addDecimalCoordinate);
   }
 
   /**
@@ -48,17 +48,17 @@ export class IslandService {
    * @param code The island code.
    * @returns An island, or null if there are no match island.
    */
-  async findByCode(code: string, withLatLong = false): Promise<Island | null> {
+  async findByCode(code: string): Promise<Island | null> {
     const island = await this.prisma.island.findUnique({
       where: {
         code: code,
       },
     });
 
-    if (withLatLong) {
-      return this.addLatLong(island);
+    if (island) {
+      return this.addDecimalCoordinate(island);
     }
 
-    return island;
+    return null;
   }
 }
