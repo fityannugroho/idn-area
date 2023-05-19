@@ -35,7 +35,7 @@ export class IslandController {
   })
   @ApiQuery({
     name: 'sortBy',
-    description: 'Sort by island code or name.',
+    description: 'Sort islands by its code, name, or coordinate.',
     required: false,
     type: 'string',
     example: 'code',
