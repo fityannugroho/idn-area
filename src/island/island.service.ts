@@ -4,11 +4,11 @@ import { Island } from '@prisma/client';
 import { SortHelper, SortOptions } from '../common/helper/sort';
 import CoordinateConverter from '../common/helper/coordinate-converter';
 
-type IslandSortKeys = keyof Island;
+export type IslandSortKeys = keyof Island;
 
 @Injectable()
 export class IslandService {
-  private readonly sortHelper: SortHelper<IslandSortKeys>;
+  readonly sortHelper: SortHelper<IslandSortKeys>;
 
   constructor(private readonly prisma: PrismaService) {
     this.sortHelper = new SortHelper<IslandSortKeys>({

@@ -6,5 +6,6 @@ import { PrismaService } from '../common/services/prisma';
 @Module({
   providers: [IslandService, PrismaService],
   controllers: [IslandController],
+  exports: [IslandService],
 })
 export class IslandModule {}

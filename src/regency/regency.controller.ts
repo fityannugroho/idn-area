@@ -19,6 +19,7 @@ import {
   RegencyFindByCodeParams,
   RegencyFindDistrictParams,
   RegencyFindDistrictQueries,
+  RegencyFindIslandsQueries,
   RegencyFindQueries,
 } from './regency.dto';
 import { RegencyService } from './regency.service';
@@ -138,15 +139,36 @@ export class RegencyController {
     type: 'string',
     example: '3273',
   })
+  @ApiQuery({
+    name: 'sortBy',
+    description: 'Sort islands by its code, name, or coordinate.',
+    required: false,
+    type: 'string',
+    example: 'code',
+  })
+  @ApiQuery({
+    name: 'sortOrder',
+    description: 'Sort islands in ascending or descending order.',
+    required: false,
+    type: 'string',
+    example: 'asc',
+  })
   @ApiOkResponse({ description: 'Returns array of islands.' })
   @ApiBadRequestResponse({ description: 'If the `code` is invalid.' })
   @ApiNotFoundResponse({
     description: 'If there are no regency match with the `code`.',
   })
   @Get(':code/islands')
-  async findIslands(@Param() params: RegencyFindByCodeParams) {
+  async findIslands(
+    @Param() params: RegencyFindByCodeParams,
+    @Query() queries: RegencyFindIslandsQueries,
+  ) {
     const { code } = params;
-    const islands = await this.regencyService.findIslands(code);
+    const { sortBy, sortOrder } = queries ?? {};
+    const islands = await this.regencyService.findIslands(code, {
+      sortBy: sortBy,
+      sortOrder: sortOrder,
+    });
 
     if (islands === false)
       throw new NotFoundException(`There are no regency with code '${code}'`);

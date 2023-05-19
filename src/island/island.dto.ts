@@ -39,8 +39,8 @@ export class Island {
   isOutermostSmall: boolean;
 }
 
-export class IslandSortQuery extends SortQuery<'code' | 'name'> {
-  @EqualsAny(['code', 'name'])
+export class IslandSortQuery extends SortQuery<'code' | 'name' | 'coordinate'> {
+  @EqualsAny(['code', 'name', 'coordinate'])
   sortBy: 'code' | 'name';
 }
 

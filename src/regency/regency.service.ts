@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { District, Island, Regency } from '@prisma/client';
 import { SortHelper, SortOptions } from '~/src/common/helper/sort';
 import { PrismaService } from '~/src/common/services/prisma';
-import CoordinateConverter from '../common/helper/coordinate-converter';
+import { IslandService, IslandSortKeys } from '../island/island.service';
 
 type RegencySortKeys = keyof Regency;
 
@@ -10,7 +10,10 @@ type RegencySortKeys = keyof Regency;
 export class RegencyService {
   private readonly sortHelper: SortHelper<RegencySortKeys>;
 
-  constructor(private readonly prisma: PrismaService) {
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly islandService: IslandService,
+  ) {
     this.sortHelper = new SortHelper<RegencySortKeys>({
       sortBy: 'code',
       sortOrder: 'asc',
@@ -80,26 +83,24 @@ export class RegencyService {
    * @param regencyCode The regency code.
    * @returns Array of islands in the match regency, or `false` if there are no regency found.
    */
-  async findIslands(regencyCode: string): Promise<false | Island[]> {
-    const coordinateConverter = new CoordinateConverter();
+  async findIslands(
+    regencyCode: string,
+    sort?: SortOptions<IslandSortKeys>,
+  ): Promise<false | Island[]> {
     const islands = await this.prisma.regency
       .findUnique({
         where: {
           code: regencyCode,
         },
       })
-      .islands();
+      .islands({
+        orderBy: this.islandService.sortHelper.object(sort),
+      });
 
     if (!islands) {
       return false;
     }
 
-    return islands.map((island) => {
-      const [latitude, longitude] = coordinateConverter.convertToNumber(
-        island.coordinate,
-      );
-
-      return { ...island, latitude, longitude };
-    });
+    return islands.map(this.islandService.addDecimalCoordinate);
   }
 }
