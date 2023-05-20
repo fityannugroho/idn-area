@@ -1,6 +1,6 @@
 {
   "name": "idn-area",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "API that provides information about Indonesia administrative area.",
   "author": "Fityan",
   "private": false,
@@ -16,7 +16,6 @@
     "prisma:gen": "prisma generate",
     "db:migrate": "prisma db push",
     "db:seed": "prisma db seed",
-    "postinstall": "npm run prisma:gen",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
@@ -26,7 +25,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "test:data": "npm run test:e2e ./test/data.e2e-spec.ts"
+    "test:data": "jest --config ./test/jest-e2e.json ./test/data.e2e-spec.ts"
   },
   "prisma": {
     "seed": "ts-node -r tsconfig-paths/register --transpile-only prisma/seed.ts"
