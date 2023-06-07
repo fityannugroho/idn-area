@@ -20,7 +20,6 @@ What kind of change does this PR introduce?
 - [ ] Refactoring (no functional changes, no api changes)
 - [ ] Build related changes
 - [ ] CI related changes
-- [ ] Data change
 - [ ] *..... (describe the other type)*
 
 ## What is the current behavior?
@@ -36,7 +35,5 @@ Issue Number: *..... (put `N/A` if there are no relevant issue)*
 *..... (explain here)*
 
 ## Other information
-
-> For PR that includes `data change`, you MUST put **the official link to the related government regulations,** so we can review and make sure the data change is legally valid.
 
 *..... (explain here, or put `None`)*
