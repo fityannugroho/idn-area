@@ -43,13 +43,7 @@ Please read the guide to install and run this app in [here](docs/installation.md
 
 ## Data
 
-The data we used is based on official data from the government.
-
-> The latest official data we got is:
->
-> [Keputusan Menteri Dalam Negeri Nomor 050-145 Tahun 2022 Tentang Pemberian dan Pemutakhiran Kode, Data Wilayah Administrasi Pemerintahan, dan Pulau Tahun 2021](https://www.kemendagri.go.id/arsip/detail/10857/keputusan-menteri-dalam-negeri-nomor-050145-tahun-2022-tentang-pemberian-kode-data-wilayah-administrasi-pemerintahan-dan-pulau-tahun-2021) ([archieved here](https://archive.org/details/kepmendagri-050-145-tahun-2022))
-
-The data is stored in separated csv files by the levels in [`data`](data) directory.
+The data we used is based on official sources, managed in [**idn-area-data**](https://github.com/fityannugroho/idn-area-data) repository and distributed as a [npm package](https://www.npmjs.com/package/idn-area-data).
 
 ## Entity Relations
 
