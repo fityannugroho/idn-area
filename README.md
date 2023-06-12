@@ -11,7 +11,7 @@ API that provides information on the **administrative areas of Indonesia**, from
 
 Built with [NestJS framework](https://nestjs.com) and writen in TypeScript. [Prisma](https://www.prisma.io) is used as the ORM to interact with any kind of database (in future). For now, we use MongoDB.
 
-> **NEW!** [Island endpoints 🏝️](#12-get-islands-by-name) available in version 1.2.0 or higher.
+> **NEW!** [Island endpoints 🏝️](#12-get-islands-by-name) available in version 1.1.0 or higher.
 
 <h2>Table of Content</h2>
 
