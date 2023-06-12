@@ -9,36 +9,18 @@ const insertProvinces = async () => {
 };
 
 const insertRegencies = async () => {
-  const regencies = await IdnArea.regencies();
-  return await prisma.regency.createMany({
-    data: regencies.map((regency) => ({
-      code: regency.code,
-      name: regency.name,
-      provinceCode: regency.province_code,
-    })),
-  });
+  const regencies = await IdnArea.regencies({ transform: true });
+  return await prisma.regency.createMany({ data: regencies });
 };
 
 const insertDistricts = async () => {
-  const districts = await IdnArea.districts();
-  return await prisma.district.createMany({
-    data: districts.map((district) => ({
-      code: district.code,
-      name: district.name,
-      regencyCode: district.regency_code,
-    })),
-  });
+  const districts = await IdnArea.districts({ transform: true });
+  return await prisma.district.createMany({ data: districts });
 };
 
 const insertVillages = async () => {
-  const villages = await IdnArea.villages();
-  return await prisma.village.createMany({
-    data: villages.map((village) => ({
-      code: village.code,
-      name: village.name,
-      districtCode: village.district_code,
-    })),
-  });
+  const villages = await IdnArea.villages({ transform: true });
+  return await prisma.village.createMany({ data: villages });
 };
 
 /**
