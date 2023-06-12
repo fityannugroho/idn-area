@@ -72,6 +72,7 @@ The following is the list of supported scopes:
 - `regency`: for changes made on `src/regency` directory.
 - `district`: for changes made on `src/district` directory.
 - `village`: for changes made on `src/village` directory.
+- `island`: for changes made on `src/island` file.
 
 If your change affect more than one package, separate the scopes with a comma (e.g. `test,province`).
 
