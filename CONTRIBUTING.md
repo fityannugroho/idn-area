@@ -65,7 +65,6 @@ The scope could be anything specifying place of the commit change.
 
 The following is the list of supported scopes:
 
-- `data/[level]`: for changes made on `data` directory. Replace `level` with 'provinces', 'regencies', 'districts', or 'villages'. For example: `data/provinces`.
 - `docs`: for changes made on `docs` directory.
 - `test`: for changes made on `test` directory.
 - `common/[sub-scope]`: for changes made on `src/common` directory. Replace `sub-scope` with available sub-directory in `common`, like 'decorator', 'helper', etc. For example: `common/decorator`.
@@ -106,7 +105,7 @@ Closes #123
 
 Before you submit an issue, please search the issue tracker, maybe an issue for your problem already exists and the discussion might inform you of workarounds readily available.
 
-You can report the issues by filling out the [new issue form](https://github.com/fityannugroho/idn-area/issues/new). Please select the right form template:
+You can report the issues by filling out the [new issue form](https://github.com/fityannugroho/idn-area/issues/new/choose). Please select the right form template:
 - **Bug Report**: if you found a bug in the source code.
 - **Feature Request**: if you want a new feature or enhancement.
 

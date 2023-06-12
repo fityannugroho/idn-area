@@ -1,75 +1,39 @@
 import { PrismaClient } from '@prisma/client';
-import { join } from 'path';
-import { CsvParser } from '~/src/common/helper/csv-parser';
-import {
-  AreaByCollection,
-  Areas,
-  Collection,
-  District,
-  Island,
-  Regency,
-  Village,
-  isDistrict,
-  isIsland,
-  isRegency,
-  isVillage,
-} from './utils';
+import * as IdnArea from 'idn-area-data';
 
 const prisma = new PrismaClient();
 
-const insertData = async <T extends Areas>(data: T[]) => {
-  if (data.every(isVillage)) {
-    return await prisma.village.createMany({
-      data: (data as Village[]).map((item) => ({
-        code: item.code,
-        name: item.name,
-        districtCode: item.district_code,
-      })),
-    });
-  }
+const insertProvinces = async () => {
+  const provinces = await IdnArea.provinces();
+  return await prisma.province.createMany({ data: provinces });
+};
 
-  if (data.every(isDistrict)) {
-    return await prisma.district.createMany({
-      data: (data as District[]).map((item) => ({
-        code: item.code,
-        name: item.name,
-        regencyCode: item.regency_code,
-      })),
-    });
-  }
+const insertRegencies = async () => {
+  const regencies = await IdnArea.regencies({ transform: true });
+  return await prisma.regency.createMany({ data: regencies });
+};
 
-  if (data.every(isRegency)) {
-    return await prisma.regency.createMany({
-      data: (data as Regency[]).map((item) => ({
-        code: item.code,
-        name: item.name,
-        provinceCode: item.province_code,
-      })),
-    });
-  }
+const insertDistricts = async () => {
+  const districts = await IdnArea.districts({ transform: true });
+  return await prisma.district.createMany({ data: districts });
+};
 
-  if (data.every(isIsland)) {
-    return await prisma.island.createMany({
-      data: (data as Island[]).map((item) => ({
-        code: item.code,
-        coordinate: item.coordinate,
-        isOutermostSmall: item.is_outermost_small === 'true',
-        isPopulated: item.is_populated === 'true',
-        name: item.name,
-        regencyCode: item.regency_code,
-      })),
-    });
-  }
+const insertVillages = async () => {
+  const villages = await IdnArea.villages({ transform: true });
+  return await prisma.village.createMany({ data: villages });
+};
 
-  return await prisma.province.createMany({ data });
+const insertIslands = async () => {
+  const islands = await IdnArea.islands({ transform: true });
+  return await prisma.island.createMany({ data: islands });
 };
 
 /**
  * Delete all data in a collection.
  */
-const deleteAreaData = async (collection: Collection) => {
+const deleteAreaData = async (collection: IdnArea.Areas) => {
   console.time(`delete-${collection}`);
-  const res = await prisma.$runCommandRaw({
+  const result = await prisma.$runCommandRaw({
     delete: collection,
     deletes: [
       {
@@ -80,20 +44,35 @@ const deleteAreaData = async (collection: Collection) => {
   });
 
   console.timeEnd(`delete-${collection}`);
-  return res;
+  return result;
 };
 
-const insertAreaData = async <T extends Collection>(collection: T) => {
+const insertAreaData = async (collection: IdnArea.Areas) => {
   console.time(`insert-${collection}`);
+  let result = null;
 
-  const filePath = join(__dirname, `../data/${collection}.csv`);
-  const parsed = await CsvParser.parse<AreaByCollection<T>>(filePath, {
-    header: true,
-  });
-  const res = await insertData(parsed.data);
+  switch (collection) {
+    case 'provinces':
+      result = await insertProvinces();
+      break;
+    case 'regencies':
+      result = await insertRegencies();
+      break;
+    case 'districts':
+      result = await insertDistricts();
+      break;
+    case 'villages':
+      result = await insertVillages();
+      break;
+    case 'islands':
+      result = await insertIslands();
+      break;
+    default:
+      throw new Error('Invalid collection');
+  }
 
   console.timeEnd(`insert-${collection}`);
-  return res;
+  return result;
 };
 
 async function main() {
