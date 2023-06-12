@@ -137,7 +137,7 @@ export class RegencyController {
     description: 'The regency code',
     required: true,
     type: 'string',
-    example: '3273',
+    example: '1101',
   })
   @ApiQuery({
     name: 'sortBy',

@@ -26,6 +26,7 @@ Built with [NestJS framework](https://nestjs.com) and writen in TypeScript. [Pri
   - [4. Get Regencies by Name](#4-get-regencies-by-name)
   - [5. Get Specific Regency](#5-get-specific-regency)
   - [6. Get All Districts in a Regency](#6-get-all-districts-in-a-regency)
+  - [Get All Islands in a Regency](#get-all-islands-in-a-regency)
   - [7. Get Districts by Name](#7-get-districts-by-name)
   - [8. Get Specific District](#8-get-specific-district)
   - [9. Get All Villages in a District](#9-get-all-villages-in-a-district)
@@ -150,6 +151,19 @@ GET /regencies/{regencyCode}/districts
 - The `{regencyCode}` must be **4 numeric characters**. If not, you will get `400 Bad Request` response.
 - This endpoint **will return** the array of district if the `{regencyCode}` is exists. Otherwise, you will get a `404 Not Found` response.
 - Usage example: http://localhost:3000/regencies/3273/districts
+
+> This endpoint also support [`sortBy`][sortby-query] and [`sortOrder`][sortorder-query] queries.
+
+### Get All Islands in a Regency
+
+```
+GET /regencies/{regencyCode}/islands
+```
+
+- Use this endpoint to **get all islands in a regency**.
+- The `{regencyCode}` must be **4 numeric characters**. If not, you will get `400 Bad Request` response.
+- This endpoint **will return** the array of island if the `{regencyCode}` is exists. Otherwise, you will get a `404 Not Found` response.
+- Usage example: http://localhost:3000/regencies/1101/islands
 
 > This endpoint also support [`sortBy`][sortby-query] and [`sortOrder`][sortorder-query] queries.
 
