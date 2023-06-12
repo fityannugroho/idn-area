@@ -11,6 +11,8 @@ API that provides information on the **administrative areas of Indonesia**, from
 
 Built with [NestJS framework](https://nestjs.com) and writen in TypeScript. [Prisma](https://www.prisma.io) is used as the ORM to interact with any kind of database (in future). For now, we use MongoDB.
 
+> **NEW!** [Island endpoints 🏝️](#12-get-islands-by-name) available in version 1.2.0 or higher.
+
 <h2>Table of Content</h2>
 
 - [Getting Started](#getting-started)
@@ -24,11 +26,14 @@ Built with [NestJS framework](https://nestjs.com) and writen in TypeScript. [Pri
   - [4. Get Regencies by Name](#4-get-regencies-by-name)
   - [5. Get Specific Regency](#5-get-specific-regency)
   - [6. Get All Districts in a Regency](#6-get-all-districts-in-a-regency)
+  - [Get All Islands in a Regency](#get-all-islands-in-a-regency)
   - [7. Get Districts by Name](#7-get-districts-by-name)
   - [8. Get Specific District](#8-get-specific-district)
   - [9. Get All Villages in a District](#9-get-all-villages-in-a-district)
   - [10. Get Villages by Name](#10-get-villages-by-name)
   - [11. Get Specific Village](#11-get-specific-village)
+  - [12. Get Islands by Name](#12-get-islands-by-name)
+  - [13. Get Specific Island](#13-get-specific-island)
   - [Query Parameters](#query-parameters)
     - [`sortBy`](#sortby)
     - [`sortOrder`](#sortorder)
@@ -149,6 +154,19 @@ GET /regencies/{regencyCode}/districts
 
 > This endpoint also support [`sortBy`][sortby-query] and [`sortOrder`][sortorder-query] queries.
 
+### Get All Islands in a Regency
+
+```
+GET /regencies/{regencyCode}/islands
+```
+
+- Use this endpoint to **get all islands in a regency**.
+- The `{regencyCode}` must be **4 numeric characters**. If not, you will get `400 Bad Request` response.
+- This endpoint **will return** the array of island if the `{regencyCode}` is exists. Otherwise, you will get a `404 Not Found` response.
+- Usage example: http://localhost:3000/regencies/1101/islands
+
+> This endpoint also support [`sortBy`][sortby-query] and [`sortOrder`][sortorder-query] queries.
+
 ### 7. Get Districts by Name
 
 ```
@@ -209,6 +227,30 @@ GET /villages/{villageCode}
 - The `{villageCode}` must be **10 numeric characters**. If not, you will get `400 Bad Request` response.
 - This endpoint **will return** the village with the same code as `{villageCode}`. Otherwise, you will get a `404 Not Found` response.
 - Usage example: http://localhost:3000/villages/3273111004
+
+### 12. Get Islands by Name
+
+```
+GET /islands?name={islandName}
+```
+
+- Use this endpoint to **get the islands by its name**.
+- The `{islandName}` **is required** and must be **at least 3 characters**, maximum 255 characters, and does not contains any other symbols besides `'-/`. If not, you will get `400 Bad Request` response.
+- This endpoint **will return** an array of island, or an **empty array** `[]` if there are no island matched with the `{islandName}`.
+- Usage example: http://localhost:3000/islands?name=java
+
+> This endpoint also support [`sortBy`][sortby-query] and [`sortOrder`][sortorder-query] queries.
+
+### 13. Get Specific Island
+
+```
+GET /islands/{islandCode}
+```
+
+- Use this endpoint to **get a specific island**.
+- The `{islandCode}` must be **9 numeric characters**. If not, you will get `400 Bad Request` response.
+- This endpoint **will return** the island with the same code as `{islandCode}`. Otherwise, you will get a `404 Not Found` response.
+- Usage example: http://localhost:3000/islands/110140001
 
 ### Query Parameters
 

@@ -1,9 +1,10 @@
+import { IntersectionType, PickType } from '@nestjs/mapped-types';
 import { IsNotEmpty, IsNumberString, Length } from 'class-validator';
 import { EqualsAny } from '~/src/common/decorator/EqualsAny';
 import { IsNotSymbol } from '~/src/common/decorator/IsNotSymbol';
 import { SortQuery } from '../common/helper/sort';
-import { IntersectionType, PickType } from '@nestjs/mapped-types';
 import { DistrictSortQuery } from '../district/district.dto';
+import { IslandSortQuery } from '../island/island.dto';
 
 export class Regency {
   @IsNotEmpty()
@@ -41,3 +42,5 @@ export class RegencyFindDistrictParams extends PickType(Regency, [
 ] as const) {}
 
 export class RegencyFindDistrictQueries extends DistrictSortQuery {}
+
+export class RegencyFindIslandsQueries extends IslandSortQuery {}

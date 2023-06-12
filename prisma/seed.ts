@@ -23,6 +23,11 @@ const insertVillages = async () => {
   return await prisma.village.createMany({ data: villages });
 };
 
+const insertIslands = async () => {
+  const islands = await IdnArea.islands({ transform: true });
+  return await prisma.island.createMany({ data: islands });
+};
+
 /**
  * Delete all data in a collection.
  */
@@ -59,6 +64,9 @@ const insertAreaData = async (collection: IdnArea.Areas) => {
     case 'villages':
       result = await insertVillages();
       break;
+    case 'islands':
+      result = await insertIslands();
+      break;
     default:
       throw new Error('Invalid collection');
   }
@@ -70,11 +78,13 @@ const insertAreaData = async (collection: IdnArea.Areas) => {
 async function main() {
   await deleteAreaData('villages');
   await deleteAreaData('districts');
+  await deleteAreaData('islands');
   await deleteAreaData('regencies');
   await deleteAreaData('provinces');
 
   await insertAreaData('provinces');
   await insertAreaData('regencies');
+  await insertAreaData('islands');
   await insertAreaData('districts');
   await insertAreaData('villages');
 }
