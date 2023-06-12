@@ -30,7 +30,7 @@ export class Island {
   isPopulated: boolean;
 
   @IsNotEmpty()
-  @IsNotSymbol()
+  @IsNotSymbol("'-/")
   @Length(3, 255)
   name: string;
 
