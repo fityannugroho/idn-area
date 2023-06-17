@@ -33,11 +33,11 @@ export const runOrFail = async (command: string) => {
 export const timify = <T extends (...args: any[]) => any>(
   fn: T,
   label?: string,
-): T => {
-  return ((...args: Parameters<T>): ReturnType<T> => {
+) => {
+  return async (...args: Parameters<T>): Promise<Awaited<ReturnType<T>>> => {
     console.time(label || fn.name);
-    const result = fn(...args);
+    const result = await fn(...args);
     console.timeEnd(label || fn.name);
     return result;
-  }) as T;
+  };
 };
