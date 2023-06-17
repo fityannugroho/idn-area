@@ -1,5 +1,5 @@
 import { IsOptional, IsString } from 'class-validator';
-import { EqualsAny } from '../../decorator/EqualsAny';
+import { EqualsAny } from '~/src/common/decorator/EqualsAny';
 
 export type SortOptions<T extends string = string> = {
   sortBy?: T;
@@ -22,7 +22,7 @@ export class SortQuery<T extends string = string> implements SortOptions<T> {
   sortOrder?: 'asc' | 'desc';
 }
 
-export class SortHelper<T extends string = string> {
+export class Sorter<T extends string = string> {
   defaultOptions: Required<SortOptions<T>>;
 
   /**

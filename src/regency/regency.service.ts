@@ -1,20 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { District, Island, Regency } from '@prisma/client';
-import { SortHelper, SortOptions } from '~/src/common/helper/sort';
 import { PrismaService } from '~/src/common/services/prisma';
+import { getDBProviderFeatures } from '~/utils/db';
+import { SortOptions, Sorter } from '~/utils/helpers/sorter';
 import { IslandService, IslandSortKeys } from '../island/island.service';
 
 type RegencySortKeys = keyof Regency;
 
 @Injectable()
 export class RegencyService {
-  private readonly sortHelper: SortHelper<RegencySortKeys>;
+  private readonly sortHelper: Sorter<RegencySortKeys>;
 
   constructor(
     private readonly prisma: PrismaService,
     private readonly islandService: IslandService,
   ) {
-    this.sortHelper = new SortHelper<RegencySortKeys>({
+    this.sortHelper = new Sorter<RegencySortKeys>({
       sortBy: 'code',
       sortOrder: 'asc',
     });
@@ -35,7 +36,9 @@ export class RegencyService {
       where: {
         name: {
           contains: name,
-          mode: 'insensitive',
+          ...(getDBProviderFeatures()?.filtering?.insensitive && {
+            mode: 'insensitive',
+          }),
         },
       },
       orderBy: this.sortHelper.object(sort),

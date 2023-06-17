@@ -1,3 +1,4 @@
+import { IntersectionType, PickType } from '@nestjs/mapped-types';
 import {
   IsBooleanString,
   IsNotEmpty,
@@ -6,10 +7,9 @@ import {
   IsString,
   Length,
 } from 'class-validator';
-import { IsNotSymbol } from '../common/decorator/IsNotSymbol';
+import { SortQuery } from '~/utils/helpers/sorter';
 import { EqualsAny } from '../common/decorator/EqualsAny';
-import { SortQuery } from '../common/helper/sort';
-import { IntersectionType, PickType } from '@nestjs/mapped-types';
+import { IsNotSymbol } from '../common/decorator/IsNotSymbol';
 
 export class Island {
   @IsNotEmpty()
@@ -19,6 +19,7 @@ export class Island {
 
   @IsNotEmpty()
   @IsString()
+  @Length(30, 30)
   coordinate: string;
 
   @IsNotEmpty()

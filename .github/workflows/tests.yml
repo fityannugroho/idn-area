@@ -1,6 +1,6 @@
 name: "Tests the App"
 env:
-  DATABASE_URL: ${{ secrets.DATABASE_URL }}
+  DB_URL: ${{ secrets.DB_URL }}
 on:
   push:
     branches:

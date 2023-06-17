@@ -1,4 +1,4 @@
-import { AppTester } from '~/src/common/helper/app-tester';
+import { AppTester } from '~/utils/helpers/app-tester';
 
 describe('District (e2e)', () => {
   const baseUrl = '/districts';
