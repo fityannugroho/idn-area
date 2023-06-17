@@ -41,37 +41,27 @@ export class Seeder {
   }
 
   async deleteProvinces(): Promise<number> {
-    const res = await this.prisma.province.deleteMany({
-      where: {},
-    });
+    const res = await this.prisma.province.deleteMany();
     return res.count;
   }
 
   async deleteRegencies(): Promise<number> {
-    const res = await this.prisma.regency.deleteMany({
-      where: {},
-    });
+    const res = await this.prisma.regency.deleteMany();
     return res.count;
   }
 
   async deleteDistricts(): Promise<number> {
-    const res = await this.prisma.district.deleteMany({
-      where: {},
-    });
+    const res = await this.prisma.district.deleteMany();
     return res.count;
   }
 
   async deleteVillages(): Promise<number> {
-    const res = await this.prisma.village.deleteMany({
-      where: {},
-    });
+    const res = await this.prisma.village.deleteMany();
     return res.count;
   }
 
   async deleteIslands(): Promise<number> {
-    const res = await this.prisma.island.deleteMany({
-      where: {},
-    });
+    const res = await this.prisma.island.deleteMany();
     return res.count;
   }
 }
