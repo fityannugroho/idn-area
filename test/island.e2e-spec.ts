@@ -1,4 +1,4 @@
-import { AppTester } from '~/src/common/helper/app-tester';
+import { AppTester } from '~/utils/helpers/app-tester';
 
 describe('Island (e2e)', () => {
   const baseUrl = '/islands';
@@ -87,5 +87,9 @@ describe('Island (e2e)', () => {
 
       expect(testCode.includes(res.json().regencyCode)).toBeTruthy();
     });
+  });
+
+  afterAll(async () => {
+    await tester.closeApp();
   });
 });

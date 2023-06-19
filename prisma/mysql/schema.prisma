@@ -1,0 +1,58 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model District {
+  code        String    @id @db.VarChar(6)
+  name        String    @db.VarChar(255)
+  regencyCode String    @map("regency_code") @db.VarChar(4)
+  regency     Regency   @relation(fields: [regencyCode], references: [code])
+  villages    Village[]
+
+  @@map("districts")
+}
+
+model Island {
+  code             String   @id @db.VarChar(9)
+  coordinate       String   @db.VarChar(30)
+  isOutermostSmall Boolean  @map("is_outermost_small")
+  isPopulated      Boolean  @map("is_populated")
+  name             String   @db.VarChar(255)
+  regencyCode      String?  @map("regency_code") @db.VarChar(4)
+  regency          Regency? @relation(fields: [regencyCode], references: [code])
+
+  @@map("islands")
+}
+
+model Province {
+  code      String    @id @db.VarChar(2)
+  name      String    @db.VarChar(255)
+  regencies Regency[]
+
+  @@map("provinces")
+}
+
+model Regency {
+  code         String     @id @db.VarChar(4)
+  name         String     @db.VarChar(255)
+  provinceCode String     @map("province_code") @db.VarChar(2)
+  islands      Island[]
+  districts    District[]
+  province     Province   @relation(fields: [provinceCode], references: [code])
+
+  @@map("regencies")
+}
+
+model Village {
+  code         String   @id @db.VarChar(10)
+  districtCode String   @map("district_code") @db.VarChar(6)
+  name         String   @db.VarChar(255)
+  district     District @relation(fields: [districtCode], references: [code])
+
+  @@map("villages")
+}

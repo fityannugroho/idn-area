@@ -1,16 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { District, Village } from '@prisma/client';
-import { SortHelper, SortOptions } from '~/src/common/helper/sort';
 import { PrismaService } from '~/src/common/services/prisma';
+import { getDBProviderFeatures } from '~/utils/db';
+import { SortOptions, Sorter } from '~/utils/helpers/sorter';
 
 type DistrictSortKeys = keyof District;
 
 @Injectable()
 export class DistrictService {
-  private readonly sortHelper: SortHelper<DistrictSortKeys>;
+  private readonly sortHelper: Sorter<DistrictSortKeys>;
 
   constructor(private readonly prisma: PrismaService) {
-    this.sortHelper = new SortHelper<DistrictSortKeys>({
+    this.sortHelper = new Sorter<DistrictSortKeys>({
       sortBy: 'code',
       sortOrder: 'asc',
     });
@@ -31,7 +32,9 @@ export class DistrictService {
       where: {
         name: {
           contains: name,
-          mode: 'insensitive',
+          ...(getDBProviderFeatures()?.filtering?.insensitive && {
+            mode: 'insensitive',
+          }),
         },
       },
       orderBy: this.sortHelper.object(sort),
