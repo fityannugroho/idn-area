@@ -2,13 +2,19 @@ import { PrismaClient } from '@prisma/client';
 import { timify } from '../utils/helpers';
 import { Seeder } from './seeder';
 import { validateDBConfig } from '~/utils/db';
+import { dbConfig, dbProvider } from '~/utils/db/config';
+import { MongodbSeeder } from './mongodb/seeder';
 
 const prisma = new PrismaClient();
 
 async function main() {
   validateDBConfig();
 
-  const seeder = new Seeder(prisma);
+  let seeder = new Seeder(prisma);
+
+  if (dbConfig.provider === dbProvider.mongodb) {
+    seeder = new MongodbSeeder(prisma);
+  }
 
   console.log('Deleting all data...');
   await timify(seeder.deleteVillages.bind(seeder), 'delete-villages')();
