@@ -11,32 +11,31 @@ API that provides information on the **administrative areas of Indonesia**, from
 
 Built with [NestJS framework](https://nestjs.com) and writen in TypeScript. [Prisma](https://www.prisma.io) is used as the ORM to interact with any kind of database (in future). For now, we use MongoDB.
 
-> **NEW!** [Island endpoints 🏝️](#12-get-islands-by-name) available in version 1.1.0 or higher.
+> **NEW!** [Island endpoints 🏝️](#get-islands-by-name) available in version 1.1.0 or higher.
 
 <h2>Table of Content</h2>
 
 - [Getting Started](#getting-started)
 - [Data](#data)
-- [Entity Relations](#entity-relations)
 - [API Endpoint](#api-endpoint)
   - [Documentation](#documentation)
-  - [1. Get Provinces](#1-get-provinces)
-  - [2. Get Specific Province](#2-get-specific-province)
-  - [3. Get All Regencies in a Province](#3-get-all-regencies-in-a-province)
-  - [4. Get Regencies by Name](#4-get-regencies-by-name)
-  - [5. Get Specific Regency](#5-get-specific-regency)
-  - [6. Get All Districts in a Regency](#6-get-all-districts-in-a-regency)
-  - [Get All Islands in a Regency](#get-all-islands-in-a-regency)
-  - [7. Get Districts by Name](#7-get-districts-by-name)
-  - [8. Get Specific District](#8-get-specific-district)
-  - [9. Get All Villages in a District](#9-get-all-villages-in-a-district)
-  - [10. Get Villages by Name](#10-get-villages-by-name)
-  - [11. Get Specific Village](#11-get-specific-village)
-  - [12. Get Islands by Name](#12-get-islands-by-name)
-  - [13. Get Specific Island](#13-get-specific-island)
-  - [Query Parameters](#query-parameters)
-    - [`sortBy`](#sortby)
-    - [`sortOrder`](#sortorder)
+  - [Get provinces](#get-provinces)
+  - [Get specific province](#get-specific-province)
+  - [Get regencies by name](#get-regencies-by-name)
+  - [Get specific regency](#get-specific-regency)
+  - [Get all regencies in a province](#get-all-regencies-in-a-province)
+  - [Get districts by name](#get-districts-by-name)
+  - [Get specific district](#get-specific-district)
+  - [Get all districts in a regency](#get-all-districts-in-a-regency)
+  - [Get villages by name](#get-villages-by-name)
+  - [Get specific village](#get-specific-village)
+  - [Get all villages in a district](#get-all-villages-in-a-district)
+  - [Get islands by name](#get-islands-by-name)
+  - [Get specific island](#get-specific-island)
+  - [Get all islands in a regency](#get-all-islands-in-a-regency)
+- [Query Parameters](#query-parameters)
+  - [`sortBy`](#sortby)
+  - [`sortOrder`](#sortorder)
 - [Live Demo](#live-demo)
 - [Contributing](#contributing)
 
@@ -49,12 +48,6 @@ Please read the guide to install and run this app in [here](docs/installation.md
 ## Data
 
 The data we used is based on official sources, managed in [**idn-area-data**](https://github.com/fityannugroho/idn-area-data) repository and distributed as a [npm package](https://www.npmjs.com/package/idn-area-data).
-
-## Entity Relations
-
-The following diagram shows the relations between the entities in this app.
-
-![Entity Relations](assets/idn-area-api.jpg)
 
 ## API Endpoint
 
@@ -69,7 +62,7 @@ GET /docs
 
 - Use this endpoint to get generated **API documentation**.
 
-### 1. Get Provinces
+### Get provinces
 
 ```
 GET /provinces
@@ -93,7 +86,7 @@ GET /provinces?name={provinceName}
 
 > This endpoint also support [`sortBy`][sortby-query] and [`sortOrder`][sortorder-query] queries.
 
-### 2. Get Specific Province
+### Get specific province
 
 ```
 GET /provinces/{provinceCode}
@@ -104,20 +97,7 @@ GET /provinces/{provinceCode}
 - This endpoint **will return** the province with the same code as `{provinceCode}`. Otherwise, you will get a `404 Not Found` response.
 - Usage example: http://localhost:3000/provinces/32
 
-### 3. Get All Regencies in a Province
-
-```
-GET /provinces/{provinceCode}/regencies
-```
-
-- Use this endpoint to **get all regencies in a province**.
-- The `{provinceCode}` must be **2 numeric characters**. If not, you will get `400 Bad Request` response.
-- This endpoint **will return** the array of regency if the `{provinceCode}` is exists. Otherwise, you will get a `404 Not Found` response.
-- Usage example: http://localhost:3000/provinces/32/regencies
-
-> This endpoint also support [`sortBy`][sortby-query] and [`sortOrder`][sortorder-query] queries.
-
-### 4. Get Regencies by Name
+### Get regencies by name
 
 ```
 GET /regencies?name={regencyName}
@@ -130,7 +110,7 @@ GET /regencies?name={regencyName}
 
 > This endpoint also support [`sortBy`][sortby-query] and [`sortOrder`][sortorder-query] queries.
 
-### 5. Get Specific Regency
+### Get specific regency
 
 ```
 GET /regencies/{regencyCode}
@@ -141,33 +121,20 @@ GET /regencies/{regencyCode}
 - This endpoint **will return** the regency with the same code as `{regencyCode}`. Otherwise, you will get a `404 Not Found` response.
 - Usage example: http://localhost:3000/regencies/3273
 
-### 6. Get All Districts in a Regency
+### Get all regencies in a province
 
 ```
-GET /regencies/{regencyCode}/districts
+GET /provinces/{provinceCode}/regencies
 ```
 
-- Use this endpoint to **get all districts in a regency**.
-- The `{regencyCode}` must be **4 numeric characters**. If not, you will get `400 Bad Request` response.
-- This endpoint **will return** the array of district if the `{regencyCode}` is exists. Otherwise, you will get a `404 Not Found` response.
-- Usage example: http://localhost:3000/regencies/3273/districts
+- Use this endpoint to **get all regencies in a province**.
+- The `{provinceCode}` must be **2 numeric characters**. If not, you will get `400 Bad Request` response.
+- This endpoint **will return** the array of regency if the `{provinceCode}` is exists. Otherwise, you will get a `404 Not Found` response.
+- Usage example: http://localhost:3000/provinces/32/regencies
 
 > This endpoint also support [`sortBy`][sortby-query] and [`sortOrder`][sortorder-query] queries.
 
-### Get All Islands in a Regency
-
-```
-GET /regencies/{regencyCode}/islands
-```
-
-- Use this endpoint to **get all islands in a regency**.
-- The `{regencyCode}` must be **4 numeric characters**. If not, you will get `400 Bad Request` response.
-- This endpoint **will return** the array of island if the `{regencyCode}` is exists. Otherwise, you will get a `404 Not Found` response.
-- Usage example: http://localhost:3000/regencies/1101/islands
-
-> This endpoint also support [`sortBy`][sortby-query] and [`sortOrder`][sortorder-query] queries.
-
-### 7. Get Districts by Name
+### Get districts by name
 
 ```
 GET /districts?name={districtName}
@@ -180,7 +147,7 @@ GET /districts?name={districtName}
 
 > This endpoint also support [`sortBy`][sortby-query] and [`sortOrder`][sortorder-query] queries.
 
-### 8. Get Specific District
+### Get specific district
 
 ```
 GET /districts/{districtCode}
@@ -191,20 +158,20 @@ GET /districts/{districtCode}
 - This endpoint **will return** the district with the same code as `{districtCode}`. Otherwise, you will get a `404 Not Found` response.
 - Usage example: http://localhost:3000/districts/327311
 
-### 9. Get All Villages in a District
+### Get all districts in a regency
 
 ```
-GET /districts/{districtCode}/villages
+GET /regencies/{regencyCode}/districts
 ```
 
-- Use this endpoint to **get all villages in a district**.
-- The `{districtCode}` must be **6 numeric characters**. If not, you will get `400 Bad Request` response.
-- This endpoint **will return** the array of village if the `{districtCode}` is exists. Otherwise, you will get a `404 Not Found` response.
-- Usage example: http://localhost:3000/districts/327311/villages
+- Use this endpoint to **get all districts in a regency**.
+- The `{regencyCode}` must be **4 numeric characters**. If not, you will get `400 Bad Request` response.
+- This endpoint **will return** the array of district if the `{regencyCode}` is exists. Otherwise, you will get a `404 Not Found` response.
+- Usage example: http://localhost:3000/regencies/3273/districts
 
 > This endpoint also support [`sortBy`][sortby-query] and [`sortOrder`][sortorder-query] queries.
 
-### 10. Get Villages by Name
+### Get villages by name
 
 ```
 GET /villages?name={villageName}
@@ -217,7 +184,7 @@ GET /villages?name={villageName}
 
 > This endpoint also support [`sortBy`][sortby-query] and [`sortOrder`][sortorder-query] queries.
 
-### 11. Get Specific Village
+### Get specific village
 
 ```
 GET /villages/{villageCode}
@@ -228,7 +195,20 @@ GET /villages/{villageCode}
 - This endpoint **will return** the village with the same code as `{villageCode}`. Otherwise, you will get a `404 Not Found` response.
 - Usage example: http://localhost:3000/villages/3273111004
 
-### 12. Get Islands by Name
+### Get all villages in a district
+
+```
+GET /districts/{districtCode}/villages
+```
+
+- Use this endpoint to **get all villages in a district**.
+- The `{districtCode}` must be **6 numeric characters**. If not, you will get `400 Bad Request` response.
+- This endpoint **will return** the array of village if the `{districtCode}` is exists. Otherwise, you will get a `404 Not Found` response.
+- Usage example: http://localhost:3000/districts/327311/villages
+
+> This endpoint also support [`sortBy`][sortby-query] and [`sortOrder`][sortorder-query] queries.
+
+### Get islands by name
 
 ```
 GET /islands?name={islandName}
@@ -241,7 +221,7 @@ GET /islands?name={islandName}
 
 > This endpoint also support [`sortBy`][sortby-query] and [`sortOrder`][sortorder-query] queries.
 
-### 13. Get Specific Island
+### Get specific island
 
 ```
 GET /islands/{islandCode}
@@ -252,11 +232,24 @@ GET /islands/{islandCode}
 - This endpoint **will return** the island with the same code as `{islandCode}`. Otherwise, you will get a `404 Not Found` response.
 - Usage example: http://localhost:3000/islands/110140001
 
-### Query Parameters
+### Get all islands in a regency
+
+```
+GET /regencies/{regencyCode}/islands
+```
+
+- Use this endpoint to **get all islands in a regency**.
+- The `{regencyCode}` must be **4 numeric characters**. If not, you will get `400 Bad Request` response.
+- This endpoint **will return** the array of island if the `{regencyCode}` is exists. Otherwise, you will get a `404 Not Found` response.
+- Usage example: http://localhost:3000/regencies/1101/islands
+
+> This endpoint also support [`sortBy`][sortby-query] and [`sortOrder`][sortorder-query] queries.
+
+## Query Parameters
 
 You can use query parameters to control what data is returned in endpoint responses.
 
-#### `sortBy`
+### `sortBy`
 
 ```
 GET /...?sortBy={code|name}
@@ -266,10 +259,10 @@ GET /...?sortBy={code|name}
 - The `sortBy` **can only be filled** by `code` or `name`. If not, you will get `400 Bad Request` response.
 - If `sortBy` **is not set**, sorting will be done by the `code`.
 - Usage example :
-  - At [`provinces`](#1-get-provinces) endpoint: http://localhost:3000/provinces?sortBy=name
-  - At [`regencies`](#4-get-regencies-by-name) endpoint: http://localhost:3000/regencies?name=bandung&sortBy=code
+  - At [`provinces`](#get-provinces) endpoint: http://localhost:3000/provinces?sortBy=name
+  - At [`regencies`](#get-regencies-by-name) endpoint: http://localhost:3000/regencies?name=bandung&sortBy=code
 
-#### `sortOrder`
+### `sortOrder`
 
 ```
 GET /...?sortOrder={asc|desc}
@@ -279,8 +272,8 @@ GET /...?sortOrder={asc|desc}
 - The `sortOrder` **can only be filled** by `asc` or `desc`. If not, you will get `400 Bad Request` response.
 - If `sortOrder` **is not set**, sorting will be done in `asc` order.
 - Usage example :
-  - At [`districts`](#7-get-districts-by-name) endpoint: http://localhost:3000/districts?name=regol&sortOrder=desc
-  - At [`villages`](#10-get-villages-by-name) endpoint: http://localhost:3000/villages?name=balong&sortOrder=asc
+  - At [`districts`](#get-districts-by-name) endpoint: http://localhost:3000/districts?name=regol&sortOrder=desc
+  - At [`villages`](#get-villages-by-name) endpoint: http://localhost:3000/villages?name=balong&sortOrder=asc
 
 > These queries can be combined with other queries linked by `&` character.
 >
@@ -288,7 +281,7 @@ GET /...?sortOrder={asc|desc}
 
 ## Live Demo
 
-You can try the API by replacing the http://localhost:3000 with the url provided in the description of this repository.
+You can try the API by replacing the http://localhost:3000 with https://idn-area.up.railway.app. For example: https://idn-area.up.railway.app/provinces.
 
 You can see an example of implementing this API on the website in [here](https://fityannugroho.github.io/idn-area-example) ([go to the repository](https://github.com/fityannugroho/idn-area-example)).
 
