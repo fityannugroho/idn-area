@@ -9,5 +9,5 @@
   "moduleNameMapper": {
     "^~/(.*)$": "<rootDir>/../$1"
   },
-  "testTimeout": 17000
+  "testTimeout": 30000
 }

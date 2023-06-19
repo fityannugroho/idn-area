@@ -88,4 +88,8 @@ describe('Island (e2e)', () => {
       expect(testCode.includes(res.json().regencyCode)).toBeTruthy();
     });
   });
+
+  afterAll(async () => {
+    await tester.closeApp();
+  });
 });
