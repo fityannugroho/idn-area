@@ -11,6 +11,9 @@ export class MongodbSeeder extends Seeder {
    * Delete all data in a collection.
    */
   protected async deleteCollection(collection: Areas) {
+    // Skip TypeScript checking because `$runCommandRaw()` method only available for mongodb provider.
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     return await this.prisma.$runCommandRaw({
       delete: collection,
       deletes: [
