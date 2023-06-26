@@ -30,13 +30,7 @@ export class Seeder {
 
   async insertIslands(): Promise<number> {
     const islands = await IdnArea.islands({ transform: true });
-    const res = await this.prisma.island.createMany({
-      data: islands.map((island) => ({
-        ...island,
-        regencyCode: island.regencyCode || null,
-      })),
-    });
-
+    const res = await this.prisma.island.createMany({ data: islands });
     return res.count;
   }
 
