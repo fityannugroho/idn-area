@@ -51,6 +51,8 @@ Please read the guide to install and run this app in [here](docs/installation.md
 
 The data we used is based on official sources, managed in [**idn-area-data**](https://github.com/fityannugroho/idn-area-data) repository and distributed as a [npm package](https://www.npmjs.com/package/idn-area-data).
 
+> The [data](https://github.com/fityannugroho/idn-area-data/tree/main/data) is made available here under the [Open Database License (ODbL)](https://github.com/fityannugroho/idn-area-data/blob/main/data/LICENSE.md).
+
 ## API Endpoint
 
 [sortby-query]: #sortby
