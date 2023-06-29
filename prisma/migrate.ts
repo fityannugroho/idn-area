@@ -1,3 +1,4 @@
+import { appConfig } from '~/utils/config/app';
 import { dbConfig } from '~/utils/config/db';
 import { validateDBConfig } from '~/utils/db';
 import { dbProvider } from '~/utils/db/provider';
@@ -12,7 +13,9 @@ const main = async () => {
       break;
     default:
       await runOrFail(
-        `prisma migrate dev --schema prisma/${dbConfig.provider}/schema.prisma`,
+        `prisma migrate ${
+          appConfig.env === 'prod' ? 'deploy' : 'dev'
+        } --schema prisma/${dbConfig.provider}/schema.prisma`,
       );
       break;
   }

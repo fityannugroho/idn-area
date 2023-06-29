@@ -5,6 +5,7 @@ import {
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { appConfig } from '~/utils/config/app';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -47,12 +48,8 @@ async function bootstrap() {
     }),
   );
 
-  // Configure app host and port.
-  const host = process.env.APP_HOST || '0.0.0.0';
-  const port = process.env.APP_PORT || 3000;
-
   // Start the app.
-  await app.listen(port, host);
+  await app.listen(appConfig.port, appConfig.host);
   console.log(`App run successfully on ${await app.getUrl()}.`);
 }
 bootstrap();
