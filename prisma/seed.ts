@@ -1,9 +1,10 @@
 import { PrismaClient } from '@prisma/client';
-import { timify } from '../utils/helpers';
-import { Seeder } from './seeder';
+import { dbConfig } from '~/utils/config/db';
 import { validateDBConfig } from '~/utils/db';
-import { dbConfig, dbProvider } from '~/utils/db/config';
+import { dbProvider } from '~/utils/db/provider';
+import { timify } from '../utils/helpers';
 import { MongodbSeeder } from './mongodb/seeder';
+import { Seeder } from './seeder';
 
 const prisma = new PrismaClient();
 

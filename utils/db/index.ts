@@ -1,5 +1,6 @@
+import { dbConfig } from '../config/db';
 import { DatabaseConfigError } from './errors';
-import { DBProviderFeatures, dbConfig, dbProviderConfig } from './config';
+import { DBProviderFeatures, dbProviderConfig } from './provider';
 
 /**
  * Validate all database config values.

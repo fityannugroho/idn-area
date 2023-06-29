@@ -1,5 +1,5 @@
+import { dbConfig } from '~/utils/config/db';
 import { validateDBConfig } from '~/utils/db';
-import { dbConfig } from '~/utils/db/config';
 import { runOrFail } from '../utils/helpers';
 
 const main = async () => {
