@@ -17,6 +17,19 @@ async function main() {
     seeder = new MongodbSeeder(prisma);
   }
 
+  const hasDataChanges = timify(
+    seeder.hasDataChanges.bind(seeder),
+    'check-data-changes',
+  );
+
+  // Skip the seeder if if there are no data changes.
+  console.log('Checking for data changes...\n');
+  if (!(await hasDataChanges())) {
+    console.log('There are no data changes. Seeder is skipped.');
+    return;
+  }
+  console.log('Data changes found!');
+
   console.log('Deleting all data...');
   await timify(seeder.deleteVillages.bind(seeder), 'delete-villages')();
   await timify(seeder.deleteIslands.bind(seeder), 'delete-islands')();

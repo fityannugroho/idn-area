@@ -1,8 +1,96 @@
 import { PrismaClient } from '@prisma/client';
 import * as IdnArea from 'idn-area-data';
+import { areArraysEqual } from '~/utils/helpers';
 
 export class Seeder {
   constructor(protected readonly prisma: PrismaClient) {}
+
+  /**
+   * Check if any provinces data have changed.
+   */
+  async hasProvinceChanges(): Promise<boolean> {
+    const [newProvinces, oldProvinces] = await Promise.all([
+      IdnArea.provinces(),
+      this.prisma.province.findMany(),
+    ]);
+
+    return !areArraysEqual(newProvinces, oldProvinces);
+  }
+
+  /**
+   * Check if any regencies data have changed.
+   */
+  async hasRegencyChanges(): Promise<boolean> {
+    const [newRegencies, oldRegencies] = await Promise.all([
+      IdnArea.regencies({ transform: true }),
+      this.prisma.regency.findMany(),
+    ]);
+
+    return !areArraysEqual(newRegencies, oldRegencies);
+  }
+
+  /**
+   * Check if any districts data have changed.
+   */
+  async hasDistrictChanges(): Promise<boolean> {
+    const [newDistricts, oldDistricts] = await Promise.all([
+      IdnArea.districts({ transform: true }),
+      this.prisma.district.findMany(),
+    ]);
+
+    return !areArraysEqual(newDistricts, oldDistricts);
+  }
+
+  /**
+   * Check if any islands data have changed.
+   */
+  async hasIslandChanges(): Promise<boolean> {
+    const [newIslands, oldIslands] = await Promise.all([
+      IdnArea.islands({ transform: true }),
+      this.prisma.island.findMany(),
+    ]);
+
+    return !areArraysEqual(newIslands, oldIslands);
+  }
+
+  /**
+   * Check if any villages data have changed.
+   */
+  async hasVillageChanges(): Promise<boolean> {
+    const [newVillages, oldVillages] = await Promise.all([
+      IdnArea.villages({ transform: true }),
+      this.prisma.village.findMany(),
+    ]);
+
+    return !areArraysEqual(newVillages, oldVillages);
+  }
+
+  /**
+   * Check if there are data changes.
+   */
+  async hasDataChanges(): Promise<boolean> {
+    if (await this.hasProvinceChanges()) {
+      return true;
+    }
+
+    if (await this.hasRegencyChanges()) {
+      return true;
+    }
+
+    if (await this.hasDistrictChanges()) {
+      return true;
+    }
+
+    if (await this.hasIslandChanges()) {
+      return true;
+    }
+
+    if (await this.hasVillageChanges()) {
+      return true;
+    }
+
+    return false;
+  }
 
   async insertProvinces(): Promise<number> {
     const provinces = await IdnArea.provinces();
