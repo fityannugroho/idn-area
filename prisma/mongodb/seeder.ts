@@ -1,10 +1,75 @@
 import { PrismaClient } from '@prisma/client';
+import * as IdnArea from 'idn-area-data';
 import { Seeder } from '../seeder';
 import { Areas } from 'idn-area-data';
+import { areArraysEqual } from '~/utils/helpers';
 
 export class MongodbSeeder extends Seeder {
   constructor(prisma: PrismaClient) {
     super(prisma);
+  }
+
+  async hasProvinceChanges(): Promise<boolean> {
+    const [newProvinces, oldProvinces] = await Promise.all([
+      IdnArea.provinces(),
+      this.prisma.province.findMany(),
+    ]);
+
+    return !areArraysEqual(newProvinces, oldProvinces, ['code', 'name']);
+  }
+
+  async hasRegencyChanges(): Promise<boolean> {
+    const [newRegencies, oldRegencies] = await Promise.all([
+      IdnArea.regencies({ transform: true }),
+      this.prisma.regency.findMany(),
+    ]);
+
+    return !areArraysEqual(newRegencies, oldRegencies, [
+      'code',
+      'name',
+      'provinceCode',
+    ]);
+  }
+
+  async hasDistrictChanges(): Promise<boolean> {
+    const [newDistricts, oldDistricts] = await Promise.all([
+      IdnArea.districts({ transform: true }),
+      this.prisma.district.findMany(),
+    ]);
+
+    return !areArraysEqual(newDistricts, oldDistricts, [
+      'code',
+      'name',
+      'regencyCode',
+    ]);
+  }
+
+  async hasIslandChanges(): Promise<boolean> {
+    const [newIslands, oldIslands] = await Promise.all([
+      IdnArea.islands({ transform: true }),
+      this.prisma.island.findMany(),
+    ]);
+
+    return !areArraysEqual(newIslands, oldIslands, [
+      'code',
+      'name',
+      'regencyCode',
+      'isPopulated',
+      'isOutermostSmall',
+    ]);
+  }
+
+  async hasVillageChanges(): Promise<boolean> {
+    const [newVillages, oldVillages] = await Promise.all([
+      IdnArea.villages({ transform: true }),
+      this.prisma.village.findMany(),
+    ]);
+
+    return !areArraysEqual(newVillages, oldVillages, [
+      'code',
+      'name',
+      'districtCode',
+    ]);
   }
 
   /**
