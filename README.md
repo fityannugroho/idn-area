@@ -40,6 +40,7 @@ Built with [NestJS framework](https://nestjs.com) and writen in TypeScript. [Pri
   - [`sortOrder`](#sortorder)
 - [Live Demo](#live-demo)
 - [Contributing](#contributing)
+- [Support This Project](#support-this-project)
 
 ---
 
@@ -292,3 +293,10 @@ You can see an example of implementing this API on the website in [here](https:/
 ## Contributing
 
 If you find a bug in the source code, wrong data source, or just want to request a new feature, you can help us by [submitting an issue](CONTRIBUTING.md#submitting-an-issue). Even better, you can [submit a Pull Request](CONTRIBUTING.md#submitting-a-pull-request) to help us solve that issue.
+
+
+## Support This Project
+
+<a href="https://trakteer.id/fityannugroho/tip" target="_blank"><img id="wse-buttons-preview" src="https://cdn.trakteer.id/images/embed/trbtn-red-5.png" style="border: 0px none; height: 36px; --darkreader-inline-border-top: currentcolor; --darkreader-inline-border-right: currentcolor; --darkreader-inline-border-bottom: currentcolor; --darkreader-inline-border-left: currentcolor;" alt="Trakteer Saya" data-darkreader-inline-border-top="" data-darkreader-inline-border-right="" data-darkreader-inline-border-bottom="" data-darkreader-inline-border-left="" height="40"></a>
+
+You can support this project by donating via [GitHub Sponsor](https://github.com/sponsors/fityannugroho), [Trakteer](https://trakteer.id/fityannugroho/tip), or [Saweria](https://saweria.co/fityannugroho).
