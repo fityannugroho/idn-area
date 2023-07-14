@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Island } from '@prisma/client';
 import { getDBProviderFeatures } from '@/common/utils/db';
-import CoordinateConverter from '~/utils/helpers/coordinate-converter';
+import { convertCoordinate } from '@/common/utils/coordinate';
 import { SortService, SortOptions } from '@/sort/sort.service';
 import { PrismaService } from '@/prisma/prisma.service';
 
@@ -22,10 +22,7 @@ export class IslandService {
    * Add decimal latitude and longitude to the island object.
    */
   addDecimalCoordinate(island: Island) {
-    const coordinateConverter = new CoordinateConverter();
-    const [latitude, longitude] = coordinateConverter.convertToNumber(
-      island.coordinate,
-    );
+    const [latitude, longitude] = convertCoordinate(island.coordinate);
 
     return { ...island, latitude, longitude };
   }
