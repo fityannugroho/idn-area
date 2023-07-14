@@ -1,7 +1,7 @@
 import { IsNotEmpty, IsNumberString, Length } from 'class-validator';
 import { EqualsAny } from '@/common/decorator/EqualsAny';
 import { IsNotSymbol } from '@/common/decorator/IsNotSymbol';
-import { SortQuery } from '~/utils/helpers/sorter';
+import { SortQuery } from '@/sort/sort.dto';
 import { IntersectionType, PickType } from '@nestjs/mapped-types';
 
 export class Village {

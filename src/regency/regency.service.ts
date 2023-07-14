@@ -2,20 +2,20 @@ import { Injectable } from '@nestjs/common';
 import { District, Island, Regency } from '@prisma/client';
 import { PrismaService } from '@/prisma/prisma.service';
 import { getDBProviderFeatures } from '@/common/utils/db';
-import { SortOptions, Sorter } from '~/utils/helpers/sorter';
+import { SortOptions, SortService } from '@/sort/sort.service';
 import { IslandService, IslandSortKeys } from '../island/island.service';
 
 type RegencySortKeys = keyof Regency;
 
 @Injectable()
 export class RegencyService {
-  private readonly sortHelper: Sorter<RegencySortKeys>;
+  private readonly sortService: SortService<RegencySortKeys>;
 
   constructor(
     private readonly prisma: PrismaService,
     private readonly islandService: IslandService,
   ) {
-    this.sortHelper = new Sorter<RegencySortKeys>({
+    this.sortService = new SortService<RegencySortKeys>({
       sortBy: 'code',
       sortOrder: 'asc',
     });
@@ -41,7 +41,7 @@ export class RegencyService {
           }),
         },
       },
-      orderBy: this.sortHelper.object(sort),
+      orderBy: this.sortService.object(sort),
     });
   }
 
@@ -75,7 +75,7 @@ export class RegencyService {
         },
       })
       .districts({
-        orderBy: this.sortHelper.object(sort),
+        orderBy: this.sortService.object(sort),
       });
 
     return districts ?? false;
@@ -97,7 +97,7 @@ export class RegencyService {
         },
       })
       .islands({
-        orderBy: this.islandService.sortHelper.object(sort),
+        orderBy: this.islandService.sortService.object(sort),
       });
 
     if (!islands) {

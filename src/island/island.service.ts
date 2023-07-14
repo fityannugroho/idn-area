@@ -2,17 +2,17 @@ import { Injectable } from '@nestjs/common';
 import { Island } from '@prisma/client';
 import { getDBProviderFeatures } from '@/common/utils/db';
 import CoordinateConverter from '~/utils/helpers/coordinate-converter';
-import { Sorter, SortOptions } from '~/utils/helpers/sorter';
+import { SortService, SortOptions } from '@/sort/sort.service';
 import { PrismaService } from '@/prisma/prisma.service';
 
 export type IslandSortKeys = keyof Island;
 
 @Injectable()
 export class IslandService {
-  readonly sortHelper: Sorter<IslandSortKeys>;
+  readonly sortService: SortService<IslandSortKeys>;
 
   constructor(private readonly prisma: PrismaService) {
-    this.sortHelper = new Sorter<IslandSortKeys>({
+    this.sortService = new SortService<IslandSortKeys>({
       sortBy: 'code',
       sortOrder: 'asc',
     });
@@ -40,7 +40,7 @@ export class IslandService {
           }),
         },
       },
-      orderBy: this.sortHelper.object(sort),
+      orderBy: this.sortService.object(sort),
     });
 
     return islands.map(this.addDecimalCoordinate);

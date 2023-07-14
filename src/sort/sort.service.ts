@@ -1,28 +1,12 @@
-import { IsOptional, IsString } from 'class-validator';
-import { EqualsAny } from '@/common/decorator/EqualsAny';
-
 export type SortOptions<T extends string = string> = {
   sortBy?: T;
   sortOrder?: 'asc' | 'desc';
 };
 
 /**
- * The validator class for the sort query.
- *
- * You may need to inherit this class and use `@EqualsAny()` decorator
- * for `sortBy` property to accept only specific values.
+ * Service to use `sortBy` and `sortOrder` query params.
  */
-export class SortQuery<T extends string = string> implements SortOptions<T> {
-  @IsOptional()
-  @IsString()
-  sortBy?: T;
-
-  @IsOptional()
-  @EqualsAny(['asc', 'desc'])
-  sortOrder?: 'asc' | 'desc';
-}
-
-export class Sorter<T extends string = string> {
+export class SortService<T extends string = string> {
   defaultOptions: Required<SortOptions<T>>;
 
   /**

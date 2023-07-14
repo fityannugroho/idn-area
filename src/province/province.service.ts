@@ -2,16 +2,16 @@ import { Injectable } from '@nestjs/common';
 import { Province, Regency } from '@prisma/client';
 import { PrismaService } from '@/prisma/prisma.service';
 import { getDBProviderFeatures } from '@/common/utils/db';
-import { SortOptions, Sorter } from '~/utils/helpers/sorter';
+import { SortOptions, SortService } from '@/sort/sort.service';
 
 type ProvinceSortKeys = keyof Province;
 
 @Injectable()
 export class ProvinceService {
-  private readonly sortHelper: Sorter<ProvinceSortKeys>;
+  private readonly sortService: SortService<ProvinceSortKeys>;
 
   constructor(private readonly prisma: PrismaService) {
-    this.sortHelper = new Sorter<ProvinceSortKeys>({
+    this.sortService = new SortService<ProvinceSortKeys>({
       sortBy: 'code',
       sortOrder: 'asc',
     });
@@ -37,7 +37,7 @@ export class ProvinceService {
           }),
         },
       },
-      orderBy: this.sortHelper.object(sort),
+      orderBy: this.sortService.object(sort),
     });
   }
 
@@ -70,7 +70,7 @@ export class ProvinceService {
         },
       })
       .regencies({
-        orderBy: this.sortHelper.object(sort),
+        orderBy: this.sortService.object(sort),
       });
 
     return regencies ?? false;
