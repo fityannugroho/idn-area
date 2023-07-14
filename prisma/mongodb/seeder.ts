@@ -1,8 +1,8 @@
+import { areArraysEqual } from '@/common/utils/array';
 import { PrismaClient } from '@prisma/client';
 import * as IdnArea from 'idn-area-data';
-import { Seeder } from '../seeder';
 import { Areas } from 'idn-area-data';
-import { areArraysEqual } from '~/utils/helpers';
+import { Seeder } from '../seeder';
 
 export class MongodbSeeder extends Seeder {
   constructor(prisma: PrismaClient) {

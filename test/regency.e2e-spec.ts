@@ -1,4 +1,4 @@
-import { AppTester } from '~/utils/helpers/app-tester';
+import { AppTester } from './helper/app-tester';
 
 describe('Regency (e2e)', () => {
   const baseUrl = '/regencies';

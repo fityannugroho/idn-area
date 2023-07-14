@@ -7,7 +7,7 @@ import {
   IsString,
   Length,
 } from 'class-validator';
-import { SortQuery } from '~/utils/helpers/sorter';
+import { SortQuery } from '@/sort/sort.dto';
 import { EqualsAny } from '../common/decorator/EqualsAny';
 import { IsNotSymbol } from '../common/decorator/IsNotSymbol';
 

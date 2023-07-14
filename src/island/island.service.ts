@@ -1,18 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { Island } from '@prisma/client';
-import { getDBProviderFeatures } from '~/utils/db';
-import CoordinateConverter from '~/utils/helpers/coordinate-converter';
-import { Sorter, SortOptions } from '~/utils/helpers/sorter';
-import { PrismaService } from '../common/services/prisma';
+import { getDBProviderFeatures } from '@/common/utils/db';
+import { convertCoordinate } from '@/common/utils/coordinate';
+import { SortService, SortOptions } from '@/sort/sort.service';
+import { PrismaService } from '@/prisma/prisma.service';
 
 export type IslandSortKeys = keyof Island;
 
 @Injectable()
 export class IslandService {
-  readonly sortHelper: Sorter<IslandSortKeys>;
+  readonly sortService: SortService<IslandSortKeys>;
 
   constructor(private readonly prisma: PrismaService) {
-    this.sortHelper = new Sorter<IslandSortKeys>({
+    this.sortService = new SortService<IslandSortKeys>({
       sortBy: 'code',
       sortOrder: 'asc',
     });
@@ -22,10 +22,7 @@ export class IslandService {
    * Add decimal latitude and longitude to the island object.
    */
   addDecimalCoordinate(island: Island) {
-    const coordinateConverter = new CoordinateConverter();
-    const [latitude, longitude] = coordinateConverter.convertToNumber(
-      island.coordinate,
-    );
+    const [latitude, longitude] = convertCoordinate(island.coordinate);
 
     return { ...island, latitude, longitude };
   }
@@ -40,7 +37,7 @@ export class IslandService {
           }),
         },
       },
-      orderBy: this.sortHelper.object(sort),
+      orderBy: this.sortService.object(sort),
     });
 
     return islands.map(this.addDecimalCoordinate);

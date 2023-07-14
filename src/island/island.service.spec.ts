@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { IslandService } from './island.service';
-import { PrismaService } from '../common/services/prisma';
+import { PrismaService } from '@/prisma/prisma.service';
 import { IslandController } from './island.controller';
 
 describe('IslandService', () => {
