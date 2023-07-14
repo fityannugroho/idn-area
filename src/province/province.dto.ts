@@ -1,7 +1,7 @@
 import { IntersectionType, PartialType, PickType } from '@nestjs/mapped-types';
 import { IsNotEmpty, IsNumberString, Length } from 'class-validator';
-import { EqualsAny } from '~/src/common/decorator/EqualsAny';
-import { IsNotSymbol } from '~/src/common/decorator/IsNotSymbol';
+import { EqualsAny } from '@/common/decorator/EqualsAny';
+import { IsNotSymbol } from '@/common/decorator/IsNotSymbol';
 import { SortQuery } from '~/utils/helpers/sorter';
 import { RegencySortQuery } from '../regency/regency.dto';
 

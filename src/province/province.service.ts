@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Province, Regency } from '@prisma/client';
-import { PrismaService } from '~/src/common/services/prisma';
+import { PrismaService } from '@/prisma/prisma.service';
 import { getDBProviderFeatures } from '~/utils/db';
 import { SortOptions, Sorter } from '~/utils/helpers/sorter';
 

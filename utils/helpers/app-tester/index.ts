@@ -4,7 +4,7 @@ import {
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 import { TestingModule, Test } from '@nestjs/testing';
-import { AppModule } from '~/src/app.module';
+import { AppModule } from '@/app.module';
 
 export type HttpMethods =
   | 'DELETE'

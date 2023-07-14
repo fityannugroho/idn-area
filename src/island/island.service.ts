@@ -3,7 +3,7 @@ import { Island } from '@prisma/client';
 import { getDBProviderFeatures } from '~/utils/db';
 import CoordinateConverter from '~/utils/helpers/coordinate-converter';
 import { Sorter, SortOptions } from '~/utils/helpers/sorter';
-import { PrismaService } from '../common/services/prisma';
+import { PrismaService } from '@/prisma/prisma.service';
 
 export type IslandSortKeys = keyof Island;
 
