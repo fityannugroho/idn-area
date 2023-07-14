@@ -1,5 +1,5 @@
+import { dbConfig } from '@/common/config/db';
 import { PrismaClient } from '@prisma/client';
-import { dbConfig } from '~/utils/config/db';
 import { validateDBConfig } from '~/utils/db';
 import { dbProvider } from '~/utils/db/provider';
 import { timify } from '../utils/helpers';

@@ -1,5 +1,5 @@
-import { appConfig } from '~/utils/config/app';
-import { dbConfig } from '~/utils/config/db';
+import { appConfig } from '@/common/config/app';
+import { dbConfig } from '@/common/config/db';
 import { validateDBConfig } from '~/utils/db';
 import { dbProvider } from '~/utils/db/provider';
 import { runOrFail } from '../utils/helpers';
