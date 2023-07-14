@@ -1,6 +1,6 @@
+import { areArraysEqual } from '@/common/utils/array';
 import { PrismaClient } from '@prisma/client';
 import * as IdnArea from 'idn-area-data';
-import { areArraysEqual } from '~/utils/helpers';
 
 export class Seeder {
   constructor(protected readonly prisma: PrismaClient) {}

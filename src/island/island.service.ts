@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Island } from '@prisma/client';
-import { getDBProviderFeatures } from '~/utils/db';
+import { getDBProviderFeatures } from '@/common/utils/db';
 import CoordinateConverter from '~/utils/helpers/coordinate-converter';
 import { Sorter, SortOptions } from '~/utils/helpers/sorter';
 import { PrismaService } from '@/prisma/prisma.service';

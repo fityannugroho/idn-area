@@ -1,8 +1,8 @@
 import { dbConfig } from '@/common/config/db';
+import { timify } from '@/common/utils/timify';
 import { PrismaClient } from '@prisma/client';
-import { validateDBConfig } from '~/utils/db';
-import { dbProvider } from '~/utils/db/provider';
-import { timify } from '../utils/helpers';
+import { validateDBConfig } from '@/common/utils/db';
+import { dbProvider } from '@/common/utils/db/provider';
 import { MongodbSeeder } from './mongodb/seeder';
 import { Seeder } from './seeder';
 

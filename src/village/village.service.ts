@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Village } from '@prisma/client';
 import { Sorter, SortOptions } from '~/utils/helpers/sorter';
 import { PrismaService } from '@/prisma/prisma.service';
-import { getDBProviderFeatures } from '~/utils/db';
+import { getDBProviderFeatures } from '@/common/utils/db';
 
 type VillageSortKeys = keyof Village;
 

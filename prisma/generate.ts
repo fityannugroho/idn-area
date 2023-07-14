@@ -1,6 +1,6 @@
 import { dbConfig } from '@/common/config/db';
-import { validateDBConfig } from '~/utils/db';
-import { runOrFail } from '../utils/helpers';
+import { runOrFail } from '@/common/utils/runner';
+import { validateDBConfig } from '@/common/utils/db';
 
 const main = async () => {
   validateDBConfig();

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { District, Village } from '@prisma/client';
 import { PrismaService } from '@/prisma/prisma.service';
-import { getDBProviderFeatures } from '~/utils/db';
+import { getDBProviderFeatures } from '@/common/utils/db';
 import { SortOptions, Sorter } from '~/utils/helpers/sorter';
 
 type DistrictSortKeys = keyof District;
