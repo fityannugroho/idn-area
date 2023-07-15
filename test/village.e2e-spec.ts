@@ -3,11 +3,8 @@ import { AppTester } from './helper/app-tester';
 describe('Village (e2e)', () => {
   const baseUrl = '/villages';
   const testCode = '3204052004';
+  const badVillageCodes = ['', '1234', '12345678910', 'abcdefghij'] as const;
   let tester: AppTester;
-
-  const expectBadVillageCode = async (url: (code: string) => string) => {
-    await tester.expectBadCode(url, ['', '1234', '12345678910', 'abcdefghij']);
-  };
 
   beforeAll(async () => {
     tester = await AppTester.make();
@@ -58,7 +55,10 @@ describe('Village (e2e)', () => {
 
   describe(`GET ${baseUrl}/{code}`, () => {
     it('should return 400 if the `code` is invalid', async () => {
-      await expectBadVillageCode((code) => `${baseUrl}/${code}`);
+      await tester.expectBadCode(
+        (code) => `${baseUrl}/${code}`,
+        badVillageCodes,
+      );
     });
 
     it('should return 404 if the `code` does not exist', async () => {

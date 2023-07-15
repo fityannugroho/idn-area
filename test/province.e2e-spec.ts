@@ -3,11 +3,8 @@ import { AppTester } from './helper/app-tester';
 describe('Province (e2e)', () => {
   const baseUrl = '/provinces';
   const testCode = '32';
+  const badProvinceCodes = ['', '1', '123', 'ab'] as const;
   let tester: AppTester;
-
-  const expectBadProvinceCode = async (url: (code: string) => string) => {
-    await tester.expectBadCode(url, ['', '1', '123', 'ab']);
-  };
 
   beforeAll(async () => {
     tester = await AppTester.make();
@@ -68,7 +65,10 @@ describe('Province (e2e)', () => {
 
   describe(`GET ${baseUrl}/{code}`, () => {
     it('should return 400 if the `code` is invalid', async () => {
-      await expectBadProvinceCode((code) => `${baseUrl}/${code}`);
+      await tester.expectBadCode(
+        (code) => `${baseUrl}/${code}`,
+        badProvinceCodes,
+      );
     });
 
     it('should return 404 if the `code` does not exists', async () => {
@@ -89,7 +89,10 @@ describe('Province (e2e)', () => {
 
   describe(`GET ${baseUrl}/{code}/regencies`, () => {
     it('should return 400 if the `code` is invalid', async () => {
-      await expectBadProvinceCode((code) => `${baseUrl}/${code}/regencies`);
+      await tester.expectBadCode(
+        (code) => `${baseUrl}/${code}/regencies`,
+        badProvinceCodes,
+      );
     });
 
     it('should return 400 if regencies sort query is invalid', async () => {
