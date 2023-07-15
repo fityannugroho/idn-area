@@ -1,7 +1,7 @@
-export type SortOptions<T extends string = string> = {
+export interface SortOptions<T extends string = string> {
   sortBy?: T;
   sortOrder?: 'asc' | 'desc';
-};
+}
 
 /**
  * Service to use `sortBy` and `sortOrder` query params.
