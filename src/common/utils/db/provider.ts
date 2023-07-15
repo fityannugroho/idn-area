@@ -13,14 +13,14 @@ export type DBProviderConfig = {
   };
 };
 
-export type DBProviderFeatures = {
+export interface DBProviderFeatures {
   filtering?: {
     /**
      * @link https://www.prisma.io/docs/concepts/components/prisma-client/case-sensitivity#options-for-case-insensitive-filtering
      */
     insensitive?: boolean;
   };
-};
+}
 
 export const dbProviderConfig: DBProviderConfig = {
   mongodb: {
