@@ -3,11 +3,8 @@ import { AppTester } from './helper/app-tester';
 describe('District (e2e)', () => {
   const baseUrl = '/districts';
   const testCode = '327325';
+  const badDistrictCodes = ['', '1234', '1234567', 'abcdef'] as const;
   let tester: AppTester;
-
-  const expectBadDistrictCode = async (url: (code: string) => string) => {
-    await tester.expectBadCode(url, ['', '1234', '1234567', 'abcdef']);
-  };
 
   beforeAll(async () => {
     tester = await AppTester.make();
@@ -58,7 +55,10 @@ describe('District (e2e)', () => {
 
   describe(`GET ${baseUrl}/{code}`, () => {
     it('should return 400 if the `code` is invalid', async () => {
-      await expectBadDistrictCode((code) => `${baseUrl}/${code}`);
+      await tester.expectBadCode(
+        (code) => `${baseUrl}/${code}`,
+        badDistrictCodes,
+      );
     });
 
     it('should return 404 if the `code` does not exist', async () => {
@@ -80,7 +80,10 @@ describe('District (e2e)', () => {
 
   describe(`GET ${baseUrl}/{code}/villages`, () => {
     it('should return 400 if the `code` is invalid', async () => {
-      await expectBadDistrictCode((code) => `${baseUrl}/${code}/villages`);
+      await tester.expectBadCode(
+        (code) => `${baseUrl}/${code}/villages`,
+        badDistrictCodes,
+      );
     });
 
     it('should return 400 if any villages sort query is invalid', async () => {

@@ -3,16 +3,8 @@ import { AppTester } from './helper/app-tester';
 describe('Island (e2e)', () => {
   const baseUrl = '/islands';
   const testCode = '110140001';
+  const badIslandCodes = ['', '12345678', '1234567890', 'abcdefghi'] as const;
   let tester: AppTester;
-
-  const expectBadIslandCode = async (url: (code: string) => string) => {
-    await tester.expectBadCode(url, [
-      '',
-      '12345678',
-      '1234567890',
-      'abcdefghi',
-    ]);
-  };
 
   beforeAll(async () => {
     tester = await AppTester.make();
@@ -62,7 +54,10 @@ describe('Island (e2e)', () => {
 
   describe(`GET ${baseUrl}/{code}`, () => {
     it('should return 400 if the `code` is invalid', async () => {
-      await expectBadIslandCode((code) => `${baseUrl}/${code}`);
+      await tester.expectBadCode(
+        (code) => `${baseUrl}/${code}`,
+        badIslandCodes,
+      );
     });
 
     it('should return 404 if the `code` does not exist', async () => {
