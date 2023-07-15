@@ -13,7 +13,7 @@
     ]
   },
   "moduleNameMapper": {
-    "^~/(.*)$": "<rootDir>/../$1"
+    "^@/(.*)$": "<rootDir>/../src/$1"
   },
   "testTimeout": 25000
 }
