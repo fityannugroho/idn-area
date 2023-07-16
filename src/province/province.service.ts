@@ -4,14 +4,12 @@ import { PrismaService } from '@/prisma/prisma.service';
 import { getDBProviderFeatures } from '@/common/utils/db';
 import { SortOptions, SortService } from '@/sort/sort.service';
 
-type ProvinceSortKeys = keyof Province;
-
 @Injectable()
 export class ProvinceService {
-  private readonly sortService: SortService<ProvinceSortKeys>;
+  private readonly sortService: SortService<Province>;
 
   constructor(private readonly prisma: PrismaService) {
-    this.sortService = new SortService<ProvinceSortKeys>({
+    this.sortService = new SortService<Province>({
       sortBy: 'code',
       sortOrder: 'asc',
     });
@@ -24,10 +22,7 @@ export class ProvinceService {
    * @param sort The sort query (optional).
    * @returns The array of provinces.
    */
-  async find(
-    name = '',
-    sort?: SortOptions<ProvinceSortKeys>,
-  ): Promise<Province[]> {
+  async find(name = '', sort?: SortOptions<Province>): Promise<Province[]> {
     return this.prisma.province.findMany({
       where: {
         name: {
@@ -61,7 +56,7 @@ export class ProvinceService {
    */
   async findRegencies(
     provinceCode: string,
-    sort?: SortOptions<ProvinceSortKeys>,
+    sort?: SortOptions<Province>,
   ): Promise<false | Regency[]> {
     const regencies = await this.prisma.province
       .findUnique({

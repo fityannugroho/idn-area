@@ -4,14 +4,12 @@ import { SortService, SortOptions } from '@/sort/sort.service';
 import { PrismaService } from '@/prisma/prisma.service';
 import { getDBProviderFeatures } from '@/common/utils/db';
 
-type VillageSortKeys = keyof Village;
-
 @Injectable()
 export class VillageService {
-  private readonly sortHelper: SortService<VillageSortKeys>;
+  private readonly sortHelper: SortService<Village>;
 
   constructor(private readonly prisma: PrismaService) {
-    this.sortHelper = new SortService<VillageSortKeys>({
+    this.sortHelper = new SortService<Village>({
       sortBy: 'code',
       sortOrder: 'asc',
     });
@@ -24,10 +22,7 @@ export class VillageService {
    * @param sort The sort query (optional).
    * @returns The array of villages.
    */
-  async find(
-    name = '',
-    sort?: SortOptions<VillageSortKeys>,
-  ): Promise<Village[]> {
+  async find(name = '', sort?: SortOptions<Village>): Promise<Village[]> {
     return this.prisma.village.findMany({
       where: {
         name: {

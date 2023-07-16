@@ -22,9 +22,9 @@ export class District {
   regencyCode: string;
 }
 
-export class DistrictSortQuery extends SortQuery<'code' | 'name'> {
+export class DistrictSortQuery extends SortQuery {
   @EqualsAny(['code', 'name'])
-  sortBy: 'code' | 'name';
+  readonly sortBy?: 'code' | 'name';
 }
 
 export class DistrictFindQueries extends IntersectionType(

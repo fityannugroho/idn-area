@@ -3,19 +3,17 @@ import { District, Island, Regency } from '@prisma/client';
 import { PrismaService } from '@/prisma/prisma.service';
 import { getDBProviderFeatures } from '@/common/utils/db';
 import { SortOptions, SortService } from '@/sort/sort.service';
-import { IslandService, IslandSortKeys } from '../island/island.service';
-
-type RegencySortKeys = keyof Regency;
+import { IslandService } from '../island/island.service';
 
 @Injectable()
 export class RegencyService {
-  private readonly sortService: SortService<RegencySortKeys>;
+  private readonly sortService: SortService<Regency>;
 
   constructor(
     private readonly prisma: PrismaService,
     private readonly islandService: IslandService,
   ) {
-    this.sortService = new SortService<RegencySortKeys>({
+    this.sortService = new SortService<Regency>({
       sortBy: 'code',
       sortOrder: 'asc',
     });
@@ -28,10 +26,7 @@ export class RegencyService {
    * @param sort The sort query (optional).
    * @returns The array of regencies.
    */
-  async find(
-    name = '',
-    sort?: SortOptions<RegencySortKeys>,
-  ): Promise<Regency[]> {
+  async find(name = '', sort?: SortOptions<Regency>): Promise<Regency[]> {
     return this.prisma.regency.findMany({
       where: {
         name: {
@@ -66,7 +61,7 @@ export class RegencyService {
    */
   async findDistrics(
     regencyCode: string,
-    sort?: SortOptions<RegencySortKeys>,
+    sort?: SortOptions<Regency>,
   ): Promise<false | District[]> {
     const districts = await this.prisma.regency
       .findUnique({
@@ -88,7 +83,7 @@ export class RegencyService {
    */
   async findIslands(
     regencyCode: string,
-    sort?: SortOptions<IslandSortKeys>,
+    sort?: SortOptions<Island>,
   ): Promise<false | Island[]> {
     const islands = await this.prisma.regency
       .findUnique({

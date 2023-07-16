@@ -5,14 +5,12 @@ import { convertCoordinate } from '@/common/utils/coordinate';
 import { SortService, SortOptions } from '@/sort/sort.service';
 import { PrismaService } from '@/prisma/prisma.service';
 
-export type IslandSortKeys = keyof Island;
-
 @Injectable()
 export class IslandService {
-  readonly sortService: SortService<IslandSortKeys>;
+  readonly sortService: SortService<Island>;
 
   constructor(private readonly prisma: PrismaService) {
-    this.sortService = new SortService<IslandSortKeys>({
+    this.sortService = new SortService<Island>({
       sortBy: 'code',
       sortOrder: 'asc',
     });
@@ -27,7 +25,7 @@ export class IslandService {
     return { ...island, latitude, longitude };
   }
 
-  async find(name = '', sort?: SortOptions<IslandSortKeys>): Promise<Island[]> {
+  async find(name = '', sort?: SortOptions<Island>): Promise<Island[]> {
     const islands = await this.prisma.island.findMany({
       where: {
         name: {

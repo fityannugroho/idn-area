@@ -41,9 +41,9 @@ export class Island {
   regencyCode?: string;
 }
 
-export class IslandSortQuery extends SortQuery<'code' | 'name' | 'coordinate'> {
+export class IslandSortQuery extends SortQuery {
   @EqualsAny(['code', 'name', 'coordinate'])
-  sortBy: 'code' | 'name';
+  readonly sortBy?: 'code' | 'name' | 'coordinate';
 }
 
 export class IslandFindQueries extends IntersectionType(
