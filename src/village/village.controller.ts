@@ -49,11 +49,7 @@ export class VillageController {
   @ApiBadRequestResponse({ description: 'If there are invalid query values.' })
   @Get()
   async find(@Query() queries?: VillageFindQueries): Promise<Village[]> {
-    const { name, sortBy, sortOrder } = queries ?? {};
-    return this.villageService.find(name, {
-      sortBy: sortBy,
-      sortOrder: sortOrder,
-    });
+    return this.villageService.find(queries);
   }
 
   @ApiOperation({ description: 'Get a village by its code.' })
@@ -70,12 +66,14 @@ export class VillageController {
     description: 'If no village matches the `code`.',
   })
   @Get(':code')
-  async findByCode(@Param() params: VillageFindByCodeParams): Promise<Village> {
-    const { code } = params;
+  async findByCode(
+    @Param() { code }: VillageFindByCodeParams,
+  ): Promise<Village> {
     const village = await this.villageService.findByCode(code);
 
-    if (village === null)
+    if (village === null) {
       throw new NotFoundException(`There are no village with code '${code}'`);
+    }
 
     return village;
   }
