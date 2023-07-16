@@ -54,11 +54,7 @@ export class DistrictController {
   @ApiBadRequestResponse({ description: 'If there are invalid query values.' })
   @Get()
   async find(@Query() queries?: DistrictFindQueries): Promise<District[]> {
-    const { name, sortBy, sortOrder } = queries ?? {};
-    return this.districtService.find(name, {
-      sortBy: sortBy,
-      sortOrder: sortOrder,
-    });
+    return this.districtService.find(queries);
   }
 
   @ApiOperation({ description: 'Get a district by its code.' })
@@ -76,13 +72,13 @@ export class DistrictController {
   })
   @Get(':code')
   async findByCode(
-    @Param() params: DistrictFindByCodeParams,
+    @Param() { code }: DistrictFindByCodeParams,
   ): Promise<District> {
-    const { code } = params;
     const district = await this.districtService.findByCode(code);
 
-    if (district === null)
+    if (district === null) {
       throw new NotFoundException(`There are no district with code '${code}'`);
+    }
 
     return district;
   }
@@ -116,18 +112,14 @@ export class DistrictController {
   })
   @Get(':code/villages')
   async findVillage(
-    @Param() params: DistrictFindVillageParams,
+    @Param() { code }: DistrictFindVillageParams,
     @Query() queries?: DistrictFindVillageQueries,
   ): Promise<Village[]> {
-    const { code } = params;
-    const { sortBy, sortOrder } = queries ?? {};
-    const villages = await this.districtService.findVillages(code, {
-      sortBy: sortBy,
-      sortOrder: sortOrder,
-    });
+    const villages = await this.districtService.findVillages(code, queries);
 
-    if (villages === false)
+    if (villages === null) {
       throw new NotFoundException(`There are no district with code '${code}'`);
+    }
 
     return villages;
   }

@@ -1,28 +1,24 @@
+import { CommonService, FindOptions } from '@/common/common.service';
+import { getDBProviderFeatures } from '@/common/utils/db';
+import { PrismaService } from '@/prisma/prisma.service';
+import { SortOptions, SortService } from '@/sort/sort.service';
 import { Injectable } from '@nestjs/common';
 import { District, Village } from '@prisma/client';
-import { PrismaService } from '@/prisma/prisma.service';
-import { getDBProviderFeatures } from '@/common/utils/db';
-import { SortOptions, SortService } from '@/sort/sort.service';
 
 @Injectable()
-export class DistrictService {
-  private readonly sortService: SortService<District>;
+export class DistrictService implements CommonService<District> {
+  readonly sorter: SortService<District>;
 
   constructor(private readonly prisma: PrismaService) {
-    this.sortService = new SortService<District>({
+    this.sorter = new SortService<District>({
       sortBy: 'code',
       sortOrder: 'asc',
     });
   }
 
-  /**
-   * If the name is empty, all districts will be returned.
-   * Otherwise, it will only return the districts with the matching name.
-   * @param name Filter by district name (optional).
-   * @param sort The sort query (optional).
-   * @returns The array of district.
-   */
-  async find(name = '', sort?: SortOptions<District>): Promise<District[]> {
+  async find({ name, ...sortOptions }: FindOptions<District> = {}): Promise<
+    District[]
+  > {
     return this.prisma.district.findMany({
       where: {
         name: {
@@ -32,16 +28,11 @@ export class DistrictService {
           }),
         },
       },
-      orderBy: this.sortService.object(sort),
+      orderBy: this.sorter.object(sortOptions),
     });
   }
 
-  /**
-   * Find a district by its code.
-   * @param code The district code.
-   * @returns An district, or null if there are no match district.
-   */
-  async findByCode(code: string): Promise<District> {
+  async findByCode(code: string): Promise<District | null> {
     return this.prisma.district.findUnique({
       where: {
         code: code,
@@ -52,23 +43,21 @@ export class DistrictService {
   /**
    * Find all villages in a district.
    * @param districtCode The district code.
-   * @param sort The sort query (optional).
-   * @returns Array of village in the match district, or `false` if there are no district found.
+   * @param sort The sort options.
+   * @returns An array of villages, or `null` if there are no match district.
    */
   async findVillages(
     districtCode: string,
     sort?: SortOptions<District>,
-  ): Promise<false | Village[]> {
-    const villages = await this.prisma.district
+  ): Promise<Village[] | null> {
+    return this.prisma.district
       .findUnique({
         where: {
           code: districtCode,
         },
       })
       .villages({
-        orderBy: this.sortService.object(sort),
+        orderBy: this.sorter.object(sort),
       });
-
-    return villages ?? false;
   }
 }
