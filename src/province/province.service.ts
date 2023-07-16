@@ -1,28 +1,24 @@
+import { CommonService, FindOptions } from '@/common/common.service';
+import { getDBProviderFeatures } from '@/common/utils/db';
+import { PrismaService } from '@/prisma/prisma.service';
+import { SortOptions, SortService } from '@/sort/sort.service';
 import { Injectable } from '@nestjs/common';
 import { Province, Regency } from '@prisma/client';
-import { PrismaService } from '@/prisma/prisma.service';
-import { getDBProviderFeatures } from '@/common/utils/db';
-import { SortOptions, SortService } from '@/sort/sort.service';
 
 @Injectable()
-export class ProvinceService {
-  private readonly sortService: SortService<Province>;
+export class ProvinceService implements CommonService<Province> {
+  readonly sorter: SortService<Province>;
 
   constructor(private readonly prisma: PrismaService) {
-    this.sortService = new SortService<Province>({
+    this.sorter = new SortService<Province>({
       sortBy: 'code',
       sortOrder: 'asc',
     });
   }
 
-  /**
-   * If the name is empty, all provinces will be returned.
-   * Otherwise, it will only return the provinces with the matching name.
-   * @param name Filter by province name (optional).
-   * @param sort The sort query (optional).
-   * @returns The array of provinces.
-   */
-  async find(name = '', sort?: SortOptions<Province>): Promise<Province[]> {
+  async find({ name, ...sortOptions }: FindOptions<Province> = {}): Promise<
+    Province[]
+  > {
     return this.prisma.province.findMany({
       where: {
         name: {
@@ -32,16 +28,11 @@ export class ProvinceService {
           }),
         },
       },
-      orderBy: this.sortService.object(sort),
+      orderBy: this.sorter.object(sortOptions),
     });
   }
 
-  /**
-   * Find a province by its code.
-   * @param code The province code.
-   * @returns An province, or `null` if there are no match province.
-   */
-  async findByCode(code: string): Promise<Province> {
+  async findByCode(code: string): Promise<Province | null> {
     return this.prisma.province.findUnique({
       where: {
         code: code,
@@ -52,22 +43,21 @@ export class ProvinceService {
   /**
    * Find all regencies in a province.
    * @param provinceCode The province code.
-   * @returns Array of regency in the match province, or `false` if there are no province found.
+   * @param sortOptions The sort options.
+   * @returns An array of regencies, or `null` if there are no match province.
    */
   async findRegencies(
     provinceCode: string,
-    sort?: SortOptions<Province>,
-  ): Promise<false | Regency[]> {
-    const regencies = await this.prisma.province
+    sortOptions?: SortOptions<Province>,
+  ): Promise<Regency[] | null> {
+    return this.prisma.province
       .findUnique({
         where: {
           code: provinceCode,
         },
       })
       .regencies({
-        orderBy: this.sortService.object(sort),
+        orderBy: this.sorter.object(sortOptions),
       });
-
-    return regencies ?? false;
   }
 }
