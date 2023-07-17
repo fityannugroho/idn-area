@@ -112,11 +112,11 @@ export class RegencyController {
     description: 'If there are no regency match with the `code`.',
   })
   @Get(':code/districts')
-  async findDistrict(
+  async findDistricts(
     @Param() { code }: RegencyFindDistrictParams,
     @Query() queries?: RegencyFindDistrictQueries,
   ): Promise<District[]> {
-    const districts = await this.regencyService.findDistrics(code, queries);
+    const districts = await this.regencyService.findDistricts(code, queries);
 
     if (districts === null) {
       throw new NotFoundException(`There are no regency with code '${code}'`);
@@ -155,7 +155,7 @@ export class RegencyController {
   @Get(':code/islands')
   async findIslands(
     @Param() { code }: RegencyFindByCodeParams,
-    @Query() queries: RegencyFindIslandsQueries,
+    @Query() queries?: RegencyFindIslandsQueries,
   ) {
     const islands = await this.regencyService.findIslands(code, queries);
 

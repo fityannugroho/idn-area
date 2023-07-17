@@ -53,7 +53,7 @@ export class RegencyService implements CommonService<Regency> {
    * @param sortOptions The sort options.
    * @returns An array of districts, or `null` if there are no match regency.
    */
-  async findDistrics(
+  async findDistricts(
     regencyCode: string,
     sortOptions?: SortOptions<District>,
   ): Promise<District[] | null> {
