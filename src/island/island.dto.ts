@@ -39,6 +39,10 @@ export class Island {
   @IsNumberString()
   @Length(4, 4)
   regencyCode?: string;
+
+  latitude?: number;
+
+  longitude?: number;
 }
 
 export class IslandSortQuery extends SortQuery {

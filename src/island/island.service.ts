@@ -1,16 +1,18 @@
+import { CommonService, FindOptions } from '@/common/common.service';
+import { convertCoordinate } from '@/common/utils/coordinate';
+import { getDBProviderFeatures } from '@/common/utils/db';
+import { Island as IslandDTO } from '@/island/island.dto';
+import { PrismaService } from '@/prisma/prisma.service';
+import { SortService } from '@/sort/sort.service';
 import { Injectable } from '@nestjs/common';
 import { Island } from '@prisma/client';
-import { getDBProviderFeatures } from '@/common/utils/db';
-import { convertCoordinate } from '@/common/utils/coordinate';
-import { SortService, SortOptions } from '@/sort/sort.service';
-import { PrismaService } from '@/prisma/prisma.service';
 
 @Injectable()
-export class IslandService {
-  readonly sortService: SortService<Island>;
+export class IslandService implements CommonService<Island> {
+  readonly sorter: SortService<Island>;
 
   constructor(private readonly prisma: PrismaService) {
-    this.sortService = new SortService<Island>({
+    this.sorter = new SortService<Island>({
       sortBy: 'code',
       sortOrder: 'asc',
     });
@@ -19,14 +21,16 @@ export class IslandService {
   /**
    * Add decimal latitude and longitude to the island object.
    */
-  addDecimalCoordinate(island: Island) {
+  addDecimalCoordinate(island: Island): IslandDTO {
     const [latitude, longitude] = convertCoordinate(island.coordinate);
 
     return { ...island, latitude, longitude };
   }
 
-  async find(name = '', sort?: SortOptions<Island>): Promise<Island[]> {
-    const islands = await this.prisma.island.findMany({
+  async find({ name, ...sortOptions }: FindOptions<Island> = {}): Promise<
+    Island[]
+  > {
+    return this.prisma.island.findMany({
       where: {
         name: {
           contains: name,
@@ -35,28 +39,15 @@ export class IslandService {
           }),
         },
       },
-      orderBy: this.sortService.object(sort),
+      orderBy: this.sorter.object(sortOptions),
     });
-
-    return islands.map(this.addDecimalCoordinate);
   }
 
-  /**
-   * Find an island by its code.
-   * @param code The island code.
-   * @returns An island, or null if there are no match island.
-   */
   async findByCode(code: string): Promise<Island | null> {
-    const island = await this.prisma.island.findUnique({
+    return this.prisma.island.findUnique({
       where: {
         code: code,
       },
     });
-
-    if (island) {
-      return this.addDecimalCoordinate(island);
-    }
-
-    return null;
   }
 }

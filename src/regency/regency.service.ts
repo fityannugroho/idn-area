@@ -1,5 +1,6 @@
 import { CommonService, FindOptions } from '@/common/common.service';
 import { getDBProviderFeatures } from '@/common/utils/db';
+import { Island as IslandDTO } from '@/island/island.dto';
 import { IslandService } from '@/island/island.service';
 import { PrismaService } from '@/prisma/prisma.service';
 import { SortOptions, SortService } from '@/sort/sort.service';
@@ -74,7 +75,7 @@ export class RegencyService implements CommonService<Regency> {
   async findIslands(
     regencyCode: string,
     sortOptions?: SortOptions<Island>,
-  ): Promise<Island[] | null> {
+  ): Promise<IslandDTO[] | null> {
     const islands = await this.prisma.regency
       .findUnique({
         where: {
@@ -82,7 +83,7 @@ export class RegencyService implements CommonService<Regency> {
         },
       })
       .islands({
-        orderBy: this.islandService.sortService.object(sortOptions),
+        orderBy: this.islandService.sorter.object(sortOptions),
       });
 
     if (!islands) {
