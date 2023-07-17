@@ -1,4 +1,4 @@
-import { getValues, sortStrArray } from '@/common/utils/array';
+import { getValues, sortArray } from '@/common/utils/array';
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import IdnArea, { Province, RegencyTransformed } from 'idn-area-data';
@@ -57,8 +57,8 @@ describe('ProvinceController', () => {
         sortOrder: 'asc',
       });
 
-      expect(getValues(testProvinces, 'name')).toEqual(
-        sortStrArray(getValues(provinces, 'name')),
+      expect(getValues(testProvinces, 'code')).toEqual(
+        getValues(sortArray(provinces, 'name'), 'code'),
       );
     });
 
@@ -68,8 +68,8 @@ describe('ProvinceController', () => {
         sortOrder: 'desc',
       });
 
-      expect(getValues(testProvinces, 'name')).toEqual(
-        sortStrArray(getValues(provinces, 'name'), 'desc'),
+      expect(getValues(testProvinces, 'code')).toEqual(
+        getValues(sortArray(provinces, 'name', 'desc'), 'code'),
       );
     });
 
@@ -97,14 +97,14 @@ describe('ProvinceController', () => {
   });
 
   describe('findByCode', () => {
-    it('should return province with match code', async () => {
+    it('should return a province with matching code', async () => {
       const testProvince = await controller.findByCode({ code: testProvCode });
       const findProvince = provinces.find((p) => p.code === testProvCode);
 
       expect(testProvince).toEqual(expect.objectContaining(findProvince));
     });
 
-    it('should throw NotFoundException if there are no match province', async () => {
+    it('should throw NotFoundException if there is no matching province', async () => {
       await expect(controller.findByCode({ code: '00' })).rejects.toThrowError(
         NotFoundException,
       );
@@ -112,7 +112,15 @@ describe('ProvinceController', () => {
   });
 
   describe('findRegencies', () => {
-    it('should return all regencies in the match province', async () => {
+    let expectedRegencies: RegencyTransformed[];
+
+    beforeAll(() => {
+      expectedRegencies = regencies.filter(
+        (r) => r.provinceCode === testProvCode,
+      );
+    });
+
+    it('should return all regencies in the matching province', async () => {
       const testRegencies = await controller.findRegencies({
         code: testProvCode,
       });
@@ -126,39 +134,34 @@ describe('ProvinceController', () => {
           }),
         ]),
       );
+      expect(testRegencies.length).toEqual(expectedRegencies.length);
     });
 
-    it('should throw NotFoundException if there are no match province', async () => {
+    it('should throw NotFoundException if there is no matching province', async () => {
       await expect(
         controller.findRegencies({ code: '00' }),
       ).rejects.toThrowError(NotFoundException);
     });
 
-    it('should return all regencies sorted by name ascending', async () => {
+    it('should return all regencies in the matching province sorted by name ascending', async () => {
       const testRegencies = await controller.findRegencies(
         { code: testProvCode },
         { sortBy: 'name', sortOrder: 'asc' },
       );
-      const expectedRegencies = regencies.filter(
-        (r) => r.provinceCode === testProvCode,
-      );
 
-      expect(getValues(testRegencies, 'name')).toEqual(
-        sortStrArray(getValues(expectedRegencies, 'name')),
+      expect(getValues(testRegencies, 'code')).toEqual(
+        getValues(sortArray(expectedRegencies, 'name'), 'code'),
       );
     });
 
-    it('should return all regencies sorted by name descending', async () => {
+    it('should return all regencies in the matching province sorted by name descending', async () => {
       const testRegencies = await controller.findRegencies(
         { code: testProvCode },
         { sortBy: 'name', sortOrder: 'desc' },
       );
-      const expectedRegencies = regencies.filter(
-        (r) => r.provinceCode === testProvCode,
-      );
 
-      expect(getValues(testRegencies, 'name')).toEqual(
-        sortStrArray(getValues(expectedRegencies, 'name'), 'desc'),
+      expect(getValues(testRegencies, 'code')).toEqual(
+        getValues(sortArray(expectedRegencies, 'name', 'desc'), 'code'),
       );
     });
   });

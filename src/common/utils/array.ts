@@ -56,18 +56,6 @@ export const sortArray = <T extends Record<string, any>>(
 };
 
 /**
- * Return new sorted array.
- */
-export const sortStrArray = (
-  arr: string[],
-  sortOrder: 'asc' | 'desc' = 'asc',
-) => {
-  return [...arr].sort((a, b) =>
-    sortOrder === 'asc' ? a.localeCompare(b) : b.localeCompare(a),
-  );
-};
-
-/**
  * Get property values from array of objects.
  */
 export const getValues = <T extends Record<string, any>>(
