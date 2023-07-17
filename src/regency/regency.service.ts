@@ -1,5 +1,6 @@
 import { CommonService, FindOptions } from '@/common/common.service';
 import { getDBProviderFeatures } from '@/common/utils/db';
+import { DistrictService } from '@/district/district.service';
 import { Island as IslandDTO } from '@/island/island.dto';
 import { IslandService } from '@/island/island.service';
 import { PrismaService } from '@/prisma/prisma.service';
@@ -13,6 +14,7 @@ export class RegencyService implements CommonService<Regency> {
 
   constructor(
     private readonly prisma: PrismaService,
+    private readonly districtService: DistrictService,
     private readonly islandService: IslandService,
   ) {
     this.sorter = new SortService<Regency>({
@@ -53,7 +55,7 @@ export class RegencyService implements CommonService<Regency> {
    */
   async findDistrics(
     regencyCode: string,
-    sortOptions?: SortOptions<Regency>,
+    sortOptions?: SortOptions<District>,
   ): Promise<District[] | null> {
     return this.prisma.regency
       .findUnique({
@@ -62,7 +64,7 @@ export class RegencyService implements CommonService<Regency> {
         },
       })
       .districts({
-        orderBy: this.sorter.object(sortOptions),
+        orderBy: this.districtService.sorter.object(sortOptions),
       });
   }
 

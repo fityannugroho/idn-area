@@ -8,5 +8,6 @@ import { VillageModule } from '@/village/village.module';
   imports: [PrismaModule, VillageModule],
   controllers: [DistrictController],
   providers: [DistrictService],
+  exports: [DistrictService],
 })
 export class DistrictModule {}
