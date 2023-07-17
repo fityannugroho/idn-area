@@ -2,6 +2,7 @@ import { CommonService, FindOptions } from '@/common/common.service';
 import { getDBProviderFeatures } from '@/common/utils/db';
 import { PrismaService } from '@/prisma/prisma.service';
 import { SortOptions, SortService } from '@/sort/sort.service';
+import { VillageService } from '@/village/village.service';
 import { Injectable } from '@nestjs/common';
 import { District, Village } from '@prisma/client';
 
@@ -9,7 +10,10 @@ import { District, Village } from '@prisma/client';
 export class DistrictService implements CommonService<District> {
   readonly sorter: SortService<District>;
 
-  constructor(private readonly prisma: PrismaService) {
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly villageService: VillageService,
+  ) {
     this.sorter = new SortService<District>({
       sortBy: 'code',
       sortOrder: 'asc',
@@ -43,12 +47,12 @@ export class DistrictService implements CommonService<District> {
   /**
    * Find all villages in a district.
    * @param districtCode The district code.
-   * @param sort The sort options.
+   * @param sortOptions The sort options.
    * @returns An array of villages, or `null` if there are no match district.
    */
   async findVillages(
     districtCode: string,
-    sort?: SortOptions<District>,
+    sortOptions?: SortOptions<Village>,
   ): Promise<Village[] | null> {
     return this.prisma.district
       .findUnique({
@@ -57,7 +61,7 @@ export class DistrictService implements CommonService<District> {
         },
       })
       .villages({
-        orderBy: this.sorter.object(sort),
+        orderBy: this.villageService.sorter.object(sortOptions),
       });
   }
 }
