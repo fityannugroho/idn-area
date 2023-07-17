@@ -7,5 +7,6 @@ import { VillageService } from './village.service';
   imports: [PrismaModule],
   controllers: [VillageController],
   providers: [VillageService],
+  exports: [VillageService],
 })
 export class VillageModule {}

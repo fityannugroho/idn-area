@@ -23,9 +23,9 @@ export class Regency {
   provinceCode: string;
 }
 
-export class RegencySortQuery extends SortQuery<'code' | 'name'> {
+export class RegencySortQuery extends SortQuery {
   @EqualsAny(['code', 'name'])
-  sortBy: 'code' | 'name';
+  readonly sortBy?: 'code' | 'name';
 }
 
 export class RegencyFindQueries extends IntersectionType(

@@ -39,11 +39,15 @@ export class Island {
   @IsNumberString()
   @Length(4, 4)
   regencyCode?: string;
+
+  latitude?: number;
+
+  longitude?: number;
 }
 
-export class IslandSortQuery extends SortQuery<'code' | 'name' | 'coordinate'> {
+export class IslandSortQuery extends SortQuery {
   @EqualsAny(['code', 'name', 'coordinate'])
-  sortBy: 'code' | 'name';
+  readonly sortBy?: 'code' | 'name' | 'coordinate';
 }
 
 export class IslandFindQueries extends IntersectionType(

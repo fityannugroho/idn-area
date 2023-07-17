@@ -8,12 +8,15 @@ import { SortOptions } from './sort.service';
  * You may need to inherit this class and use `@EqualsAny()` decorator
  * for `sortBy` property to accept only specific values.
  */
-export class SortQuery<T extends string = string> implements SortOptions<T> {
+export class SortQuery<
+  T extends Record<string, unknown> = Record<string, unknown>,
+> implements SortOptions<T>
+{
   @IsOptional()
   @IsString()
-  sortBy?: T;
+  readonly sortBy?: keyof T;
 
   @IsOptional()
   @EqualsAny(['asc', 'desc'])
-  sortOrder?: 'asc' | 'desc';
+  readonly sortOrder?: 'asc' | 'desc';
 }

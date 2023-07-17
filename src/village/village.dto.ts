@@ -21,9 +21,9 @@ export class Village {
   districtCode: string;
 }
 
-export class VillageSortQuery extends SortQuery<'code' | 'name'> {
+export class VillageSortQuery extends SortQuery {
   @EqualsAny(['code', 'name'])
-  sortBy: 'code' | 'name';
+  readonly sortBy?: 'code' | 'name';
 }
 
 export class VillageFindQueries extends IntersectionType(

@@ -5,8 +5,6 @@ import {
   Param,
   Query,
 } from '@nestjs/common';
-import { IslandService } from './island.service';
-import { IslandFindByCodeParams, IslandFindQueries } from './island.dto';
 import {
   ApiBadRequestResponse,
   ApiNotFoundResponse,
@@ -16,7 +14,12 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { Island } from '@prisma/client';
+import {
+  Island,
+  IslandFindByCodeParams,
+  IslandFindQueries,
+} from './island.dto';
+import { IslandService } from './island.service';
 
 @ApiTags('Island')
 @Controller('islands')
@@ -50,12 +53,10 @@ export class IslandController {
   @ApiOkResponse({ description: 'Returns array of islands.' })
   @ApiBadRequestResponse({ description: 'If there are invalid query values.' })
   @Get()
-  async find(@Query() queries: IslandFindQueries) {
-    const { name, sortBy, sortOrder } = queries ?? {};
-    return this.islandService.find(name, {
-      sortBy: sortBy,
-      sortOrder: sortOrder,
-    });
+  async find(@Query() queries?: IslandFindQueries): Promise<Island[]> {
+    return (await this.islandService.find(queries)).map((island) =>
+      this.islandService.addDecimalCoordinate(island),
+    );
   }
 
   @ApiOperation({ description: 'Get an island by its code.' })
@@ -72,14 +73,13 @@ export class IslandController {
     description: 'If no island matches the `code`.',
   })
   @Get(':code')
-  async findByCode(@Param() params: IslandFindByCodeParams): Promise<Island> {
-    const { code } = params;
+  async findByCode(@Param() { code }: IslandFindByCodeParams): Promise<Island> {
     const island = await this.islandService.findByCode(code);
 
-    if (!island) {
+    if (island === null) {
       throw new NotFoundException(`Island with code ${code} not found.`);
     }
 
-    return island;
+    return this.islandService.addDecimalCoordinate(island);
   }
 }
