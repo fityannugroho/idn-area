@@ -1,8 +1,7 @@
 import { getValues, sortArray } from '@/common/utils/array';
-import { PrismaService } from '@/prisma/prisma.service';
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import {
+import IdnArea, {
   DistrictTransformed,
   IslandTransformed,
   RegencyTransformed,
@@ -20,9 +19,9 @@ describe('RegencyController', () => {
   let controller: RegencyController;
 
   beforeAll(async () => {
-    regencies = await new PrismaService().regency.findMany();
-    districts = await new PrismaService().district.findMany();
-    islands = await new PrismaService().island.findMany();
+    regencies = await IdnArea.regencies({ transform: true });
+    districts = await IdnArea.districts({ transform: true });
+    islands = await IdnArea.islands({ transform: true });
   });
 
   beforeEach(async () => {
