@@ -1,4 +1,4 @@
-import { SortOptions } from '@/sort/sort.service';
+import { SortOptions, SortService } from '@/sort/sort.service';
 
 export type CommonData = Record<string, unknown> & {
   code: string;
@@ -10,6 +10,8 @@ export type FindOptions<T extends CommonData> = SortOptions<T> & {
 };
 
 export interface CommonService<T extends CommonData> {
+  readonly sorter: SortService<T>;
+
   /**
    * If the name is empty, all data will be returned.
    * Otherwise, it will only return the data with the matching name.
