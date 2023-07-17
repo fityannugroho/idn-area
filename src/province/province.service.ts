@@ -1,6 +1,7 @@
 import { CommonService, FindOptions } from '@/common/common.service';
 import { getDBProviderFeatures } from '@/common/utils/db';
 import { PrismaService } from '@/prisma/prisma.service';
+import { RegencyService } from '@/regency/regency.service';
 import { SortOptions, SortService } from '@/sort/sort.service';
 import { Injectable } from '@nestjs/common';
 import { Province, Regency } from '@prisma/client';
@@ -9,7 +10,10 @@ import { Province, Regency } from '@prisma/client';
 export class ProvinceService implements CommonService<Province> {
   readonly sorter: SortService<Province>;
 
-  constructor(private readonly prisma: PrismaService) {
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly regencyService: RegencyService,
+  ) {
     this.sorter = new SortService<Province>({
       sortBy: 'code',
       sortOrder: 'asc',
@@ -48,7 +52,7 @@ export class ProvinceService implements CommonService<Province> {
    */
   async findRegencies(
     provinceCode: string,
-    sortOptions?: SortOptions<Province>,
+    sortOptions?: SortOptions<Regency>,
   ): Promise<Regency[] | null> {
     return this.prisma.province
       .findUnique({
@@ -57,7 +61,7 @@ export class ProvinceService implements CommonService<Province> {
         },
       })
       .regencies({
-        orderBy: this.sorter.object(sortOptions),
+        orderBy: this.regencyService.sorter.object(sortOptions),
       });
   }
 }

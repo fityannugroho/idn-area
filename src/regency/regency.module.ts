@@ -8,5 +8,6 @@ import { PrismaModule } from '@/prisma/prisma.module';
   imports: [PrismaModule, IslandModule],
   controllers: [RegencyController],
   providers: [RegencyService],
+  exports: [RegencyService],
 })
 export class RegencyModule {}
