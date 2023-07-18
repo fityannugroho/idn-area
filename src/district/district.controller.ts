@@ -111,7 +111,7 @@ export class DistrictController {
     description: 'If there are no district match with the `code`.',
   })
   @Get(':code/villages')
-  async findVillage(
+  async findVillages(
     @Param() { code }: DistrictFindVillageParams,
     @Query() queries?: DistrictFindVillageQueries,
   ): Promise<Village[]> {
