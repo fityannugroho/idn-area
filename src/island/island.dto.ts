@@ -7,7 +7,7 @@ import {
   IsString,
   Length,
 } from 'class-validator';
-import { SortQuery } from '~/utils/helpers/sorter';
+import { SortQuery } from '@/sort/sort.dto';
 import { EqualsAny } from '../common/decorator/EqualsAny';
 import { IsNotSymbol } from '../common/decorator/IsNotSymbol';
 
@@ -39,11 +39,15 @@ export class Island {
   @IsNumberString()
   @Length(4, 4)
   regencyCode?: string;
+
+  latitude?: number;
+
+  longitude?: number;
 }
 
-export class IslandSortQuery extends SortQuery<'code' | 'name' | 'coordinate'> {
+export class IslandSortQuery extends SortQuery {
   @EqualsAny(['code', 'name', 'coordinate'])
-  sortBy: 'code' | 'name';
+  readonly sortBy?: 'code' | 'name' | 'coordinate';
 }
 
 export class IslandFindQueries extends IntersectionType(

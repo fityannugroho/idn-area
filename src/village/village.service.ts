@@ -1,33 +1,24 @@
+import { CommonService, FindOptions } from '@/common/common.service';
+import { getDBProviderFeatures } from '@/common/utils/db';
+import { PrismaService } from '@/prisma/prisma.service';
+import { SortService } from '@/sort/sort.service';
 import { Injectable } from '@nestjs/common';
 import { Village } from '@prisma/client';
-import { Sorter, SortOptions } from '~/utils/helpers/sorter';
-import { PrismaService } from '~/src/common/services/prisma';
-import { getDBProviderFeatures } from '~/utils/db';
-
-type VillageSortKeys = keyof Village;
 
 @Injectable()
-export class VillageService {
-  private readonly sortHelper: Sorter<VillageSortKeys>;
+export class VillageService implements CommonService<Village> {
+  readonly sorter: SortService<Village>;
 
   constructor(private readonly prisma: PrismaService) {
-    this.sortHelper = new Sorter<VillageSortKeys>({
+    this.sorter = new SortService<Village>({
       sortBy: 'code',
       sortOrder: 'asc',
     });
   }
 
-  /**
-   * If the name is empty, all villages will be returned.
-   * Otherwise, it will only return the villages with the matching name.
-   * @param name Filter by village name (optional).
-   * @param sort The sort query (optional).
-   * @returns The array of villages.
-   */
-  async find(
-    name = '',
-    sort?: SortOptions<VillageSortKeys>,
-  ): Promise<Village[]> {
+  async find({ name, ...sortOptions }: FindOptions<Village> = {}): Promise<
+    Village[]
+  > {
     return this.prisma.village.findMany({
       where: {
         name: {
@@ -37,16 +28,11 @@ export class VillageService {
           }),
         },
       },
-      orderBy: this.sortHelper.object(sort),
+      orderBy: this.sorter.object(sortOptions),
     });
   }
 
-  /**
-   * Find a village by its code.
-   * @param code The village code.
-   * @returns An village, or null if there are no match village.
-   */
-  async findByCode(code: string): Promise<Village> {
+  async findByCode(code: string): Promise<Village | null> {
     return this.prisma.village.findUnique({
       where: {
         code: code,

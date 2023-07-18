@@ -4,7 +4,7 @@ import {
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 import { TestingModule, Test } from '@nestjs/testing';
-import { AppModule } from '~/src/app.module';
+import { AppModule } from '@/app.module';
 
 export type HttpMethods =
   | 'DELETE'
@@ -21,6 +21,8 @@ export type HttpMethods =
   | 'put'
   | 'OPTIONS'
   | 'options';
+
+type BadRequestResponse = Awaited<ReturnType<AppTester['expectBadRequest']>>;
 
 export class AppTester {
   constructor(readonly app: NestFastifyApplication) {}
@@ -136,10 +138,17 @@ export class AppTester {
    *
    * @param badCodes List of invalid `code` samples to test.
    */
-  async expectBadCode(url: (code: string) => string, badCodes: string[]) {
+  async expectBadCode(
+    url: (code: string) => string,
+    badCodes: readonly string[],
+  ) {
+    const promises: Promise<BadRequestResponse>[] = [];
+
     for (const code of badCodes) {
-      await this.expectBadRequest(url(code));
+      promises.push(this.expectBadRequest(url(code)));
     }
+
+    await Promise.all(promises);
   }
 
   /**
@@ -159,13 +168,16 @@ export class AppTester {
     badSortBy: string[],
   ) {
     const badSortOrder = ['', 'ASC', 'DESC', 'unknown'];
+    const promises: Promise<BadRequestResponse>[] = [];
 
     for (const sortBy of badSortBy) {
       for (const sortOrder of badSortOrder) {
-        await this.expectBadRequest(
-          url(`sortBy=${sortBy}&sortOrder=${sortOrder}`),
+        promises.push(
+          this.expectBadRequest(url(`sortBy=${sortBy}&sortOrder=${sortOrder}`)),
         );
       }
     }
+
+    await Promise.all(promises);
   }
 }

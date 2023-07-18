@@ -5,7 +5,7 @@ import {
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { appConfig } from '~/utils/config/app';
+import { appConfig } from '@/common/config/app';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -45,6 +45,8 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: true,
     }),
   );
 

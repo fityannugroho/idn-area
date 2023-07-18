@@ -1,8 +1,8 @@
 import { IntersectionType, PickType } from '@nestjs/mapped-types';
 import { IsNotEmpty, IsNumberString, Length } from 'class-validator';
-import { EqualsAny } from '~/src/common/decorator/EqualsAny';
-import { IsNotSymbol } from '~/src/common/decorator/IsNotSymbol';
-import { SortQuery } from '~/utils/helpers/sorter';
+import { EqualsAny } from '@/common/decorator/EqualsAny';
+import { IsNotSymbol } from '@/common/decorator/IsNotSymbol';
+import { SortQuery } from '@/sort/sort.dto';
 import { DistrictSortQuery } from '../district/district.dto';
 import { IslandSortQuery } from '../island/island.dto';
 
@@ -23,9 +23,9 @@ export class Regency {
   provinceCode: string;
 }
 
-export class RegencySortQuery extends SortQuery<'code' | 'name'> {
+export class RegencySortQuery extends SortQuery {
   @EqualsAny(['code', 'name'])
-  sortBy: 'code' | 'name';
+  readonly sortBy?: 'code' | 'name';
 }
 
 export class RegencyFindQueries extends IntersectionType(

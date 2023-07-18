@@ -1,13 +1,10 @@
-import { AppTester } from '~/utils/helpers/app-tester';
+import { AppTester } from './helper/app-tester';
 
 describe('Regency (e2e)', () => {
   const baseUrl = '/regencies';
   const testCode = '3273';
+  const badRegencyCodes = ['', '123', '12345', 'abcd'] as const;
   let tester: AppTester;
-
-  const expectBadRegencyCode = async (url: (code: string) => string) => {
-    await tester.expectBadCode(url, ['', '123', '12345', 'abcd']);
-  };
 
   beforeAll(async () => {
     tester = await AppTester.make();
@@ -58,7 +55,10 @@ describe('Regency (e2e)', () => {
 
   describe(`GET ${baseUrl}/{code}`, () => {
     it('should return 400 if the `code` is invalid', async () => {
-      await expectBadRegencyCode((code) => `${baseUrl}/${code}`);
+      await tester.expectBadCode(
+        (code) => `${baseUrl}/${code}`,
+        badRegencyCodes,
+      );
     });
 
     it('should return 404 if the `code` does not match with any regency', async () => {
@@ -80,7 +80,10 @@ describe('Regency (e2e)', () => {
 
   describe(`GET ${baseUrl}/{code}/districts`, () => {
     it('should return 400 if the `code` is invalid', async () => {
-      await expectBadRegencyCode((code) => `${baseUrl}/${code}/districts`);
+      await tester.expectBadCode(
+        (code) => `${baseUrl}/${code}/districts`,
+        badRegencyCodes,
+      );
     });
 
     it('should return 400 if any districts sort query is invalid', async () => {
@@ -111,7 +114,10 @@ describe('Regency (e2e)', () => {
 
   describe(`GET ${baseUrl}/{code}/islands`, () => {
     it('should return 400 if the `code` is invalid', async () => {
-      await expectBadRegencyCode((code) => `${baseUrl}/${code}/islands`);
+      await tester.expectBadCode(
+        (code) => `${baseUrl}/${code}/islands`,
+        badRegencyCodes,
+      );
     });
 
     it('should return 404 if the `code` does not match with any regency', async () => {

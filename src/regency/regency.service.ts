@@ -1,37 +1,31 @@
+import { CommonService, FindOptions } from '@/common/common.service';
+import { getDBProviderFeatures } from '@/common/utils/db';
+import { DistrictService } from '@/district/district.service';
+import { Island as IslandDTO } from '@/island/island.dto';
+import { IslandService } from '@/island/island.service';
+import { PrismaService } from '@/prisma/prisma.service';
+import { SortOptions, SortService } from '@/sort/sort.service';
 import { Injectable } from '@nestjs/common';
 import { District, Island, Regency } from '@prisma/client';
-import { PrismaService } from '~/src/common/services/prisma';
-import { getDBProviderFeatures } from '~/utils/db';
-import { SortOptions, Sorter } from '~/utils/helpers/sorter';
-import { IslandService, IslandSortKeys } from '../island/island.service';
-
-type RegencySortKeys = keyof Regency;
 
 @Injectable()
-export class RegencyService {
-  private readonly sortHelper: Sorter<RegencySortKeys>;
+export class RegencyService implements CommonService<Regency> {
+  readonly sorter: SortService<Regency>;
 
   constructor(
     private readonly prisma: PrismaService,
+    private readonly districtService: DistrictService,
     private readonly islandService: IslandService,
   ) {
-    this.sortHelper = new Sorter<RegencySortKeys>({
+    this.sorter = new SortService<Regency>({
       sortBy: 'code',
       sortOrder: 'asc',
     });
   }
 
-  /**
-   * If the name is empty, all regencies will be returned.
-   * Otherwise, it will only return the regencies with the matching name.
-   * @param name Filter by regency name (optional).
-   * @param sort The sort query (optional).
-   * @returns The array of regencies.
-   */
-  async find(
-    name = '',
-    sort?: SortOptions<RegencySortKeys>,
-  ): Promise<Regency[]> {
+  async find({ name, ...sortOptions }: FindOptions<Regency> = {}): Promise<
+    Regency[]
+  > {
     return this.prisma.regency.findMany({
       where: {
         name: {
@@ -41,16 +35,11 @@ export class RegencyService {
           }),
         },
       },
-      orderBy: this.sortHelper.object(sort),
+      orderBy: this.sorter.object(sortOptions),
     });
   }
 
-  /**
-   * Find a regency by its code.
-   * @param code The regency code.
-   * @returns An regency, or null if there are no match regency.
-   */
-  async findByCode(code: string): Promise<Regency> {
+  async findByCode(code: string): Promise<Regency | null> {
     return this.prisma.regency.findUnique({
       where: {
         code: code,
@@ -61,35 +50,34 @@ export class RegencyService {
   /**
    * Find all districts in a regency.
    * @param regencyCode The regency code.
-   * @param sort The sort query (optional).
-   * @returns Array of districts in the match regency, or `false` if there are no regency found.
+   * @param sortOptions The sort options.
+   * @returns An array of districts, or `null` if there are no match regency.
    */
-  async findDistrics(
+  async findDistricts(
     regencyCode: string,
-    sort?: SortOptions<RegencySortKeys>,
-  ): Promise<false | District[]> {
-    const districts = await this.prisma.regency
+    sortOptions?: SortOptions<District>,
+  ): Promise<District[] | null> {
+    return this.prisma.regency
       .findUnique({
         where: {
           code: regencyCode,
         },
       })
       .districts({
-        orderBy: this.sortHelper.object(sort),
+        orderBy: this.districtService.sorter.object(sortOptions),
       });
-
-    return districts ?? false;
   }
 
   /**
    * Find all islands in a regency.
    * @param regencyCode The regency code.
-   * @returns Array of islands in the match regency, or `false` if there are no regency found.
+   * @param sortOptions The sort options.
+   * @returns An array of islands, or `null` if there are no match regency.
    */
   async findIslands(
     regencyCode: string,
-    sort?: SortOptions<IslandSortKeys>,
-  ): Promise<false | Island[]> {
+    sortOptions?: SortOptions<Island>,
+  ): Promise<IslandDTO[] | null> {
     const islands = await this.prisma.regency
       .findUnique({
         where: {
@@ -97,11 +85,11 @@ export class RegencyService {
         },
       })
       .islands({
-        orderBy: this.islandService.sortHelper.object(sort),
+        orderBy: this.islandService.sorter.object(sortOptions),
       });
 
     if (!islands) {
-      return false;
+      return null;
     }
 
     return islands.map(this.islandService.addDecimalCoordinate);

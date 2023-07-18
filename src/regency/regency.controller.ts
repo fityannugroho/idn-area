@@ -55,11 +55,7 @@ export class RegencyController {
   @ApiBadRequestResponse({ description: 'If there are invalid query values.' })
   @Get()
   async find(@Query() queries?: RegencyFindQueries): Promise<Regency[]> {
-    const { name, sortBy, sortOrder } = queries ?? {};
-    return this.regencyService.find(name, {
-      sortBy: sortBy,
-      sortOrder: sortOrder,
-    });
+    return this.regencyService.find(queries);
   }
 
   @ApiOperation({ description: 'Get a regency by its code.' })
@@ -76,12 +72,14 @@ export class RegencyController {
     description: 'If no regency matches the `code`.',
   })
   @Get(':code')
-  async findByCode(@Param() params: RegencyFindByCodeParams): Promise<Regency> {
-    const { code } = params;
+  async findByCode(
+    @Param() { code }: RegencyFindByCodeParams,
+  ): Promise<Regency> {
     const regency = await this.regencyService.findByCode(code);
 
-    if (regency === null)
+    if (regency === null) {
       throw new NotFoundException(`There are no regency with code '${code}'`);
+    }
 
     return regency;
   }
@@ -114,19 +112,15 @@ export class RegencyController {
     description: 'If there are no regency match with the `code`.',
   })
   @Get(':code/districts')
-  async findDistrict(
-    @Param() params: RegencyFindDistrictParams,
+  async findDistricts(
+    @Param() { code }: RegencyFindDistrictParams,
     @Query() queries?: RegencyFindDistrictQueries,
   ): Promise<District[]> {
-    const { code } = params;
-    const { sortBy, sortOrder } = queries ?? {};
-    const districts = await this.regencyService.findDistrics(code, {
-      sortBy: sortBy,
-      sortOrder: sortOrder,
-    });
+    const districts = await this.regencyService.findDistricts(code, queries);
 
-    if (districts === false)
+    if (districts === null) {
       throw new NotFoundException(`There are no regency with code '${code}'`);
+    }
 
     return districts;
   }
@@ -160,18 +154,14 @@ export class RegencyController {
   })
   @Get(':code/islands')
   async findIslands(
-    @Param() params: RegencyFindByCodeParams,
-    @Query() queries: RegencyFindIslandsQueries,
+    @Param() { code }: RegencyFindByCodeParams,
+    @Query() queries?: RegencyFindIslandsQueries,
   ) {
-    const { code } = params;
-    const { sortBy, sortOrder } = queries ?? {};
-    const islands = await this.regencyService.findIslands(code, {
-      sortBy: sortBy,
-      sortOrder: sortOrder,
-    });
+    const islands = await this.regencyService.findIslands(code, queries);
 
-    if (islands === false)
+    if (islands === null) {
       throw new NotFoundException(`There are no regency with code '${code}'`);
+    }
 
     return islands;
   }
