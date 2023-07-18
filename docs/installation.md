@@ -10,7 +10,7 @@
 
 ## Prerequisite
 
-- [Node.js](https://nodejs.org/en) (version 16 or higher)
+- [Node.js](https://nodejs.org/en) (version 18 or higher)
 - [npm](https://www.npmjs.com)
 - Database provider you want to use. We currently support MongoDB, PostgreSQL, and MySQL. See supported databases version [here](https://www.prisma.io/docs/reference/database-reference/supported-databases).
 

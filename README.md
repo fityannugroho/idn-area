@@ -13,7 +13,9 @@ API that provides information on the **administrative areas of Indonesia**, from
 
 Built with [NestJS framework](https://nestjs.com) and writen in TypeScript. [Prisma](https://www.prisma.io) is used as the ORM to interact with any kind of database.
 
-> **NEW!** **PostgreSQL and MySQL** is supported since version 2.0.0. See the [installation guide](docs/installation.md).
+> **⚠️ Upgrading to v3.0.0 ⚠️**
+>
+> Since v3.0.0, **Node.js v18** or higher is required. See the [installation guide](docs/installation.md).
 
 <h2>Table of Content</h2>
 
