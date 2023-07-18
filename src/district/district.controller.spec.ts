@@ -73,7 +73,7 @@ describe('DistrictController', () => {
         expect.arrayContaining([
           expect.objectContaining({
             code: expect.any(String),
-            name: expect.any(String),
+            name: expect.stringMatching(new RegExp(testDistrictName, 'i')),
             regencyCode: expect.any(String),
           }),
         ]),
@@ -118,14 +118,11 @@ describe('DistrictController', () => {
       const testDistrict = await controller.findByCode({
         code: testDistrictCode,
       });
-
-      expect(testDistrict).toEqual(
-        expect.objectContaining({
-          code: testDistrictCode,
-          name: expect.any(String),
-          regencyCode: testDistrictCode.slice(0, 4),
-        }),
+      const expectedDistrict = districts.find(
+        (district) => district.code === testDistrictCode,
       );
+
+      expect(testDistrict).toEqual(expect.objectContaining(expectedDistrict));
     });
 
     it('should throw NotFoundException if there is no district with the corresponding code', async () => {

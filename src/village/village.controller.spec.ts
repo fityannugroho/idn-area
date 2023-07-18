@@ -106,20 +106,17 @@ describe('VillageController', () => {
       const testRegency = await controller.findByCode({
         code: testVillageCode,
       });
-
-      expect(testRegency).toEqual(
-        expect.objectContaining({
-          code: testVillageCode,
-          name: expect.any(String),
-          districtCode: testVillageCode.slice(0, 6),
-        }),
+      const expectedVillage = villages.find(
+        (village) => village.code === testVillageCode,
       );
 
-      it('should throw NotFoundException if there is no matching villages', async () => {
-        await expect(
-          controller.findByCode({ code: '0000' }),
-        ).rejects.toThrowError(NotFoundException);
-      });
+      expect(testRegency).toEqual(expect.objectContaining(expectedVillage));
+    });
+
+    it('should throw NotFoundException if there is no matching villages', async () => {
+      await expect(
+        controller.findByCode({ code: '0000' }),
+      ).rejects.toThrowError(NotFoundException);
     });
   });
 });

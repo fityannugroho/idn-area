@@ -140,19 +140,11 @@ describe('IslandController', () => {
   describe('findByCode', () => {
     it('should return island with the corresponding code', async () => {
       const testIsland = await controller.findByCode({ code: testIslandCode });
-
-      expect(testIsland).toEqual(
-        expect.objectContaining({
-          code: testIslandCode,
-          coordinate: expect.any(String),
-          isOutermostSmall: expect.any(Boolean),
-          isPopulated: expect.any(Boolean),
-          latitude: expect.any(Number),
-          longitude: expect.any(Number),
-          name: expect.any(String),
-          regencyCode: testIslandCode.slice(0, 4),
-        }),
+      const expectedIsland = islands.find(
+        (island) => island.code === testIslandCode,
       );
+
+      expect(testIsland).toEqual(expect.objectContaining(expectedIsland));
     });
 
     it('should throw NotFoundException if there is no matching island', async () => {

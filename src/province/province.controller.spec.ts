@@ -48,7 +48,7 @@ describe('ProvinceController', () => {
           }),
         ]),
       );
-      expect(testProvinces.length).toEqual(provinces.length);
+      expect(testProvinces).toHaveLength(provinces.length);
     });
 
     it('should return all provinces sorted by name ascending', async () => {
@@ -73,7 +73,7 @@ describe('ProvinceController', () => {
       );
     });
 
-    it('should return all provinces filtered by name case-insensitive', async () => {
+    it('should return all provinces filtered by name', async () => {
       const testProvName = 'jawa';
       const testProvinces = await controller.find({
         name: testProvName,
@@ -99,9 +99,9 @@ describe('ProvinceController', () => {
   describe('findByCode', () => {
     it('should return a province with matching code', async () => {
       const testProvince = await controller.findByCode({ code: testProvCode });
-      const findProvince = provinces.find((p) => p.code === testProvCode);
+      const expectedProvince = provinces.find((p) => p.code === testProvCode);
 
-      expect(testProvince).toEqual(expect.objectContaining(findProvince));
+      expect(testProvince).toEqual(expect.objectContaining(expectedProvince));
     });
 
     it('should throw NotFoundException if there is no matching province', async () => {
@@ -134,7 +134,7 @@ describe('ProvinceController', () => {
           }),
         ]),
       );
-      expect(testRegencies.length).toEqual(expectedRegencies.length);
+      expect(testRegencies).toHaveLength(expectedRegencies.length);
     });
 
     it('should throw NotFoundException if there is no matching province', async () => {

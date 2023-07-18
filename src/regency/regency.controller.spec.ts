@@ -64,7 +64,7 @@ describe('RegencyController', () => {
           }),
         ]),
       );
-      expect(testRegencies.length).toEqual(regencies.length);
+      expect(testRegencies).toHaveLength(regencies.length);
     });
 
     it('should return regencies filtered by name', async () => {
@@ -121,14 +121,11 @@ describe('RegencyController', () => {
       const testRegency = await controller.findByCode({
         code: testRegencyCode,
       });
-
-      expect(testRegency).toEqual(
-        expect.objectContaining({
-          code: testRegencyCode,
-          name: expect.any(String),
-          provinceCode: testRegencyCode.slice(0, 2),
-        }),
+      const expectedRegency = regencies.find(
+        (regency) => regency.code === testRegencyCode,
       );
+
+      expect(testRegency).toEqual(expect.objectContaining(expectedRegency));
     });
 
     it('should throw NotFoundException if there is no matching regency', async () => {
@@ -163,7 +160,7 @@ describe('RegencyController', () => {
           }),
         ]),
       );
-      expect(testDistricts.length).toEqual(expectedDistricts.length);
+      expect(testDistricts).toHaveLength(expectedDistricts.length);
     });
 
     it('should throw NotFoundException if there is no matching regency', async () => {
@@ -225,7 +222,7 @@ describe('RegencyController', () => {
           }),
         ]),
       );
-      expect(testIslands.length).toEqual(expectedIslands.length);
+      expect(testIslands).toHaveLength(expectedIslands.length);
     });
 
     it('should throw NotFoundException if there is no matching regency', async () => {
