@@ -9,13 +9,13 @@
   <a href="https://www.mysql.com"><img alt="MySQL" src="https://img.shields.io/badge/-MySQL-00688F?style=flat-square&logo=mysql&logoColor=white" /></a>
 </p>
 
-API that provides information on the **administrative areas of Indonesia**, from the province, regency, district, to village levels. It also provides island data since version 1.1.0.
+API that provides information on the **administrative areas of Indonesia**, from the province, regency, district, to village levels. It also provides island data since [version 1.1.0](https://github.com/fityannugroho/idn-area/releases/tag/v1.1.0).
 
-Built with [NestJS framework](https://nestjs.com) and writen in TypeScript. [Prisma](https://www.prisma.io) is used as the ORM to interact with any kind of database.
+Built with [NestJS framework](https://nestjs.com) and writen in TypeScript. [Prisma](https://www.prisma.io) is used as the ORM to interact with any kind of databases (MySQL, PostgreSQL, and MongoDB).
 
 > **⚠️ Upgrading to v3.0.0 ⚠️**
 >
-> Since v3.0.0, **Node.js v18** or higher is required. See the [installation guide](docs/installation.md).
+> Since [v3.0.0](https://github.com/fityannugroho/idn-area/releases/tag/v3.0.0), **Node.js v18** or higher is required.
 
 <h2>Table of Content</h2>
 
@@ -42,13 +42,17 @@ Built with [NestJS framework](https://nestjs.com) and writen in TypeScript. [Pri
   - [`sortOrder`](#sortorder)
 - [Live Demo](#live-demo)
 - [Contributing](#contributing)
+- [Problem Reporting](#problem-reporting)
+  - [Reporting a Bug](#reporting-a-bug)
+  - [Requesting a New Feature](#requesting-a-new-feature)
+  - [Asking a Question](#asking-a-question)
 - [Support This Project](#support-this-project)
 
 ---
 
 ## Getting Started
 
-Please read the guide to install and run this app in [here](docs/installation.md).
+Please read the [installation guide](docs/installation.md) to install and run this app.
 
 ## Data
 
@@ -288,17 +292,32 @@ GET /...?sortOrder={asc|desc}
 
 ## Live Demo
 
-You can try the API by replacing the http://localhost:3000 with https://idn-area.up.railway.app. For example: https://idn-area.up.railway.app/provinces.
+You can try the API by replacing the http://localhost:3000 with the endpoint provided in this repository description.
 
-You can see an example of implementing this API on the website in [here](https://fityannugroho.github.io/idn-area-example) ([go to the repository](https://github.com/fityannugroho/idn-area-example)).
+These are some sample projects that using this API :
+
+- [Simple area dropdown](https://github.com/fityannugroho/idn-area-example)
+- [idn-area Map](https://github.com/fityannugroho/idn-area-map)
 
 ## Contributing
 
-If you find a bug in the source code, wrong data source, or just want to request a new feature, you can help us by [submitting an issue](CONTRIBUTING.md#submitting-an-issue). Even better, you can [submit a Pull Request](CONTRIBUTING.md#submitting-a-pull-request) to help us solve that issue.
+If you want to contribute to this project, please read the [CONTRIBUTING.md](CONTRIBUTING.md) file and make sure you follow the [Pull Request guide](CONTRIBUTING.md#submitting-a-pull-request)
 
+## Problem Reporting
+
+We have different channels for each problem, please use them by following these conditions :
+
+### Reporting a Bug
+To report a bug, please open a new issue following the [guide](CONTRIBUTING.md#submitting-an-issue).
+
+### Requesting a New Feature
+If you have a new feature in mind, please open a new issue following the [guide](CONTRIBUTING.md#submitting-an-issue).
+
+### Asking a Question
+If you have a question, you can search for answers in the [GitHub Discussions Q&A category](https://github.com/fityannugroho/idn-area/discussions/categories/q-a). If you don't find a relevant discussion already, you can open a new discussion.
 
 ## Support This Project
 
-<a href="https://trakteer.id/fityannugroho/tip" target="_blank"><img id="wse-buttons-preview" src="https://cdn.trakteer.id/images/embed/trbtn-red-5.png" style="border: 0px none; height: 36px; --darkreader-inline-border-top: currentcolor; --darkreader-inline-border-right: currentcolor; --darkreader-inline-border-bottom: currentcolor; --darkreader-inline-border-left: currentcolor;" alt="Trakteer Saya" data-darkreader-inline-border-top="" data-darkreader-inline-border-right="" data-darkreader-inline-border-bottom="" data-darkreader-inline-border-left="" height="40"></a>
+<a href="https://trakteer.id/fityannugroho/tip" target="_blank"><img id="wse-buttons-preview" src="https://cdn.trakteer.id/images/embed/trbtn-red-6.png" style="border: 0px none; height: 36px; --darkreader-inline-border-top: currentcolor; --darkreader-inline-border-right: currentcolor; --darkreader-inline-border-bottom: currentcolor; --darkreader-inline-border-left: currentcolor;" alt="Trakteer Saya" data-darkreader-inline-border-top="" data-darkreader-inline-border-right="" data-darkreader-inline-border-bottom="" data-darkreader-inline-border-left="" height="40"></a>
 
 You can support this project by donating via [GitHub Sponsor](https://github.com/sponsors/fityannugroho), [Trakteer](https://trakteer.id/fityannugroho/tip), or [Saweria](https://saweria.co/fityannugroho).
