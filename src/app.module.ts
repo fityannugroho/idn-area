@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { AppController } from './app.controller';
 import { DistrictModule } from './district/district.module';
 import { IslandModule } from './island/island.module';
@@ -15,8 +17,22 @@ import { VillageModule } from './village/village.module';
     DistrictModule,
     VillageModule,
     IslandModule,
+    ThrottlerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        ttl: config.get('APP_THROTTLE_TTL'),
+        limit: config.get('APP_THROTTLE_LIMIT'),
+        skipIf: () => config.get('APP_ENABLE_THROTTLE') !== 'true',
+      }),
+    }),
   ],
   controllers: [AppController],
-  providers: [],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
 })
 export class AppModule {}

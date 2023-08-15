@@ -1,10 +1,16 @@
+import { AppController } from '@/app.controller';
+import { DistrictModule } from '@/district/district.module';
+import { IslandModule } from '@/island/island.module';
+import { ProvinceModule } from '@/province/province.module';
+import { RegencyModule } from '@/regency/regency.module';
+import { VillageModule } from '@/village/village.module';
 import { ValidationPipe } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
-import { TestingModule, Test } from '@nestjs/testing';
-import { AppModule } from '@/app.module';
+import { Test, TestingModule } from '@nestjs/testing';
 
 export type HttpMethods =
   | 'DELETE'
@@ -29,7 +35,15 @@ export class AppTester {
 
   static async make() {
     const moduleRef: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
+      imports: [
+        ConfigModule.forRoot(),
+        ProvinceModule,
+        RegencyModule,
+        DistrictModule,
+        VillageModule,
+        IslandModule,
+      ],
+      controllers: [AppController],
     }).compile();
 
     const app = moduleRef.createNestApplication<NestFastifyApplication>(

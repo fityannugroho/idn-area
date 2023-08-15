@@ -27,24 +27,29 @@
 1. Configure the environment variables
 
     - Create `.env` file by simply copying the **`.env.example` file** and rename it.
+
     - Set the `APP_HOST` and `APP_PORT`.
+
+    - You can enable [rate limiting](https://docs.nestjs.com/security/rate-limiting) by setting the **`APP_ENABLE_THROTTLE`** to be `true`. You also can customize the `APP_THROTTLE_TTL` and `APP_THROTTLE_LIMIT` as desired.
+
     - Set the `DB_PROVIDER` with the data source provider you want to use. Current supported providers: 'mongodb', 'postgresql', and 'mysql'. See the details [here](https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#fields).
+
     - Set the `DB_URL` with the database connection string. See the [connection string](https://pris.ly/d/connection-strings) documentation.
 
       > You must grant **read-write access** to the database.
 
-1. Generate the database
+2. Generate the database
 
     Run **`npm run db:migrate`** command to generate the database.
 
     > You can use `npx prisma migrate deploy` command to run migration in **non-development environments** and if you are using any database providers **other than MongoDB**.
     > See the details [here](https://www.prisma.io/docs/reference/api-reference/command-reference#migrate-deploy).
 
-1. Seed the data
+3. Seed the data
 
     Run **`npm run db:seed`** command to seed the data.
 
-1. Run the app
+4. Run the app
 
     Use `npm run start` command, to run the app.
 
