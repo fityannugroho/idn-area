@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "@fastify/static": "^6.10.2",
-    "@nestjs/common": "^10.1.0",
+    "@nestjs/common": "^10.2.0",
     "@nestjs/config": "^3.0.0",
     "@nestjs/core": "^10.1.0",
     "@nestjs/mapped-types": "^2.0.0",
