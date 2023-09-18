@@ -38,7 +38,7 @@
     "@nestjs/platform-fastify": "^10.1.0",
     "@nestjs/swagger": "^7.1.1",
     "@nestjs/throttler": "^4.2.1",
-    "@prisma/client": "^5.1.1",
+    "@prisma/client": "^5.3.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "dotenv": "^16.3.1",
