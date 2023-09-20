@@ -1,19 +1,20 @@
 import { getValues, sortArray } from '@/common/utils/array';
+import { getIslands } from '@/common/utils/data';
+import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import IdnArea, { IslandTransformed } from 'idn-area-data';
+import { Island } from '@prisma/client';
 import { MockIslandService } from './__mocks__/island.service';
 import { IslandController } from './island.controller';
 import { IslandService } from './island.service';
-import { NotFoundException } from '@nestjs/common';
 
 describe('IslandController', () => {
   const testIslandCode = '110140001';
 
-  let islands: IslandTransformed[];
+  let islands: Island[];
   let controller: IslandController;
 
   beforeAll(async () => {
-    islands = await IdnArea.islands({ transform: true });
+    islands = await getIslands();
   });
 
   beforeEach(async () => {
@@ -33,7 +34,7 @@ describe('IslandController', () => {
 
   describe('find', () => {
     const testIslandName = 'bali';
-    let filteredIslandsByName: IslandTransformed[];
+    let filteredIslandsByName: Island[];
 
     beforeAll(() => {
       filteredIslandsByName = islands.filter((p) =>

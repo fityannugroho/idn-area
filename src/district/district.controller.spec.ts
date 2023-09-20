@@ -1,24 +1,22 @@
+import { getValues, sortArray } from '@/common/utils/array';
+import { getDistricts, getVillages } from '@/common/utils/data';
+import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import IdnArea, {
-  DistrictTransformed,
-  VillageTransformed,
-} from 'idn-area-data';
+import { District, Village } from '@prisma/client';
 import { MockDistrictService } from './__mocks__/district.service';
 import { DistrictController } from './district.controller';
 import { DistrictService } from './district.service';
-import { getValues, sortArray } from '@/common/utils/array';
-import { NotFoundException } from '@nestjs/common';
 
 describe('DistrictController', () => {
   const testDistrictCode = '110101';
 
-  let districts: DistrictTransformed[];
-  let villages: VillageTransformed[];
+  let districts: District[];
+  let villages: Village[];
   let controller: DistrictController;
 
   beforeAll(async () => {
-    districts = await IdnArea.districts({ transform: true });
-    villages = await IdnArea.villages({ transform: true });
+    districts = await getDistricts();
+    villages = await getVillages();
   });
 
   beforeEach(async () => {
@@ -41,7 +39,7 @@ describe('DistrictController', () => {
 
   describe('find', () => {
     const testDistrictName = 'bandung';
-    let filteredDistrictsByName: DistrictTransformed[];
+    let filteredDistrictsByName: District[];
 
     beforeAll(() => {
       filteredDistrictsByName = districts.filter((p) =>
@@ -133,7 +131,7 @@ describe('DistrictController', () => {
   });
 
   describe('findVillages', () => {
-    let expectedVillages: VillageTransformed[];
+    let expectedVillages: Village[];
 
     beforeAll(() => {
       expectedVillages = villages.filter(
