@@ -1,11 +1,8 @@
 import { getValues, sortArray } from '@/common/utils/array';
+import { getDistricts, getIslands, getRegencies } from '@/common/utils/data';
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import IdnArea, {
-  DistrictTransformed,
-  IslandTransformed,
-  RegencyTransformed,
-} from 'idn-area-data';
+import { District, Island, Regency } from '@prisma/client';
 import { MockRegencyService } from './__mocks__/regency.service';
 import { RegencyController } from './regency.controller';
 import { RegencyService } from './regency.service';
@@ -13,15 +10,15 @@ import { RegencyService } from './regency.service';
 describe('RegencyController', () => {
   const testRegencyCode = '1101';
 
-  let regencies: RegencyTransformed[];
-  let districts: DistrictTransformed[];
-  let islands: IslandTransformed[];
+  let regencies: Regency[];
+  let districts: District[];
+  let islands: Island[];
   let controller: RegencyController;
 
   beforeAll(async () => {
-    regencies = await IdnArea.regencies({ transform: true });
-    districts = await IdnArea.districts({ transform: true });
-    islands = await IdnArea.islands({ transform: true });
+    regencies = await getRegencies();
+    districts = await getDistricts();
+    islands = await getIslands();
   });
 
   beforeEach(async () => {
@@ -44,7 +41,7 @@ describe('RegencyController', () => {
 
   describe('find', () => {
     const testRegencyName = 'jakarta';
-    let filteredRegenciesByName: RegencyTransformed[];
+    let filteredRegenciesByName: Regency[];
 
     beforeAll(() => {
       filteredRegenciesByName = regencies.filter((p) =>
@@ -136,7 +133,7 @@ describe('RegencyController', () => {
   });
 
   describe('findDistricts', () => {
-    let expectedDistricts: DistrictTransformed[];
+    let expectedDistricts: District[];
 
     beforeAll(() => {
       expectedDistricts = districts.filter(
@@ -193,7 +190,7 @@ describe('RegencyController', () => {
   });
 
   describe('findIslands', () => {
-    let expectedIslands: IslandTransformed[];
+    let expectedIslands: Island[];
 
     beforeAll(() => {
       expectedIslands = islands.filter(

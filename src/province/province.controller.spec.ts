@@ -1,7 +1,8 @@
 import { getValues, sortArray } from '@/common/utils/array';
+import { getProvinces, getRegencies } from '@/common/utils/data';
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import IdnArea, { Province, RegencyTransformed } from 'idn-area-data';
+import { Province, Regency } from '@prisma/client';
 import { MockProvinceService } from './__mocks__/province.service';
 import { ProvinceController } from './province.controller';
 import { ProvinceService } from './province.service';
@@ -11,11 +12,11 @@ describe('ProvinceController', () => {
 
   let controller: ProvinceController;
   let provinces: Province[];
-  let regencies: RegencyTransformed[];
+  let regencies: Regency[];
 
   beforeAll(async () => {
-    provinces = await IdnArea.provinces({ transform: true });
-    regencies = await IdnArea.regencies({ transform: true });
+    provinces = await getProvinces();
+    regencies = await getRegencies();
   });
 
   beforeEach(async () => {
@@ -112,7 +113,7 @@ describe('ProvinceController', () => {
   });
 
   describe('findRegencies', () => {
-    let expectedRegencies: RegencyTransformed[];
+    let expectedRegencies: Regency[];
 
     beforeAll(() => {
       expectedRegencies = regencies.filter(

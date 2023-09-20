@@ -1,19 +1,20 @@
 import { getValues, sortArray } from '@/common/utils/array';
+import { getVillages } from '@/common/utils/data';
+import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import IdnArea, { VillageTransformed } from 'idn-area-data';
+import { Village } from '@prisma/client';
 import { MockVillageService } from './__mocks__/village.service';
 import { VillageController } from './village.controller';
 import { VillageService } from './village.service';
-import { NotFoundException } from '@nestjs/common';
 
 describe('VillageController', () => {
   const testVillageCode = '1101012001';
 
-  let villages: VillageTransformed[];
+  let villages: Village[];
   let controller: VillageController;
 
   beforeAll(async () => {
-    villages = await IdnArea.villages({ transform: true });
+    villages = await getVillages();
   });
 
   beforeEach(async () => {
@@ -33,7 +34,7 @@ describe('VillageController', () => {
 
   describe('find', () => {
     const testVillageName = 'ubud';
-    let filteredVillagesByName: VillageTransformed[];
+    let filteredVillagesByName: Village[];
 
     beforeAll(() => {
       filteredVillagesByName = villages.filter((p) =>
