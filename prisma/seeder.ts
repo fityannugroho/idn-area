@@ -1,6 +1,12 @@
 import { areArraysEqual } from '@/common/utils/array';
+import {
+  getDistricts,
+  getIslands,
+  getProvinces,
+  getRegencies,
+  getVillages,
+} from '@/common/utils/data';
 import { PrismaClient } from '@prisma/client';
-import * as IdnArea from 'idn-area-data';
 
 export class Seeder {
   constructor(protected readonly prisma: PrismaClient) {}
@@ -10,7 +16,7 @@ export class Seeder {
    */
   async hasProvinceChanges(): Promise<boolean> {
     const [newProvinces, oldProvinces] = await Promise.all([
-      IdnArea.provinces(),
+      getProvinces(),
       this.prisma.province.findMany(),
     ]);
 
@@ -22,7 +28,7 @@ export class Seeder {
    */
   async hasRegencyChanges(): Promise<boolean> {
     const [newRegencies, oldRegencies] = await Promise.all([
-      IdnArea.regencies({ transform: true }),
+      getRegencies(),
       this.prisma.regency.findMany(),
     ]);
 
@@ -34,7 +40,7 @@ export class Seeder {
    */
   async hasDistrictChanges(): Promise<boolean> {
     const [newDistricts, oldDistricts] = await Promise.all([
-      IdnArea.districts({ transform: true }),
+      getDistricts(),
       this.prisma.district.findMany(),
     ]);
 
@@ -46,7 +52,7 @@ export class Seeder {
    */
   async hasIslandChanges(): Promise<boolean> {
     const [newIslands, oldIslands] = await Promise.all([
-      IdnArea.islands({ transform: true }),
+      getIslands(),
       this.prisma.island.findMany(),
     ]);
 
@@ -58,7 +64,7 @@ export class Seeder {
    */
   async hasVillageChanges(): Promise<boolean> {
     const [newVillages, oldVillages] = await Promise.all([
-      IdnArea.villages({ transform: true }),
+      getVillages(),
       this.prisma.village.findMany(),
     ]);
 
@@ -93,31 +99,31 @@ export class Seeder {
   }
 
   async insertProvinces(): Promise<number> {
-    const provinces = await IdnArea.provinces();
+    const provinces = await getProvinces();
     const res = await this.prisma.province.createMany({ data: provinces });
     return res.count;
   }
 
   async insertRegencies(): Promise<number> {
-    const regencies = await IdnArea.regencies({ transform: true });
+    const regencies = await getRegencies();
     const res = await this.prisma.regency.createMany({ data: regencies });
     return res.count;
   }
 
   async insertDistricts(): Promise<number> {
-    const districts = await IdnArea.districts({ transform: true });
+    const districts = await getDistricts();
     const res = await this.prisma.district.createMany({ data: districts });
     return res.count;
   }
 
   async insertVillages(): Promise<number> {
-    const villages = await IdnArea.villages({ transform: true });
+    const villages = await getVillages();
     const res = await this.prisma.village.createMany({ data: villages });
     return res.count;
   }
 
   async insertIslands(): Promise<number> {
-    const islands = await IdnArea.islands({ transform: true });
+    const islands = await getIslands();
     const res = await this.prisma.island.createMany({ data: islands });
     return res.count;
   }

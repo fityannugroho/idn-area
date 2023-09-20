@@ -1,6 +1,12 @@
 import { areArraysEqual } from '@/common/utils/array';
+import {
+  getDistricts,
+  getIslands,
+  getProvinces,
+  getRegencies,
+  getVillages,
+} from '@/common/utils/data';
 import { PrismaClient } from '@prisma/client';
-import * as IdnArea from 'idn-area-data';
 import { Areas } from 'idn-area-data';
 import { Seeder } from '../seeder';
 
@@ -11,7 +17,7 @@ export class MongodbSeeder extends Seeder {
 
   async hasProvinceChanges(): Promise<boolean> {
     const [newProvinces, oldProvinces] = await Promise.all([
-      IdnArea.provinces(),
+      getProvinces(),
       this.prisma.province.findMany(),
     ]);
 
@@ -20,7 +26,7 @@ export class MongodbSeeder extends Seeder {
 
   async hasRegencyChanges(): Promise<boolean> {
     const [newRegencies, oldRegencies] = await Promise.all([
-      IdnArea.regencies({ transform: true }),
+      getRegencies(),
       this.prisma.regency.findMany(),
     ]);
 
@@ -33,7 +39,7 @@ export class MongodbSeeder extends Seeder {
 
   async hasDistrictChanges(): Promise<boolean> {
     const [newDistricts, oldDistricts] = await Promise.all([
-      IdnArea.districts({ transform: true }),
+      getDistricts(),
       this.prisma.district.findMany(),
     ]);
 
@@ -46,7 +52,7 @@ export class MongodbSeeder extends Seeder {
 
   async hasIslandChanges(): Promise<boolean> {
     const [newIslands, oldIslands] = await Promise.all([
-      IdnArea.islands({ transform: true }),
+      getIslands(),
       this.prisma.island.findMany(),
     ]);
 
@@ -61,7 +67,7 @@ export class MongodbSeeder extends Seeder {
 
   async hasVillageChanges(): Promise<boolean> {
     const [newVillages, oldVillages] = await Promise.all([
-      IdnArea.villages({ transform: true }),
+      getVillages(),
       this.prisma.village.findMany(),
     ]);
 
