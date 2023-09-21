@@ -8,7 +8,7 @@ import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-export interface Response<T> {
+export interface SuccessfulResponse<T> {
   statusCode: number;
   message: string | string[];
   data: T;
@@ -17,14 +17,14 @@ export interface Response<T> {
 
 @Injectable()
 export class TransformInterceptor<T>
-  implements NestInterceptor<T, Response<T>>
+  implements NestInterceptor<T, SuccessfulResponse<T>>
 {
   constructor(private reflector: Reflector) {}
 
   intercept(
     context: ExecutionContext,
     next: CallHandler,
-  ): Observable<Response<T>> {
+  ): Observable<SuccessfulResponse<T>> {
     const resMsg =
       this.reflector.get<string | string[]>(
         'response_message',
