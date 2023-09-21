@@ -31,11 +31,16 @@ export class TransformInterceptor<T>
         context.getHandler(),
       ) || 'OK';
 
+    const unwrapResponse = this.reflector.get<boolean>(
+      'unwrap_response',
+      context.getHandler(),
+    );
+
     return next.handle().pipe(
       map((data) => ({
         statusCode: context.switchToHttp().getResponse().statusCode,
         message: resMsg,
-        data: data,
+        ...(unwrapResponse && !Array.isArray(data) ? data : { data }),
         total: Array.isArray(data) ? data.length : undefined,
       })),
     );
