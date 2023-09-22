@@ -1,4 +1,6 @@
+import { Village } from '@prisma/client';
 import { AppTester } from './helper/app-tester';
+import { villageRegex } from './helper/data-regex';
 
 describe('Village (e2e)', () => {
   const baseUrl = '/villages';
@@ -32,24 +34,26 @@ describe('Village (e2e)', () => {
     });
 
     it('should return empty array if there are no any villages match with the `name`', async () => {
-      const res = await tester.expectOk(`${baseUrl}?name=unknown`);
+      const villages = await tester.expectData<Village[]>(
+        `${baseUrl}?name=unknown`,
+      );
 
-      expect(res.json()).toEqual([]);
+      expect(villages).toEqual([]);
     });
 
     it('should return all villages match with the `name`', async () => {
       const testName = 'cinunuk';
-      const res = await tester.expectOk(`${baseUrl}?name=${testName}`);
-
-      expect(res.json()).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({
-            code: expect.any(String),
-            name: expect.stringMatching(new RegExp(testName, 'i')),
-            districtCode: expect.any(String),
-          }),
-        ]),
+      const villages = await tester.expectData<Village[]>(
+        `${baseUrl}?name=${testName}`,
       );
+
+      villages.forEach((village) => {
+        expect(village).toEqual({
+          code: expect.stringMatching(villageRegex.code),
+          name: expect.stringMatching(new RegExp(testName, 'i')),
+          districtCode: village.code.slice(0, 6),
+        });
+      });
     });
   });
 
@@ -66,15 +70,15 @@ describe('Village (e2e)', () => {
     });
 
     it('should return the village data if the `code` exists', async () => {
-      const res = await tester.expectOk(`${baseUrl}/${testCode}`);
-
-      expect(res.json()).toEqual(
-        expect.objectContaining({
-          code: testCode,
-          name: expect.any(String),
-          districtCode: expect.any(String),
-        }),
+      const village = await tester.expectData<Village>(
+        `${baseUrl}/${testCode}`,
       );
+
+      expect(village).toEqual({
+        code: testCode,
+        name: expect.stringMatching(villageRegex.name),
+        districtCode: testCode.slice(0, 6),
+      });
     });
   });
 

@@ -1,4 +1,8 @@
 import { AppController } from '@/app.controller';
+import {
+  SuccessfulResponse,
+  TransformInterceptor,
+} from '@/common/interceptor/transform.interceptor';
 import { DistrictModule } from '@/district/district.module';
 import { IslandModule } from '@/island/island.module';
 import { ProvinceModule } from '@/province/province.module';
@@ -6,6 +10,7 @@ import { RegencyModule } from '@/regency/regency.module';
 import { VillageModule } from '@/village/village.module';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 import {
   FastifyAdapter,
   NestFastifyApplication,
@@ -44,6 +49,12 @@ export class AppTester {
         IslandModule,
       ],
       controllers: [AppController],
+      providers: [
+        {
+          provide: APP_INTERCEPTOR,
+          useClass: TransformInterceptor,
+        },
+      ],
     }).compile();
 
     const app = moduleRef.createNestApplication<NestFastifyApplication>(
@@ -99,8 +110,27 @@ export class AppTester {
     const res = await this.expectJson(url, method);
 
     expect(res.statusCode).toEqual(200);
+    expect(res.json().statusCode).toEqual(200);
 
     return res;
+  }
+
+  /**
+   * Expect the HTTP response to have status code `200` and the `data` property.
+   *
+   * If the `data` is an array, it also expect the `total` property.
+   */
+  async expectData<T>(url: string, method: HttpMethods = 'GET') {
+    const res = await this.expectOk(url, method);
+    const resJson = res.json<SuccessfulResponse<T>>();
+
+    expect(resJson.data).toBeDefined();
+
+    if (Array.isArray(resJson.data)) {
+      expect(resJson.total).toEqual(resJson.data.length);
+    }
+
+    return resJson.data;
   }
 
   /**

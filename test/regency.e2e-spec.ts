@@ -1,4 +1,6 @@
+import { District, Island, Regency } from '@prisma/client';
 import { AppTester } from './helper/app-tester';
+import { districtRegex, islandRegex, regencyRegex } from './helper/data-regex';
 
 describe('Regency (e2e)', () => {
   const baseUrl = '/regencies';
@@ -32,24 +34,26 @@ describe('Regency (e2e)', () => {
     });
 
     it('should return empty array if there are no any regencies match with the `name`', async () => {
-      const res = await tester.expectOk(`${baseUrl}?name=unknown`);
+      const regencies = await tester.expectData<Regency[]>(
+        `${baseUrl}?name=unknown`,
+      );
 
-      expect(res.json()).toEqual([]);
+      expect(regencies).toEqual([]);
     });
 
     it('should return all regencies match with the `name`', async () => {
       const testName = 'bandung';
-      const res = await tester.expectOk(`${baseUrl}?name=${testName}`);
-
-      expect(res.json()).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({
-            code: expect.any(String),
-            name: expect.stringMatching(new RegExp(testName, 'i')),
-            provinceCode: expect.any(String),
-          }),
-        ]),
+      const regencies = await tester.expectData<Regency[]>(
+        `${baseUrl}?name=${testName}`,
       );
+
+      regencies.forEach((regency) => {
+        expect(regency).toEqual({
+          code: expect.stringMatching(regencyRegex.code),
+          name: expect.stringMatching(new RegExp(testName, 'i')),
+          provinceCode: expect.stringMatching(regencyRegex.provinceCode),
+        });
+      });
     });
   });
 
@@ -66,15 +70,15 @@ describe('Regency (e2e)', () => {
     });
 
     it('should return a regency that match with the `code`', async () => {
-      const res = await tester.expectOk(`${baseUrl}/${testCode}`);
-
-      expect(res.json()).toEqual(
-        expect.objectContaining({
-          code: testCode,
-          name: expect.any(String),
-          provinceCode: expect.any(String),
-        }),
+      const regency = await tester.expectData<Regency>(
+        `${baseUrl}/${testCode}`,
       );
+
+      expect(regency).toEqual({
+        code: testCode,
+        name: expect.stringMatching(regencyRegex.name),
+        provinceCode: testCode.slice(0, 2),
+      });
     });
   });
 
@@ -98,17 +102,17 @@ describe('Regency (e2e)', () => {
     });
 
     it('should return all districts from specific regency', async () => {
-      const res = await tester.expectOk(`${baseUrl}/${testCode}/districts`);
-
-      expect(res.json()).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({
-            code: expect.any(String),
-            name: expect.any(String),
-            regencyCode: testCode,
-          }),
-        ]),
+      const districts = await tester.expectData<District[]>(
+        `${baseUrl}/${testCode}/districts`,
       );
+
+      districts.forEach((district) => {
+        expect(district).toEqual({
+          code: expect.stringMatching(districtRegex.code),
+          name: expect.stringMatching(districtRegex.name),
+          regencyCode: testCode,
+        });
+      });
     });
   });
 
@@ -125,28 +129,31 @@ describe('Regency (e2e)', () => {
     });
 
     it('should return all islands from specific regency', async () => {
-      const res = await tester.expectOk(`${baseUrl}/1101/islands`);
-
-      expect(res.json()).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({
-            code: expect.any(String),
-            coordinate: expect.any(String),
-            isOutermostSmall: expect.any(Boolean),
-            isPopulated: expect.any(Boolean),
-            latitude: expect.any(Number),
-            longitude: expect.any(Number),
-            name: expect.any(String),
-            regencyCode: '1101',
-          }),
-        ]),
+      const testCode = '1101';
+      const islands = await tester.expectData<Island[]>(
+        `${baseUrl}/${testCode}/islands`,
       );
+
+      islands.forEach((island) => {
+        expect(island).toEqual({
+          code: expect.stringMatching(islandRegex.code),
+          coordinate: expect.stringMatching(islandRegex.coordinate),
+          isOutermostSmall: expect.any(Boolean),
+          isPopulated: expect.any(Boolean),
+          latitude: expect.any(Number),
+          longitude: expect.any(Number),
+          name: expect.stringMatching(islandRegex.name),
+          regencyCode: testCode,
+        });
+      });
     });
 
     it('should return empty array if there are no any island in the regency', async () => {
-      const res = await tester.expectOk(`${baseUrl}/1102/islands`);
+      const islands = await tester.expectData<Island[]>(
+        `${baseUrl}/1102/islands`,
+      );
 
-      expect(res.json()).toEqual([]);
+      expect(islands).toEqual([]);
     });
   });
 
