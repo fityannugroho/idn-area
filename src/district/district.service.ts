@@ -20,27 +20,30 @@ export class DistrictService implements CommonService<District> {
     });
   }
 
-  async find({ name, ...sortOptions }: FindOptions<District> = {}): Promise<
-    District[]
-  > {
+  async find(options?: FindOptions<District>): Promise<District[]> {
     return this.prisma.district.findMany({
-      where: {
-        name: {
-          contains: name,
-          ...(getDBProviderFeatures()?.filtering?.insensitive && {
-            mode: 'insensitive',
-          }),
+      ...(options?.name && {
+        where: {
+          name: {
+            contains: options?.name,
+            ...(getDBProviderFeatures()?.filtering?.insensitive && {
+              mode: 'insensitive',
+            }),
+          },
         },
-      },
-      orderBy: this.sorter.object(sortOptions),
+      }),
+      ...((options?.sortBy || options?.sortOrder) && {
+        orderBy: this.sorter.object({
+          sortBy: options?.sortBy,
+          sortOrder: options?.sortOrder,
+        }),
+      }),
     });
   }
 
   async findByCode(code: string): Promise<District | null> {
     return this.prisma.district.findUnique({
-      where: {
-        code: code,
-      },
+      where: { code },
     });
   }
 
