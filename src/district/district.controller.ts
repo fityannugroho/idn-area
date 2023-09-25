@@ -43,13 +43,6 @@ export class DistrictController {
     type: 'string',
     example: 'code',
   })
-  @ApiQuery({
-    name: 'sortOrder',
-    description: 'Sort districts in ascending or descending order.',
-    required: false,
-    type: 'string',
-    example: 'asc',
-  })
   @ApiOkResponse({ description: 'Returns array of district.' })
   @ApiBadRequestResponse({ description: 'If there are invalid query values.' })
   @Get()
@@ -97,13 +90,6 @@ export class DistrictController {
     required: false,
     type: 'string',
     example: 'code',
-  })
-  @ApiQuery({
-    name: 'sortOrder',
-    description: 'Sort villages in ascending or descending order.',
-    required: false,
-    type: 'string',
-    example: 'asc',
   })
   @ApiOkResponse({ description: 'Returns array of villages.' })
   @ApiBadRequestResponse({ description: 'If the `code` is invalid.' })

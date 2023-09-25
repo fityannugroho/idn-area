@@ -38,7 +38,6 @@ export class ProvinceController {
     description: 'Get provinces by its name.',
     required: false,
     type: 'string',
-    example: 'jawa',
   })
   @ApiQuery({
     name: 'sortBy',
@@ -46,13 +45,6 @@ export class ProvinceController {
     required: false,
     type: 'string',
     example: 'code',
-  })
-  @ApiQuery({
-    name: 'sortOrder',
-    description: 'Sort provinces in ascending or descending order.',
-    required: false,
-    type: 'string',
-    example: 'asc',
   })
   @ApiOkResponse({ description: 'Returns array of province.' })
   @ApiBadRequestResponse({ description: 'If there are invalid query values.' })
@@ -99,13 +91,6 @@ export class ProvinceController {
     required: false,
     type: 'string',
     example: 'code',
-  })
-  @ApiQuery({
-    name: 'sortOrder',
-    description: 'Sort regencies in ascending or descending order.',
-    required: false,
-    type: 'string',
-    example: 'asc',
   })
   @ApiOkResponse({ description: 'Returns array of regencies.' })
   @ApiBadRequestResponse({ description: 'If the `code` is invalid.' })

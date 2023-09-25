@@ -44,13 +44,6 @@ export class RegencyController {
     type: 'string',
     example: 'code',
   })
-  @ApiQuery({
-    name: 'sortOrder',
-    description: 'Sort regencies in ascending or descending order.',
-    required: false,
-    type: 'string',
-    example: 'asc',
-  })
   @ApiOkResponse({ description: 'Returns array of regency.' })
   @ApiBadRequestResponse({ description: 'If there are invalid query values.' })
   @Get()
@@ -99,13 +92,6 @@ export class RegencyController {
     type: 'string',
     example: 'code',
   })
-  @ApiQuery({
-    name: 'sortOrder',
-    description: 'Sort districts in ascending or descending order.',
-    required: false,
-    type: 'string',
-    example: 'asc',
-  })
   @ApiOkResponse({ description: 'Returns array of districts.' })
   @ApiBadRequestResponse({ description: 'If the `code` is invalid.' })
   @ApiNotFoundResponse({
@@ -139,13 +125,6 @@ export class RegencyController {
     required: false,
     type: 'string',
     example: 'code',
-  })
-  @ApiQuery({
-    name: 'sortOrder',
-    description: 'Sort islands in ascending or descending order.',
-    required: false,
-    type: 'string',
-    example: 'asc',
   })
   @ApiOkResponse({ description: 'Returns array of islands.' })
   @ApiBadRequestResponse({ description: 'If the `code` is invalid.' })

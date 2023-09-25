@@ -43,13 +43,6 @@ export class IslandController {
     type: 'string',
     example: 'code',
   })
-  @ApiQuery({
-    name: 'sortOrder',
-    description: 'Sort islands in ascending or descending order.',
-    required: false,
-    type: 'string',
-    example: 'asc',
-  })
   @ApiOkResponse({ description: 'Returns array of islands.' })
   @ApiBadRequestResponse({ description: 'If there are invalid query values.' })
   @Get()

@@ -1,8 +1,8 @@
-import { IntersectionType, PickType } from '@nestjs/mapped-types';
-import { IsNotEmpty, IsNumberString, Length } from 'class-validator';
 import { EqualsAny } from '@/common/decorator/EqualsAny';
 import { IsNotSymbol } from '@/common/decorator/IsNotSymbol';
 import { SortQuery } from '@/sort/sort.dto';
+import { IntersectionType, PickType } from '@nestjs/swagger';
+import { IsNotEmpty, IsNumberString, Length } from 'class-validator';
 import { DistrictSortQuery } from '../district/district.dto';
 import { IslandSortQuery } from '../island/island.dto';
 

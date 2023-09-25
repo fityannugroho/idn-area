@@ -1,4 +1,5 @@
-import { IntersectionType, PickType } from '@nestjs/mapped-types';
+import { SortQuery } from '@/sort/sort.dto';
+import { IntersectionType, PickType } from '@nestjs/swagger';
 import {
   IsBooleanString,
   IsNotEmpty,
@@ -7,7 +8,6 @@ import {
   IsString,
   Length,
 } from 'class-validator';
-import { SortQuery } from '@/sort/sort.dto';
 import { EqualsAny } from '../common/decorator/EqualsAny';
 import { IsNotSymbol } from '../common/decorator/IsNotSymbol';
 
