@@ -1,3 +1,5 @@
+import { ApiDataResponse } from '@/common/decorator/api-data-response.decorator';
+import { Regency } from '@/regency/regency.dto';
 import {
   Controller,
   Get,
@@ -8,13 +10,12 @@ import {
 import {
   ApiBadRequestResponse,
   ApiNotFoundResponse,
-  ApiOkResponse,
   ApiOperation,
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { Province, Regency } from '@prisma/client';
 import {
+  Province,
   ProvinceFindByCodeParams,
   ProvinceFindQueries,
   ProvinceFindRegencyParams,
@@ -44,7 +45,11 @@ export class ProvinceController {
     type: 'string',
     example: 'code',
   })
-  @ApiOkResponse({ description: 'Returns array of province.' })
+  @ApiDataResponse({
+    model: Province,
+    multiple: true,
+    description: 'Returns array of province.',
+  })
   @ApiBadRequestResponse({ description: 'If there are invalid query values.' })
   @Get()
   async find(@Query() queries?: ProvinceFindQueries): Promise<Province[]> {
@@ -52,7 +57,10 @@ export class ProvinceController {
   }
 
   @ApiOperation({ description: 'Get a province by its code.' })
-  @ApiOkResponse({ description: 'Returns a province.' })
+  @ApiDataResponse({
+    model: Province,
+    description: 'Returns a province.',
+  })
   @ApiBadRequestResponse({ description: 'If the `code` is invalid.' })
   @ApiNotFoundResponse({ description: 'If there are no match province.' })
   @Get(':code')
@@ -76,7 +84,11 @@ export class ProvinceController {
     type: 'string',
     example: 'code',
   })
-  @ApiOkResponse({ description: 'Returns array of regencies.' })
+  @ApiDataResponse({
+    model: Regency,
+    multiple: true,
+    description: 'Returns array of regencies.',
+  })
   @ApiBadRequestResponse({ description: 'If the `code` is invalid.' })
   @ApiNotFoundResponse({
     description: 'If there are no province match with the `code`.',

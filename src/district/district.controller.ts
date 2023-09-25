@@ -1,3 +1,5 @@
+import { ApiDataResponse } from '@/common/decorator/api-data-response.decorator';
+import { Village } from '@/village/village.dto';
 import {
   Controller,
   Get,
@@ -8,13 +10,12 @@ import {
 import {
   ApiBadRequestResponse,
   ApiNotFoundResponse,
-  ApiOkResponse,
   ApiOperation,
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { District, Village } from '@prisma/client';
 import {
+  District,
   DistrictFindByCodeParams,
   DistrictFindQueries,
   DistrictFindVillageParams,
@@ -35,7 +36,11 @@ export class DistrictController {
     type: 'string',
     example: 'code',
   })
-  @ApiOkResponse({ description: 'Returns array of district.' })
+  @ApiDataResponse({
+    model: District,
+    multiple: true,
+    description: 'Returns array of district.',
+  })
   @ApiBadRequestResponse({ description: 'If there are invalid query values.' })
   @Get()
   async find(@Query() queries?: DistrictFindQueries): Promise<District[]> {
@@ -43,7 +48,7 @@ export class DistrictController {
   }
 
   @ApiOperation({ description: 'Get a district by its code.' })
-  @ApiOkResponse({ description: 'Returns a district.' })
+  @ApiDataResponse({ model: District, description: 'Returns a district.' })
   @ApiBadRequestResponse({ description: 'If the `code` is invalid.' })
   @ApiNotFoundResponse({
     description: 'If no district matches the `code`.',
@@ -69,7 +74,11 @@ export class DistrictController {
     type: 'string',
     example: 'code',
   })
-  @ApiOkResponse({ description: 'Returns array of villages.' })
+  @ApiDataResponse({
+    model: Village,
+    multiple: true,
+    description: 'Returns array of villages.',
+  })
   @ApiBadRequestResponse({ description: 'If the `code` is invalid.' })
   @ApiNotFoundResponse({
     description: 'If there are no district match with the `code`.',

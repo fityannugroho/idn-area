@@ -1,3 +1,4 @@
+import { ApiDataResponse } from '@/common/decorator/api-data-response.decorator';
 import {
   Controller,
   Get,
@@ -8,7 +9,6 @@ import {
 import {
   ApiBadRequestResponse,
   ApiNotFoundResponse,
-  ApiOkResponse,
   ApiOperation,
   ApiQuery,
   ApiTags,
@@ -35,7 +35,11 @@ export class IslandController {
     type: 'string',
     example: 'code',
   })
-  @ApiOkResponse({ description: 'Returns array of islands.' })
+  @ApiDataResponse({
+    model: Island,
+    multiple: true,
+    description: 'Returns array of islands.',
+  })
   @ApiBadRequestResponse({ description: 'If there are invalid query values.' })
   @Get()
   async find(@Query() queries?: IslandFindQueries): Promise<Island[]> {
@@ -45,7 +49,7 @@ export class IslandController {
   }
 
   @ApiOperation({ description: 'Get an island by its code.' })
-  @ApiOkResponse({ description: 'Returns an island.' })
+  @ApiDataResponse({ model: Island, description: 'Returns an island.' })
   @ApiBadRequestResponse({ description: 'If the `code` is invalid.' })
   @ApiNotFoundResponse({
     description: 'If no island matches the `code`.',

@@ -1,3 +1,4 @@
+import { ApiDataResponse } from '@/common/decorator/api-data-response.decorator';
 import {
   Controller,
   Get,
@@ -8,13 +9,15 @@ import {
 import {
   ApiBadRequestResponse,
   ApiNotFoundResponse,
-  ApiOkResponse,
   ApiOperation,
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { Village } from '@prisma/client';
-import { VillageFindByCodeParams, VillageFindQueries } from './village.dto';
+import {
+  Village,
+  VillageFindByCodeParams,
+  VillageFindQueries,
+} from './village.dto';
 import { VillageService } from './village.service';
 
 @ApiTags('Village')
@@ -30,7 +33,11 @@ export class VillageController {
     type: 'string',
     example: 'code',
   })
-  @ApiOkResponse({ description: 'Returns array of village.' })
+  @ApiDataResponse({
+    model: Village,
+    multiple: true,
+    description: 'Returns array of village.',
+  })
   @ApiBadRequestResponse({ description: 'If there are invalid query values.' })
   @Get()
   async find(@Query() queries?: VillageFindQueries): Promise<Village[]> {
@@ -38,7 +45,7 @@ export class VillageController {
   }
 
   @ApiOperation({ description: 'Get a village by its code.' })
-  @ApiOkResponse({ description: 'Returns a village.' })
+  @ApiDataResponse({ model: Village, description: 'Returns a village.' })
   @ApiBadRequestResponse({ description: 'If the `code` is invalid.' })
   @ApiNotFoundResponse({
     description: 'If no village matches the `code`.',

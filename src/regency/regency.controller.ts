@@ -1,3 +1,6 @@
+import { ApiDataResponse } from '@/common/decorator/api-data-response.decorator';
+import { District } from '@/district/district.dto';
+import { Island } from '@/island/island.dto';
 import {
   Controller,
   Get,
@@ -8,13 +11,12 @@ import {
 import {
   ApiBadRequestResponse,
   ApiNotFoundResponse,
-  ApiOkResponse,
   ApiOperation,
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { District, Regency } from '@prisma/client';
 import {
+  Regency,
   RegencyFindByCodeParams,
   RegencyFindDistrictParams,
   RegencyFindDistrictQueries,
@@ -36,7 +38,11 @@ export class RegencyController {
     type: 'string',
     example: 'code',
   })
-  @ApiOkResponse({ description: 'Returns array of regency.' })
+  @ApiDataResponse({
+    model: Regency,
+    multiple: true,
+    description: 'Returns array of regency.',
+  })
   @ApiBadRequestResponse({ description: 'If there are invalid query values.' })
   @Get()
   async find(@Query() queries?: RegencyFindQueries): Promise<Regency[]> {
@@ -44,7 +50,7 @@ export class RegencyController {
   }
 
   @ApiOperation({ description: 'Get a regency by its code.' })
-  @ApiOkResponse({ description: 'Returns a regency.' })
+  @ApiDataResponse({ model: Regency, description: 'Returns a regency.' })
   @ApiBadRequestResponse({ description: 'If the `code` is invalid.' })
   @ApiNotFoundResponse({
     description: 'If no regency matches the `code`.',
@@ -70,7 +76,11 @@ export class RegencyController {
     type: 'string',
     example: 'code',
   })
-  @ApiOkResponse({ description: 'Returns array of districts.' })
+  @ApiDataResponse({
+    model: District,
+    multiple: true,
+    description: 'Returns array of districts.',
+  })
   @ApiBadRequestResponse({ description: 'If the `code` is invalid.' })
   @ApiNotFoundResponse({
     description: 'If there are no regency match with the `code`.',
@@ -97,7 +107,11 @@ export class RegencyController {
     type: 'string',
     example: 'code',
   })
-  @ApiOkResponse({ description: 'Returns array of islands.' })
+  @ApiDataResponse({
+    model: Island,
+    multiple: true,
+    description: 'Returns array of islands.',
+  })
   @ApiBadRequestResponse({ description: 'If the `code` is invalid.' })
   @ApiNotFoundResponse({
     description: 'If there are no regency match with the `code`.',
