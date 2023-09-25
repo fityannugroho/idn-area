@@ -1,3 +1,5 @@
+import { ApiDataResponse } from '@/common/decorator/api-data-response.decorator';
+import { Village } from '@/village/village.dto';
 import {
   Controller,
   Get,
@@ -8,14 +10,12 @@ import {
 import {
   ApiBadRequestResponse,
   ApiNotFoundResponse,
-  ApiOkResponse,
   ApiOperation,
-  ApiParam,
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { District, Village } from '@prisma/client';
 import {
+  District,
   DistrictFindByCodeParams,
   DistrictFindQueries,
   DistrictFindVillageParams,
@@ -30,27 +30,17 @@ export class DistrictController {
 
   @ApiOperation({ description: 'Get districts by its name.' })
   @ApiQuery({
-    name: 'name',
-    description: 'The district name.',
-    required: true,
-    type: 'string',
-    example: 'bandung',
-  })
-  @ApiQuery({
     name: 'sortBy',
     description: 'Sort by district code or name.',
     required: false,
     type: 'string',
     example: 'code',
   })
-  @ApiQuery({
-    name: 'sortOrder',
-    description: 'Sort districts in ascending or descending order.',
-    required: false,
-    type: 'string',
-    example: 'asc',
+  @ApiDataResponse({
+    model: District,
+    multiple: true,
+    description: 'Returns array of district.',
   })
-  @ApiOkResponse({ description: 'Returns array of district.' })
   @ApiBadRequestResponse({ description: 'If there are invalid query values.' })
   @Get()
   async find(@Query() queries?: DistrictFindQueries): Promise<District[]> {
@@ -58,14 +48,7 @@ export class DistrictController {
   }
 
   @ApiOperation({ description: 'Get a district by its code.' })
-  @ApiParam({
-    name: 'code',
-    description: 'The district code',
-    required: true,
-    type: 'string',
-    example: '327325',
-  })
-  @ApiOkResponse({ description: 'Returns a district.' })
+  @ApiDataResponse({ model: District, description: 'Returns a district.' })
   @ApiBadRequestResponse({ description: 'If the `code` is invalid.' })
   @ApiNotFoundResponse({
     description: 'If no district matches the `code`.',
@@ -84,13 +67,6 @@ export class DistrictController {
   }
 
   @ApiOperation({ description: 'Get all villages in a district.' })
-  @ApiParam({
-    name: 'code',
-    description: 'The district code',
-    required: true,
-    type: 'string',
-    example: '327325',
-  })
   @ApiQuery({
     name: 'sortBy',
     description: 'Sort villages by its code or name.',
@@ -98,14 +74,11 @@ export class DistrictController {
     type: 'string',
     example: 'code',
   })
-  @ApiQuery({
-    name: 'sortOrder',
-    description: 'Sort villages in ascending or descending order.',
-    required: false,
-    type: 'string',
-    example: 'asc',
+  @ApiDataResponse({
+    model: Village,
+    multiple: true,
+    description: 'Returns array of villages.',
   })
-  @ApiOkResponse({ description: 'Returns array of villages.' })
   @ApiBadRequestResponse({ description: 'If the `code` is invalid.' })
   @ApiNotFoundResponse({
     description: 'If there are no district match with the `code`.',

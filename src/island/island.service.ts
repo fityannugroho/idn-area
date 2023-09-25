@@ -27,19 +27,24 @@ export class IslandService implements CommonService<Island> {
     return { ...island, latitude, longitude };
   }
 
-  async find({ name, ...sortOptions }: FindOptions<Island> = {}): Promise<
-    Island[]
-  > {
+  async find(options?: FindOptions<Island>): Promise<Island[]> {
     return this.prisma.island.findMany({
-      where: {
-        name: {
-          contains: name,
-          ...(getDBProviderFeatures()?.filtering?.insensitive && {
-            mode: 'insensitive',
-          }),
+      ...(options?.name && {
+        where: {
+          name: {
+            contains: options.name,
+            ...(getDBProviderFeatures()?.filtering?.insensitive && {
+              mode: 'insensitive',
+            }),
+          },
         },
-      },
-      orderBy: this.sorter.object(sortOptions),
+      }),
+      ...((options?.sortBy || options?.sortOrder) && {
+        orderBy: this.sorter.object({
+          sortBy: options?.sortBy,
+          sortOrder: options?.sortOrder,
+        }),
+      }),
     });
   }
 

@@ -1,4 +1,6 @@
+import { Province, Regency } from '@prisma/client';
 import { AppTester } from './helper/app-tester';
+import { provinceRegex, regencyRegex } from './helper/data-regex';
 
 describe('Province (e2e)', () => {
   const baseUrl = '/provinces';
@@ -20,45 +22,45 @@ describe('Province (e2e)', () => {
     });
 
     it('should return all provinces', async () => {
-      const res = await tester.expectOk(baseUrl);
+      const provinces = await tester.expectData<Province[]>(baseUrl);
 
-      expect(res.json()).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({
-            code: expect.any(String),
-            name: expect.any(String),
-          }),
-        ]),
-      );
+      provinces.forEach((province) => {
+        expect(province).toEqual({
+          code: expect.stringMatching(provinceRegex.code),
+          name: expect.stringMatching(provinceRegex.name),
+        });
+      });
+    });
+  });
+
+  describe(`GET ${baseUrl}?name={name}`, () => {
+    it('should return 400 if the `name` is empty, less than 3 chars, more than 255 chars, or contains any symbols', async () => {
+      const invalidNames = ['', 'ab', 'x'.repeat(256), 'j@wa'];
+
+      for (const name of invalidNames) {
+        await tester.expectBadRequest(`${baseUrl}?name=${name}`);
+      }
     });
 
-    describe(`GET ${baseUrl}?name={name}`, () => {
-      it('should return 400 if the `name` is empty, less than 3 chars, more than 255 chars, or contains any symbols', async () => {
-        const invalidNames = ['', 'ab', 'x'.repeat(256), 'j@wa'];
+    it('should return empty array if there are no any provinces match with the `name`', async () => {
+      const provinces = await tester.expectData<Province[]>(
+        `${baseUrl}?name=unknown`,
+      );
 
-        for (const name of invalidNames) {
-          await tester.expectBadRequest(`${baseUrl}?name=${name}`);
-        }
-      });
+      expect(provinces).toEqual([]);
+    });
 
-      it('should return empty array if there are no any provinces match with the `name`', async () => {
-        const res = await tester.expectOk(`${baseUrl}?name=unknown`);
+    it('should return array of provinces that match with the `name`', async () => {
+      const testName = 'jawa';
+      const provinces = await tester.expectData<Province[]>(
+        `${baseUrl}?name=${testName}`,
+      );
 
-        expect(res.json()).toEqual([]);
-      });
-
-      it('should return array of provinces that match with the `name`', async () => {
-        const testName = 'jawa';
-        const res = await tester.expectOk(`${baseUrl}?name=${testName}`);
-
-        expect(res.json()).toEqual(
-          expect.arrayContaining([
-            expect.objectContaining({
-              code: expect.any(String),
-              name: expect.stringMatching(new RegExp(testName, 'i')),
-            }),
-          ]),
-        );
+      provinces.forEach((province) => {
+        expect(province).toEqual({
+          code: expect.stringMatching(provinceRegex.code),
+          name: expect.stringMatching(new RegExp(testName, 'i')),
+        });
       });
     });
   });
@@ -76,14 +78,14 @@ describe('Province (e2e)', () => {
     });
 
     it('should return a province that match with the `code`', async () => {
-      const res = await tester.expectOk(`${baseUrl}/${testCode}`);
-
-      expect(res.json()).toEqual(
-        expect.objectContaining({
-          code: testCode,
-          name: expect.any(String),
-        }),
+      const province = await tester.expectData<Province>(
+        `${baseUrl}/${testCode}`,
       );
+
+      expect(province).toEqual({
+        code: testCode,
+        name: expect.stringMatching(provinceRegex.name),
+      });
     });
   });
 
@@ -103,17 +105,17 @@ describe('Province (e2e)', () => {
     });
 
     it('should return all regencies from specific province', async () => {
-      const res = await tester.expectOk(`${baseUrl}/${testCode}/regencies`);
-
-      expect(res.json()).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({
-            code: expect.any(String),
-            name: expect.any(String),
-            provinceCode: testCode,
-          }),
-        ]),
+      const regencies = await tester.expectData<Regency[]>(
+        `${baseUrl}/${testCode}/regencies`,
       );
+
+      regencies.forEach((regency) => {
+        expect(regency).toEqual({
+          code: expect.stringMatching(regencyRegex.code),
+          name: expect.stringMatching(regencyRegex.name),
+          provinceCode: testCode,
+        });
+      });
     });
   });
 

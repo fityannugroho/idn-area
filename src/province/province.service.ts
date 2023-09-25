@@ -20,19 +20,24 @@ export class ProvinceService implements CommonService<Province> {
     });
   }
 
-  async find({ name, ...sortOptions }: FindOptions<Province> = {}): Promise<
-    Province[]
-  > {
+  async find(options?: FindOptions<Province>): Promise<Province[]> {
     return this.prisma.province.findMany({
-      where: {
-        name: {
-          contains: name,
-          ...(getDBProviderFeatures()?.filtering?.insensitive && {
-            mode: 'insensitive',
-          }),
+      ...(options?.name && {
+        where: {
+          name: {
+            contains: options.name,
+            ...(getDBProviderFeatures()?.filtering?.insensitive && {
+              mode: 'insensitive',
+            }),
+          },
         },
-      },
-      orderBy: this.sorter.object(sortOptions),
+      }),
+      ...((options?.sortBy || options?.sortOrder) && {
+        orderBy: this.sorter.object({
+          sortBy: options?.sortBy,
+          sortOrder: options?.sortOrder,
+        }),
+      }),
     });
   }
 

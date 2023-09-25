@@ -1,23 +1,26 @@
-import { IsNotEmpty, IsNumberString, Length } from 'class-validator';
 import { EqualsAny } from '@/common/decorator/EqualsAny';
 import { IsNotSymbol } from '@/common/decorator/IsNotSymbol';
 import { SortQuery } from '@/sort/sort.dto';
-import { IntersectionType, PickType } from '@nestjs/mapped-types';
+import { ApiProperty, IntersectionType, PickType } from '@nestjs/swagger';
+import { IsNotEmpty, IsNumberString, Length } from 'class-validator';
 
 export class Village {
   @IsNotEmpty()
   @IsNumberString()
   @Length(10, 10)
+  @ApiProperty({ description: 'The village code', example: '1101012001' })
   code: string;
 
   @IsNotEmpty()
   @IsNotSymbol("'()-./")
   @Length(3, 255)
+  @ApiProperty({ example: 'Keude Bakongan' })
   name: string;
 
   @IsNotEmpty()
   @IsNumberString()
   @Length(6, 6)
+  @ApiProperty({ example: '110101' })
   districtCode: string;
 }
 

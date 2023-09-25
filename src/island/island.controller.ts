@@ -1,3 +1,4 @@
+import { ApiDataResponse } from '@/common/decorator/api-data-response.decorator';
 import {
   Controller,
   Get,
@@ -8,9 +9,7 @@ import {
 import {
   ApiBadRequestResponse,
   ApiNotFoundResponse,
-  ApiOkResponse,
   ApiOperation,
-  ApiParam,
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
@@ -30,27 +29,17 @@ export class IslandController {
     description: 'Get the islands by its name.',
   })
   @ApiQuery({
-    name: 'name',
-    description: 'The island name.',
-    required: true,
-    type: 'string',
-    example: 'sabang',
-  })
-  @ApiQuery({
     name: 'sortBy',
     description: 'Sort islands by its code, name, or coordinate.',
     required: false,
     type: 'string',
     example: 'code',
   })
-  @ApiQuery({
-    name: 'sortOrder',
-    description: 'Sort islands in ascending or descending order.',
-    required: false,
-    type: 'string',
-    example: 'asc',
+  @ApiDataResponse({
+    model: Island,
+    multiple: true,
+    description: 'Returns array of islands.',
   })
-  @ApiOkResponse({ description: 'Returns array of islands.' })
   @ApiBadRequestResponse({ description: 'If there are invalid query values.' })
   @Get()
   async find(@Query() queries?: IslandFindQueries): Promise<Island[]> {
@@ -60,14 +49,7 @@ export class IslandController {
   }
 
   @ApiOperation({ description: 'Get an island by its code.' })
-  @ApiParam({
-    name: 'code',
-    description: 'The island code',
-    required: true,
-    type: 'string',
-    example: '110140001',
-  })
-  @ApiOkResponse({ description: 'Returns an island.' })
+  @ApiDataResponse({ model: Island, description: 'Returns an island.' })
   @ApiBadRequestResponse({ description: 'If the `code` is invalid.' })
   @ApiNotFoundResponse({
     description: 'If no island matches the `code`.',

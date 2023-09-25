@@ -1,3 +1,6 @@
+import { ApiDataResponse } from '@/common/decorator/api-data-response.decorator';
+import { District } from '@/district/district.dto';
+import { Island } from '@/island/island.dto';
 import {
   Controller,
   Get,
@@ -8,14 +11,12 @@ import {
 import {
   ApiBadRequestResponse,
   ApiNotFoundResponse,
-  ApiOkResponse,
   ApiOperation,
-  ApiParam,
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { District, Regency } from '@prisma/client';
 import {
+  Regency,
   RegencyFindByCodeParams,
   RegencyFindDistrictParams,
   RegencyFindDistrictQueries,
@@ -31,27 +32,17 @@ export class RegencyController {
 
   @ApiOperation({ description: 'Get the regencies by its name.' })
   @ApiQuery({
-    name: 'name',
-    description: 'The regency name.',
-    required: true,
-    type: 'string',
-    example: 'bandung',
-  })
-  @ApiQuery({
     name: 'sortBy',
     description: 'Sort by regency code or name.',
     required: false,
     type: 'string',
     example: 'code',
   })
-  @ApiQuery({
-    name: 'sortOrder',
-    description: 'Sort regencies in ascending or descending order.',
-    required: false,
-    type: 'string',
-    example: 'asc',
+  @ApiDataResponse({
+    model: Regency,
+    multiple: true,
+    description: 'Returns array of regency.',
   })
-  @ApiOkResponse({ description: 'Returns array of regency.' })
   @ApiBadRequestResponse({ description: 'If there are invalid query values.' })
   @Get()
   async find(@Query() queries?: RegencyFindQueries): Promise<Regency[]> {
@@ -59,14 +50,7 @@ export class RegencyController {
   }
 
   @ApiOperation({ description: 'Get a regency by its code.' })
-  @ApiParam({
-    name: 'code',
-    description: 'The regency code',
-    required: true,
-    type: 'string',
-    example: '3273',
-  })
-  @ApiOkResponse({ description: 'Returns a regency.' })
+  @ApiDataResponse({ model: Regency, description: 'Returns a regency.' })
   @ApiBadRequestResponse({ description: 'If the `code` is invalid.' })
   @ApiNotFoundResponse({
     description: 'If no regency matches the `code`.',
@@ -85,13 +69,6 @@ export class RegencyController {
   }
 
   @ApiOperation({ description: 'Get all districts in a regency.' })
-  @ApiParam({
-    name: 'code',
-    description: 'The regency code',
-    required: true,
-    type: 'string',
-    example: '3273',
-  })
   @ApiQuery({
     name: 'sortBy',
     description: 'Sort districts by its code or name.',
@@ -99,14 +76,11 @@ export class RegencyController {
     type: 'string',
     example: 'code',
   })
-  @ApiQuery({
-    name: 'sortOrder',
-    description: 'Sort districts in ascending or descending order.',
-    required: false,
-    type: 'string',
-    example: 'asc',
+  @ApiDataResponse({
+    model: District,
+    multiple: true,
+    description: 'Returns array of districts.',
   })
-  @ApiOkResponse({ description: 'Returns array of districts.' })
   @ApiBadRequestResponse({ description: 'If the `code` is invalid.' })
   @ApiNotFoundResponse({
     description: 'If there are no regency match with the `code`.',
@@ -126,13 +100,6 @@ export class RegencyController {
   }
 
   @ApiOperation({ description: 'Get all islands in a regency.' })
-  @ApiParam({
-    name: 'code',
-    description: 'The regency code',
-    required: true,
-    type: 'string',
-    example: '1101',
-  })
   @ApiQuery({
     name: 'sortBy',
     description: 'Sort islands by its code, name, or coordinate.',
@@ -140,14 +107,11 @@ export class RegencyController {
     type: 'string',
     example: 'code',
   })
-  @ApiQuery({
-    name: 'sortOrder',
-    description: 'Sort islands in ascending or descending order.',
-    required: false,
-    type: 'string',
-    example: 'asc',
+  @ApiDataResponse({
+    model: Island,
+    multiple: true,
+    description: 'Returns array of islands.',
   })
-  @ApiOkResponse({ description: 'Returns array of islands.' })
   @ApiBadRequestResponse({ description: 'If the `code` is invalid.' })
   @ApiNotFoundResponse({
     description: 'If there are no regency match with the `code`.',

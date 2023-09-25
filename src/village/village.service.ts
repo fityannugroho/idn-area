@@ -16,27 +16,30 @@ export class VillageService implements CommonService<Village> {
     });
   }
 
-  async find({ name, ...sortOptions }: FindOptions<Village> = {}): Promise<
-    Village[]
-  > {
+  async find(options?: FindOptions<Village>): Promise<Village[]> {
     return this.prisma.village.findMany({
-      where: {
-        name: {
-          contains: name,
-          ...(getDBProviderFeatures()?.filtering?.insensitive && {
-            mode: 'insensitive',
-          }),
+      ...(options?.name && {
+        where: {
+          name: {
+            contains: options?.name,
+            ...(getDBProviderFeatures()?.filtering?.insensitive && {
+              mode: 'insensitive',
+            }),
+          },
         },
-      },
-      orderBy: this.sorter.object(sortOptions),
+      }),
+      ...((options?.sortBy || options?.sortOrder) && {
+        orderBy: this.sorter.object({
+          sortBy: options?.sortBy,
+          sortOrder: options?.sortOrder,
+        }),
+      }),
     });
   }
 
   async findByCode(code: string): Promise<Village | null> {
     return this.prisma.village.findUnique({
-      where: {
-        code: code,
-      },
+      where: { code },
     });
   }
 }

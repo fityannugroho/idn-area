@@ -1,4 +1,6 @@
+import { Island } from '@prisma/client';
 import { AppTester } from './helper/app-tester';
+import { islandRegex } from './helper/data-regex';
 
 describe('Island (e2e)', () => {
   const baseUrl = '/islands';
@@ -32,23 +34,31 @@ describe('Island (e2e)', () => {
     });
 
     it('should return empty array if there are no any islands match with the `name`', async () => {
-      const res = await tester.expectOk(`${baseUrl}?name=unknown`);
+      const islands = await tester.expectData<Island[]>(
+        `${baseUrl}?name=unknown`,
+      );
 
-      expect(res.json()).toEqual([]);
+      expect(islands).toEqual([]);
     });
 
     it('should return all islands match with the `name`', async () => {
       const testName = 'batu';
-      const res = await tester.expectOk(`${baseUrl}?name=${testName}`);
-
-      expect(res.json()).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({
-            code: expect.any(String),
-            name: expect.stringMatching(new RegExp(testName, 'i')),
-          }),
-        ]),
+      const islands = await tester.expectData<Island[]>(
+        `${baseUrl}?name=${testName}`,
       );
+
+      islands.forEach((island) => {
+        expect(island).toEqual({
+          code: expect.stringMatching(islandRegex.code),
+          coordinate: expect.stringMatching(islandRegex.coordinate),
+          isOutermostSmall: expect.any(Boolean),
+          isPopulated: expect.any(Boolean),
+          latitude: expect.any(Number),
+          longitude: expect.any(Number),
+          name: expect.stringMatching(new RegExp(testName, 'i')),
+          regencyCode: island.regencyCode ? island.code.slice(0, 4) : null,
+        });
+      });
     });
   });
 
@@ -65,22 +75,18 @@ describe('Island (e2e)', () => {
     });
 
     it('should return the island with the `code`', async () => {
-      const res = await tester.expectOk(`${baseUrl}/${testCode}`);
+      const island = await tester.expectData<Island>(`${baseUrl}/${testCode}`);
 
-      expect(res.json()).toEqual(
-        expect.objectContaining({
-          code: testCode,
-          coordinate: expect.any(String),
-          isOutermostSmall: expect.any(Boolean),
-          isPopulated: expect.any(Boolean),
-          latitude: expect.any(Number),
-          longitude: expect.any(Number),
-          name: expect.any(String),
-          regencyCode: expect.any(String),
-        }),
-      );
-
-      expect(testCode.includes(res.json().regencyCode)).toBeTruthy();
+      expect(island).toEqual({
+        code: testCode,
+        coordinate: expect.stringMatching(islandRegex.coordinate),
+        isOutermostSmall: expect.any(Boolean),
+        isPopulated: expect.any(Boolean),
+        latitude: expect.any(Number),
+        longitude: expect.any(Number),
+        name: expect.stringMatching(islandRegex.name),
+        regencyCode: island.regencyCode ? island.code.slice(0, 4) : null,
+      });
     });
   });
 

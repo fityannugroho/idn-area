@@ -1,6 +1,12 @@
 import { EqualsAny } from '@/common/decorator/EqualsAny';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional, IsString } from 'class-validator';
 import { SortOptions } from './sort.service';
+
+export enum SortOrder {
+  asc = 'asc',
+  desc = 'desc',
+}
 
 /**
  * The validator class for the sort query.
@@ -18,5 +24,8 @@ export class SortQuery<
 
   @IsOptional()
   @EqualsAny(['asc', 'desc'])
-  readonly sortOrder?: 'asc' | 'desc';
+  @ApiPropertyOptional({
+    description: 'Sort the data in ascending or descending order.',
+  })
+  readonly sortOrder?: SortOrder;
 }

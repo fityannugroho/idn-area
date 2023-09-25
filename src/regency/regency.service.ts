@@ -23,19 +23,24 @@ export class RegencyService implements CommonService<Regency> {
     });
   }
 
-  async find({ name, ...sortOptions }: FindOptions<Regency> = {}): Promise<
-    Regency[]
-  > {
+  async find(options?: FindOptions<Regency>): Promise<Regency[]> {
     return this.prisma.regency.findMany({
-      where: {
-        name: {
-          contains: name,
-          ...(getDBProviderFeatures()?.filtering?.insensitive && {
-            mode: 'insensitive',
-          }),
+      ...(options?.name && {
+        where: {
+          name: {
+            contains: options.name,
+            ...(getDBProviderFeatures()?.filtering?.insensitive && {
+              mode: 'insensitive',
+            }),
+          },
         },
-      },
-      orderBy: this.sorter.object(sortOptions),
+      }),
+      ...((options?.sortBy || options?.sortOrder) && {
+        orderBy: this.sorter.object({
+          sortBy: options?.sortBy,
+          sortOrder: options?.sortOrder,
+        }),
+      }),
     });
   }
 
