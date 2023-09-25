@@ -10,7 +10,6 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
-  ApiParam,
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
@@ -31,13 +30,6 @@ export class RegencyController {
 
   @ApiOperation({ description: 'Get the regencies by its name.' })
   @ApiQuery({
-    name: 'name',
-    description: 'The regency name.',
-    required: true,
-    type: 'string',
-    example: 'bandung',
-  })
-  @ApiQuery({
     name: 'sortBy',
     description: 'Sort by regency code or name.',
     required: false,
@@ -52,13 +44,6 @@ export class RegencyController {
   }
 
   @ApiOperation({ description: 'Get a regency by its code.' })
-  @ApiParam({
-    name: 'code',
-    description: 'The regency code',
-    required: true,
-    type: 'string',
-    example: '3273',
-  })
   @ApiOkResponse({ description: 'Returns a regency.' })
   @ApiBadRequestResponse({ description: 'If the `code` is invalid.' })
   @ApiNotFoundResponse({
@@ -78,13 +63,6 @@ export class RegencyController {
   }
 
   @ApiOperation({ description: 'Get all districts in a regency.' })
-  @ApiParam({
-    name: 'code',
-    description: 'The regency code',
-    required: true,
-    type: 'string',
-    example: '3273',
-  })
   @ApiQuery({
     name: 'sortBy',
     description: 'Sort districts by its code or name.',
@@ -112,13 +90,6 @@ export class RegencyController {
   }
 
   @ApiOperation({ description: 'Get all islands in a regency.' })
-  @ApiParam({
-    name: 'code',
-    description: 'The regency code',
-    required: true,
-    type: 'string',
-    example: '1101',
-  })
   @ApiQuery({
     name: 'sortBy',
     description: 'Sort islands by its code, name, or coordinate.',

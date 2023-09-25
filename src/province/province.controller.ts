@@ -10,7 +10,6 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
-  ApiParam,
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
@@ -37,7 +36,6 @@ export class ProvinceController {
     name: 'name',
     description: 'Get provinces by its name.',
     required: false,
-    type: 'string',
   })
   @ApiQuery({
     name: 'sortBy',
@@ -54,13 +52,6 @@ export class ProvinceController {
   }
 
   @ApiOperation({ description: 'Get a province by its code.' })
-  @ApiParam({
-    name: 'code',
-    description: 'The province code',
-    required: true,
-    type: 'string',
-    example: '32',
-  })
   @ApiOkResponse({ description: 'Returns a province.' })
   @ApiBadRequestResponse({ description: 'If the `code` is invalid.' })
   @ApiNotFoundResponse({ description: 'If there are no match province.' })
@@ -78,13 +69,6 @@ export class ProvinceController {
   }
 
   @ApiOperation({ description: 'Get all regencies in a province.' })
-  @ApiParam({
-    name: 'code',
-    description: 'The province code',
-    required: true,
-    type: 'string',
-    example: '32',
-  })
   @ApiQuery({
     name: 'sortBy',
     description: 'Sort regencies by its code or name.',

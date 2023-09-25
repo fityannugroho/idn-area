@@ -1,5 +1,5 @@
 import { SortQuery } from '@/sort/sort.dto';
-import { IntersectionType, PickType } from '@nestjs/swagger';
+import { ApiProperty, IntersectionType, PickType } from '@nestjs/swagger';
 import {
   IsBooleanString,
   IsNotEmpty,
@@ -15,33 +15,41 @@ export class Island {
   @IsNotEmpty()
   @IsNumberString()
   @Length(9, 9)
+  @ApiProperty({ description: 'The island code', example: '1101014001' })
   code: string;
 
   @IsNotEmpty()
   @IsString()
   @Length(30, 30)
+  @ApiProperty({ example: `03°19'03.44" N 097°07'41.73" E` })
   coordinate: string;
 
   @IsNotEmpty()
   @IsBooleanString()
+  @ApiProperty({ example: false })
   isOutermostSmall: boolean;
 
   @IsNotEmpty()
   @IsBooleanString()
+  @ApiProperty({ example: false })
   isPopulated: boolean;
 
   @IsNotEmpty()
   @IsNotSymbol("'-/")
   @Length(3, 255)
+  @ApiProperty({ example: 'Pulau Batukapal' })
   name: string;
 
   @IsOptional()
   @IsNumberString()
   @Length(4, 4)
+  @ApiProperty({ example: '1101' })
   regencyCode?: string;
 
+  @ApiProperty({ example: 3.317622222222222 })
   latitude?: number;
 
+  @ApiProperty({ example: 97.12825833333332 })
   longitude?: number;
 }
 

@@ -10,7 +10,6 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
-  ApiParam,
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
@@ -30,13 +29,6 @@ export class DistrictController {
 
   @ApiOperation({ description: 'Get districts by its name.' })
   @ApiQuery({
-    name: 'name',
-    description: 'The district name.',
-    required: true,
-    type: 'string',
-    example: 'bandung',
-  })
-  @ApiQuery({
     name: 'sortBy',
     description: 'Sort by district code or name.',
     required: false,
@@ -51,13 +43,6 @@ export class DistrictController {
   }
 
   @ApiOperation({ description: 'Get a district by its code.' })
-  @ApiParam({
-    name: 'code',
-    description: 'The district code',
-    required: true,
-    type: 'string',
-    example: '327325',
-  })
   @ApiOkResponse({ description: 'Returns a district.' })
   @ApiBadRequestResponse({ description: 'If the `code` is invalid.' })
   @ApiNotFoundResponse({
@@ -77,13 +62,6 @@ export class DistrictController {
   }
 
   @ApiOperation({ description: 'Get all villages in a district.' })
-  @ApiParam({
-    name: 'code',
-    description: 'The district code',
-    required: true,
-    type: 'string',
-    example: '327325',
-  })
   @ApiQuery({
     name: 'sortBy',
     description: 'Sort villages by its code or name.',

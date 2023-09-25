@@ -10,7 +10,6 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
-  ApiParam,
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
@@ -30,13 +29,6 @@ export class IslandController {
     description: 'Get the islands by its name.',
   })
   @ApiQuery({
-    name: 'name',
-    description: 'The island name.',
-    required: true,
-    type: 'string',
-    example: 'sabang',
-  })
-  @ApiQuery({
     name: 'sortBy',
     description: 'Sort islands by its code, name, or coordinate.',
     required: false,
@@ -53,13 +45,6 @@ export class IslandController {
   }
 
   @ApiOperation({ description: 'Get an island by its code.' })
-  @ApiParam({
-    name: 'code',
-    description: 'The island code',
-    required: true,
-    type: 'string',
-    example: '110140001',
-  })
   @ApiOkResponse({ description: 'Returns an island.' })
   @ApiBadRequestResponse({ description: 'If the `code` is invalid.' })
   @ApiNotFoundResponse({
