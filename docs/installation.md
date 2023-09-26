@@ -32,6 +32,11 @@
 
     - You can enable [rate limiting](https://docs.nestjs.com/security/rate-limiting) by setting the **`APP_ENABLE_THROTTLE`** to be `true`. You also can customize the `APP_THROTTLE_TTL` and `APP_THROTTLE_LIMIT` as desired.
 
+    - You can also customize the pagination feature by setting the **`APP_PAGINATION_MAX_PAGE_SIZE`** and **`APP_PAGINATION_DEFAULT_PAGE_SIZE`**.
+
+      > [!NOTE]
+      > Set the `APP_PAGINATION_MAX_PAGE_SIZE` value wisely, as it will determine the amount of resource usage (the size of queries to the database).
+
     - Set the `DB_PROVIDER` with the data source provider you want to use. Current supported providers: 'mongodb', 'postgresql', and 'mysql'. See the details [here](https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#fields).
 
     - Set the `DB_URL` with the database connection string. See the [connection string](https://pris.ly/d/connection-strings) documentation.
