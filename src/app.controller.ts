@@ -1,14 +1,10 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, HttpStatus } from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { UnwrapResponse } from './common/decorator/unwrap-response.decorator';
-import { ResponseMessage } from './common/decorator/response-message.decorator';
 
 @ApiTags('Home')
 @Controller()
 export class AppController {
   @Get()
-  @UnwrapResponse()
-  @ResponseMessage('Welcome to Indonesia Area API.')
   @ApiOkResponse({
     schema: {
       type: 'object',
@@ -25,6 +21,8 @@ export class AppController {
   })
   async index() {
     return {
+      statusCode: HttpStatus.OK,
+      message: 'Welcome to Indonesia Area API.',
       version: process.env.npm_package_version,
       docs: '/docs',
     };
