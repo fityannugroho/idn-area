@@ -1,8 +1,5 @@
 import { AppController } from '@/app.controller';
-import {
-  SuccessfulResponse,
-  TransformInterceptor,
-} from '@/common/interceptor/transform.interceptor';
+import { SuccessfulResponse } from '@/common/interceptor/transform.interceptor';
 import { DistrictModule } from '@/district/district.module';
 import { IslandModule } from '@/island/island.module';
 import { ProvinceModule } from '@/province/province.module';
@@ -10,7 +7,6 @@ import { RegencyModule } from '@/regency/regency.module';
 import { VillageModule } from '@/village/village.module';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { APP_INTERCEPTOR } from '@nestjs/core';
 import {
   FastifyAdapter,
   NestFastifyApplication,
@@ -49,12 +45,6 @@ export class AppTester {
         IslandModule,
       ],
       controllers: [AppController],
-      providers: [
-        {
-          provide: APP_INTERCEPTOR,
-          useClass: TransformInterceptor,
-        },
-      ],
     }).compile();
 
     const app = moduleRef.createNestApplication<NestFastifyApplication>(
