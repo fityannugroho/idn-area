@@ -1,5 +1,6 @@
 import { getValues, sortArray } from '@/common/utils/array';
 import { getDistricts, getIslands, getRegencies } from '@/common/utils/data';
+import { SortOrder } from '@/sort/sort.dto';
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { District, Island, Regency } from '@prisma/client';
@@ -104,11 +105,14 @@ describe('RegencyController', () => {
       const testRegencies = await controller.find({
         name: testRegencyName,
         sortBy: 'name',
-        sortOrder: 'desc',
+        sortOrder: SortOrder.DESC,
       });
 
       expect(getValues(testRegencies, 'code')).toEqual(
-        getValues(sortArray(filteredRegenciesByName, 'name', 'desc'), 'code'),
+        getValues(
+          sortArray(filteredRegenciesByName, 'name', SortOrder.DESC),
+          'code',
+        ),
       );
     });
   });
@@ -169,7 +173,7 @@ describe('RegencyController', () => {
     it('should return all districts in the matching regency sorted by name ascending', async () => {
       const testDistricts = await controller.findDistricts(
         { code: testRegencyCode },
-        { sortBy: 'name', sortOrder: 'asc' },
+        { sortBy: 'name', sortOrder: SortOrder.ASC },
       );
 
       expect(getValues(testDistricts, 'code')).toEqual(
@@ -180,11 +184,11 @@ describe('RegencyController', () => {
     it('should return all districts in the matching regency sorted by name descending', async () => {
       const testDistricts = await controller.findDistricts(
         { code: testRegencyCode },
-        { sortBy: 'name', sortOrder: 'desc' },
+        { sortBy: 'name', sortOrder: SortOrder.DESC },
       );
 
       expect(getValues(testDistricts, 'code')).toEqual(
-        getValues(sortArray(expectedDistricts, 'name', 'desc'), 'code'),
+        getValues(sortArray(expectedDistricts, 'name', SortOrder.DESC), 'code'),
       );
     });
   });
@@ -231,7 +235,7 @@ describe('RegencyController', () => {
     it('should return all islands in the matching regency sorted by name ascending', async () => {
       const testIslands = await controller.findIslands(
         { code: testRegencyCode },
-        { sortBy: 'name', sortOrder: 'asc' },
+        { sortBy: 'name', sortOrder: SortOrder.ASC },
       );
 
       expect(getValues(testIslands, 'code')).toEqual(
@@ -242,18 +246,18 @@ describe('RegencyController', () => {
     it('should return all islands in the matching regency sorted by name descending', async () => {
       const testIslands = await controller.findIslands(
         { code: testRegencyCode },
-        { sortBy: 'name', sortOrder: 'desc' },
+        { sortBy: 'name', sortOrder: SortOrder.DESC },
       );
 
       expect(getValues(testIslands, 'code')).toEqual(
-        getValues(sortArray(expectedIslands, 'name', 'desc'), 'code'),
+        getValues(sortArray(expectedIslands, 'name', SortOrder.DESC), 'code'),
       );
     });
 
     it('should return all islands in the matching regency sorted by coordinate ascending', async () => {
       const testIslands = await controller.findIslands(
         { code: testRegencyCode },
-        { sortBy: 'coordinate', sortOrder: 'asc' },
+        { sortBy: 'coordinate', sortOrder: SortOrder.ASC },
       );
 
       expect(getValues(testIslands, 'code')).toEqual(
@@ -264,11 +268,14 @@ describe('RegencyController', () => {
     it('should return all islands in the matching regency sorted by coordinate descending', async () => {
       const testIslands = await controller.findIslands(
         { code: testRegencyCode },
-        { sortBy: 'coordinate', sortOrder: 'desc' },
+        { sortBy: 'coordinate', sortOrder: SortOrder.DESC },
       );
 
       expect(getValues(testIslands, 'code')).toEqual(
-        getValues(sortArray(expectedIslands, 'coordinate', 'desc'), 'code'),
+        getValues(
+          sortArray(expectedIslands, 'coordinate', SortOrder.DESC),
+          'code',
+        ),
       );
     });
   });

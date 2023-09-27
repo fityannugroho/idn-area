@@ -1,5 +1,6 @@
 import { getValues, sortArray } from '@/common/utils/array';
 import { getProvinces, getRegencies } from '@/common/utils/data';
+import { SortOrder } from '@/sort/sort.dto';
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Province, Regency } from '@prisma/client';
@@ -55,7 +56,7 @@ describe('ProvinceController', () => {
     it('should return all provinces sorted by name ascending', async () => {
       const testProvinces = await controller.find({
         sortBy: 'name',
-        sortOrder: 'asc',
+        sortOrder: SortOrder.ASC,
       });
 
       expect(getValues(testProvinces, 'code')).toEqual(
@@ -66,7 +67,7 @@ describe('ProvinceController', () => {
     it('should return all provinces sorted by name descending', async () => {
       const testProvinces = await controller.find({
         sortBy: 'name',
-        sortOrder: 'desc',
+        sortOrder: SortOrder.DESC,
       });
 
       expect(getValues(testProvinces, 'code')).toEqual(
@@ -147,7 +148,7 @@ describe('ProvinceController', () => {
     it('should return all regencies in the matching province sorted by name ascending', async () => {
       const testRegencies = await controller.findRegencies(
         { code: testProvCode },
-        { sortBy: 'name', sortOrder: 'asc' },
+        { sortBy: 'name', sortOrder: SortOrder.ASC },
       );
 
       expect(getValues(testRegencies, 'code')).toEqual(
@@ -158,11 +159,11 @@ describe('ProvinceController', () => {
     it('should return all regencies in the matching province sorted by name descending', async () => {
       const testRegencies = await controller.findRegencies(
         { code: testProvCode },
-        { sortBy: 'name', sortOrder: 'desc' },
+        { sortBy: 'name', sortOrder: SortOrder.DESC },
       );
 
       expect(getValues(testRegencies, 'code')).toEqual(
-        getValues(sortArray(expectedRegencies, 'name', 'desc'), 'code'),
+        getValues(sortArray(expectedRegencies, 'name', SortOrder.DESC), 'code'),
       );
     });
   });

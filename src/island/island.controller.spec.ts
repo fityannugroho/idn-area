@@ -1,5 +1,6 @@
 import { getValues, sortArray } from '@/common/utils/array';
 import { getIslands } from '@/common/utils/data';
+import { SortOrder } from '@/sort/sort.dto';
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Island } from '@prisma/client';
@@ -103,11 +104,14 @@ describe('IslandController', () => {
       const testIslands = await controller.find({
         name: testIslandName,
         sortBy: 'name',
-        sortOrder: 'desc',
+        sortOrder: SortOrder.DESC,
       });
 
       expect(getValues(testIslands, 'code')).toEqual(
-        getValues(sortArray(filteredIslandsByName, 'name', 'desc'), 'code'),
+        getValues(
+          sortArray(filteredIslandsByName, 'name', SortOrder.DESC),
+          'code',
+        ),
       );
     });
 
@@ -126,12 +130,12 @@ describe('IslandController', () => {
       const testIslands = await controller.find({
         name: testIslandName,
         sortBy: 'coordinate',
-        sortOrder: 'desc',
+        sortOrder: SortOrder.DESC,
       });
 
       expect(getValues(testIslands, 'code')).toEqual(
         getValues(
-          sortArray(filteredIslandsByName, 'coordinate', 'desc'),
+          sortArray(filteredIslandsByName, 'coordinate', SortOrder.DESC),
           'code',
         ),
       );

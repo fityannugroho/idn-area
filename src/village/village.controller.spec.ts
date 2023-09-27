@@ -1,5 +1,6 @@
 import { getValues, sortArray } from '@/common/utils/array';
 import { getVillages } from '@/common/utils/data';
+import { SortOrder } from '@/sort/sort.dto';
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Village } from '@prisma/client';
@@ -93,11 +94,14 @@ describe('VillageController', () => {
       const testVillages = await controller.find({
         name: testVillageName,
         sortBy: 'name',
-        sortOrder: 'desc',
+        sortOrder: SortOrder.DESC,
       });
 
       expect(getValues(testVillages, 'code')).toEqual(
-        getValues(sortArray(filteredVillagesByName, 'name', 'desc'), 'code'),
+        getValues(
+          sortArray(filteredVillagesByName, 'name', SortOrder.DESC),
+          'code',
+        ),
       );
     });
   });
