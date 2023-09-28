@@ -59,14 +59,6 @@ export class TransformInterceptor<T, R extends TransformedResponse<T>>
       }
     }
 
-    // Add the `total` property to the meta if the data is an array.
-    if (Array.isArray(res.data)) {
-      res.meta = {
-        ...(res.meta ?? {}),
-        total: res.data.length,
-      };
-    }
-
     return res;
   }
 
@@ -85,7 +77,10 @@ export class TransformInterceptor<T, R extends TransformedResponse<T>>
           statusCode: context.switchToHttp().getResponse().statusCode,
           message: resMsg,
           data,
-          meta,
+          // Add the `total` property to the meta if the data is an array.
+          meta: Array.isArray(data)
+            ? { total: data.length, ...(meta ?? {}) }
+            : meta,
         } as R;
       }),
     );
