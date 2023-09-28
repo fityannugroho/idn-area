@@ -1,5 +1,5 @@
 import { AppController } from '@/app.controller';
-import { SuccessfulResponse } from '@/common/interceptor/transform.interceptor';
+import { TransformedResponse } from '@/common/interceptor/transform.interceptor';
 import { DistrictModule } from '@/district/district.module';
 import { IslandModule } from '@/island/island.module';
 import { ProvinceModule } from '@/province/province.module';
@@ -112,7 +112,7 @@ export class AppTester {
    */
   async expectData<T>(url: string, method: HttpMethods = 'GET') {
     const res = await this.expectOk(url, method);
-    const resJson = res.json<SuccessfulResponse<T>>();
+    const resJson = res.json<TransformedResponse<T>>();
 
     expect(resJson.data).toBeDefined();
 

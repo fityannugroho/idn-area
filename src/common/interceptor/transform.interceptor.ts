@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { isDBProvider } from '../utils/db/provider';
 
-export interface SuccessfulResponse<T> {
+export interface TransformedResponse<T> {
   statusCode: number;
   message: string | string[];
   data: T;
@@ -18,14 +18,14 @@ export interface SuccessfulResponse<T> {
 
 @Injectable()
 export class TransformInterceptor<T>
-  implements NestInterceptor<T, SuccessfulResponse<T>>
+  implements NestInterceptor<T, TransformedResponse<T>>
 {
   constructor(private reflector: Reflector) {}
 
   intercept(
     context: ExecutionContext,
     next: CallHandler,
-  ): Observable<SuccessfulResponse<T>> {
+  ): Observable<TransformedResponse<T>> {
     const resMsg =
       this.reflector.get<string | string[]>(
         'response_message',
