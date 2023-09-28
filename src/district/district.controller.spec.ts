@@ -1,5 +1,6 @@
 import { getValues, sortArray } from '@/common/utils/array';
 import { getDistricts, getVillages } from '@/common/utils/data';
+import { SortOrder } from '@/sort/sort.dto';
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { District, Village } from '@prisma/client';
@@ -102,11 +103,14 @@ describe('DistrictController', () => {
       const testDistricts = await controller.find({
         name: testDistrictName,
         sortBy: 'name',
-        sortOrder: 'desc',
+        sortOrder: SortOrder.DESC,
       });
 
       expect(getValues(testDistricts, 'code')).toEqual(
-        getValues(sortArray(filteredDistrictsByName, 'name', 'desc'), 'code'),
+        getValues(
+          sortArray(filteredDistrictsByName, 'name', SortOrder.DESC),
+          'code',
+        ),
       );
     });
   });
@@ -180,11 +184,11 @@ describe('DistrictController', () => {
     it('should return all villages in the matching district sorted by name descending', async () => {
       const testVillages = await controller.findVillages(
         { code: testDistrictCode },
-        { sortBy: 'name', sortOrder: 'desc' },
+        { sortBy: 'name', sortOrder: SortOrder.DESC },
       );
 
       expect(getValues(testVillages, 'code')).toEqual(
-        getValues(sortArray(expectedVillages, 'name', 'desc'), 'code'),
+        getValues(sortArray(expectedVillages, 'name', SortOrder.DESC), 'code'),
       );
     });
   });

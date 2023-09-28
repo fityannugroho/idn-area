@@ -4,8 +4,8 @@ import { IsOptional, IsString } from 'class-validator';
 import { SortOptions } from './sort.service';
 
 export enum SortOrder {
-  asc = 'asc',
-  desc = 'desc',
+  ASC = 'asc',
+  DESC = 'desc',
 }
 
 /**
