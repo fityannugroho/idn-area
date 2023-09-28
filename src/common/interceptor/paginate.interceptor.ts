@@ -6,13 +6,15 @@ import {
   WrappedData,
 } from './transform.interceptor';
 
-export interface PaginationMeta extends Record<string, unknown> {
+// See issue: https://stackoverflow.com/questions/69462870/how-to-replace-object-with-recordstring-unknown
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+export type PaginationMeta = {
   current: string;
   first: string;
   last: string;
   previous: string | null;
   next: string | null;
-}
+};
 
 export type PaginatedReturn<T> = WrappedData<T[], PaginationMeta>;
 
