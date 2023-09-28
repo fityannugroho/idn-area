@@ -117,7 +117,7 @@ export class AppTester {
     expect(resJson.data).toBeDefined();
 
     if (Array.isArray(resJson.data)) {
-      expect(resJson.total).toEqual(resJson.data.length);
+      expect(resJson.meta.total).toEqual(resJson.data.length);
     }
 
     return resJson.data;

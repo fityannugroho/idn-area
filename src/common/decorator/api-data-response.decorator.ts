@@ -30,10 +30,17 @@ interface Options<Model extends Type<any>> {
 }
 
 /**
- * This decorator will wrap the response into `data` property and add these properties:
+ * This decorator will wrap the response into `data` property.
+ *
+ * To add additional metadata, your method must return an object with `data` and `meta` property
+ * (see the `WrappedData` interface)
+ *
+ * The transformed response will have the following properties:
  * - `statusCode` (number)
  * - `message` (string)
- * - `total` (number) (only if `multiple` is true)
+ * - `data` (object or array)
+ * - `meta` (object, optional)
+ *    - `total` (number, if the `data` is an array)
  *
  * This decorator will also add `ApiExtraModels` and `ApiOkResponse` decorator
  * to generate the swagger documentation.
@@ -61,9 +68,15 @@ export const ApiDataResponse = <Model extends Type<any>>(
                 type: 'object',
                 $ref: getSchemaPath(options.model),
               },
-          total: options.multiple
-            ? { type: 'number', example: 1, nullable: true }
-            : undefined,
+          meta: {
+            type: 'object',
+            nullable: options.multiple ? undefined : true,
+            properties: {
+              total: options.multiple
+                ? { type: 'number', example: 1 }
+                : undefined,
+            },
+          },
         },
       },
     }),
