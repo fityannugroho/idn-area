@@ -1,6 +1,6 @@
 import 'dotenv/config';
 
-export interface AppConfig {
+export type AppConfig = {
   /**
    * Get the app environment.
    * @default 'dev'
@@ -22,7 +22,7 @@ export interface AppConfig {
      */
     defaultPageSize: number;
   };
-}
+};
 
 export const appConfig: AppConfig = {
   env: (process.env.APP_ENV as AppConfig['env']) || 'dev',

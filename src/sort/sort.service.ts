@@ -1,7 +1,7 @@
-export interface SortOptions<T extends Record<string, unknown>> {
+export type SortOptions<T extends Record<string, unknown>> = {
   sortBy?: keyof T;
   sortOrder?: 'asc' | 'desc';
-}
+};
 
 /**
  * Service to use `sortBy` and `sortOrder` query params.

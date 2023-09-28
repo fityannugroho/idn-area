@@ -9,7 +9,7 @@ export type FindOptions<T extends CommonData> = SortOptions<T> & {
   name?: string;
 };
 
-export interface CommonService<T extends CommonData> {
+export type CommonService<T extends CommonData> = {
   readonly sorter: SortService<T>;
 
   /**
@@ -24,4 +24,4 @@ export interface CommonService<T extends CommonData> {
    * @returns A data or `null`.
    */
   findByCode(code: string): Promise<T | null>;
-}
+};

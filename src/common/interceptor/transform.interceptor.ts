@@ -9,23 +9,20 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { isDBProvider } from '../utils/db/provider';
 
-export interface WrappedData<
+export type WrappedData<
   Data,
   Meta extends Record<string, unknown> = Record<string, unknown>,
-> {
+> = {
   data: Data;
   meta?: Meta;
-}
+};
 
-export interface TransformedResponse<
-  Data,
-  Meta = WrappedData<unknown>['meta'],
-> {
+export type TransformedResponse<Data, Meta = WrappedData<unknown>['meta']> = {
   statusCode: number;
   message: string | string[];
   data: Data;
   meta: Data extends any[] ? { total: number } & Meta : Meta | undefined;
-}
+};
 
 /**
  * Check if the value contains `data` property.

@@ -7,7 +7,7 @@ import {
 import { PaginateInterceptor } from '../interceptor/paginate.interceptor';
 import { ApiExtraModels, ApiOkResponse, getSchemaPath } from '@nestjs/swagger';
 
-interface Options<Model extends Type<any>> {
+type Options<Model extends Type<any>> = {
   /**
    * The model that will be used in the response.
    */
@@ -23,7 +23,7 @@ interface Options<Model extends Type<any>> {
    * @default 'OK'
    */
   message?: string | string[];
-}
+};
 
 /**
  * This decorator will transform the response to a paginated response.
