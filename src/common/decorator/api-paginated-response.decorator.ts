@@ -38,9 +38,9 @@ type Options<Model extends Type<any>> = {
  * - `meta` (object, optional)
  *    - `total` (number)
  *    - `pagination` (object)
- *       - `current` (string)
  *       - `first` (string)
  *       - `last` (string)
+ *       - `current` (string or null)
  *       - `previous` (string or null)
  *       - `next` (string or null)
  *
@@ -72,9 +72,9 @@ export const ApiPaginatedResponse = <Model extends Type<any>>(
               pagination: {
                 type: 'object',
                 properties: {
-                  current: { type: 'string' },
                   first: { type: 'string' },
                   last: { type: 'string' },
+                  current: { type: 'string', nullable: true },
                   previous: { type: 'string', nullable: true },
                   next: { type: 'string', nullable: true },
                 },
