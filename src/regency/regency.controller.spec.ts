@@ -51,64 +51,62 @@ describe('RegencyController', () => {
     });
 
     it('should return all regencies', async () => {
-      const testRegencies = await controller.find();
+      const { data } = await controller.find();
 
-      expect(testRegencies).toEqual(
-        expect.arrayContaining([
+      for (const regency of data) {
+        expect(regency).toEqual(
           expect.objectContaining({
             code: expect.any(String),
             name: expect.any(String),
             provinceCode: expect.any(String),
           }),
-        ]),
-      );
-      expect(testRegencies).toHaveLength(regencies.length);
+        );
+      }
+
+      expect(data).toHaveLength(regencies.length);
     });
 
     it('should return regencies filtered by name', async () => {
-      const testRegencies = await controller.find({
-        name: testRegencyName,
-      });
+      const { data } = await controller.find({ name: testRegencyName });
 
-      expect(testRegencies).toEqual(
-        expect.arrayContaining([
+      for (const regency of data) {
+        expect(regency).toEqual(
           expect.objectContaining({
             code: expect.any(String),
             name: expect.stringMatching(new RegExp(testRegencyName, 'i')),
             provinceCode: expect.any(String),
           }),
-        ]),
-      );
-      expect(testRegencies.length).toEqual(filteredRegenciesByName.length);
+        );
+      }
+
+      expect(data.length).toEqual(filteredRegenciesByName.length);
     });
 
     it('should return empty array if there is no regency with the corresponding name', async () => {
-      const testRegencies = await controller.find({
-        name: 'unknown regency',
-      });
+      const { data } = await controller.find({ name: 'unknown regency' });
 
-      expect(testRegencies).toEqual([]);
+      expect(data).toEqual([]);
     });
 
     it('should return regencies filtered and sorted by name ascending', async () => {
-      const testRegencies = await controller.find({
+      const { data } = await controller.find({
         name: testRegencyName,
         sortBy: 'name',
       });
 
-      expect(getValues(testRegencies, 'code')).toEqual(
+      expect(getValues(data, 'code')).toEqual(
         getValues(sortArray(filteredRegenciesByName, 'name'), 'code'),
       );
     });
 
     it('should return regencies filtered and sorted by name descending', async () => {
-      const testRegencies = await controller.find({
+      const { data } = await controller.find({
         name: testRegencyName,
         sortBy: 'name',
         sortOrder: SortOrder.DESC,
       });
 
-      expect(getValues(testRegencies, 'code')).toEqual(
+      expect(getValues(data, 'code')).toEqual(
         getValues(
           sortArray(filteredRegenciesByName, 'name', SortOrder.DESC),
           'code',

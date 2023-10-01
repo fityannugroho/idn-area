@@ -1,4 +1,5 @@
 import { ApiDataResponse } from '@/common/decorator/api-data-response.decorator';
+import { ApiPaginatedResponse } from '@/common/decorator/api-paginated-response.decorator';
 import { District } from '@/district/district.dto';
 import { Island } from '@/island/island.dto';
 import {
@@ -24,6 +25,7 @@ import {
   RegencyFindQueries,
 } from './regency.dto';
 import { RegencyService } from './regency.service';
+import { PaginatedReturn } from '@/common/interceptor/paginate.interceptor';
 
 @ApiTags('Regency')
 @Controller('regencies')
@@ -38,14 +40,15 @@ export class RegencyController {
     type: 'string',
     example: 'code',
   })
-  @ApiDataResponse({
+  @ApiPaginatedResponse({
     model: Regency,
-    multiple: true,
     description: 'Returns array of regency.',
   })
   @ApiBadRequestResponse({ description: 'If there are invalid query values.' })
   @Get()
-  async find(@Query() queries?: RegencyFindQueries): Promise<Regency[]> {
+  async find(
+    @Query() queries?: RegencyFindQueries,
+  ): Promise<PaginatedReturn<Regency>> {
     return this.regencyService.find(queries);
   }
 

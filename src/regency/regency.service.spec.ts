@@ -88,16 +88,24 @@ describe('RegencyService', () => {
   });
 
   describe('find', () => {
+    const paginatorOptions = {
+      model: 'Regency',
+      paginate: { limit: undefined, page: undefined },
+      args: {},
+      pathTemplate: '/regencies',
+      params: { sortBy: undefined, sortOrder: undefined },
+    };
+
     it('should return all regencies ', async () => {
-      const findManySpy = vitest
-        .spyOn(prismaService.regency, 'findMany')
-        .mockResolvedValue([...regencies]);
+      const paginatorSpy = vitest
+        .spyOn(prismaService, 'paginator')
+        .mockResolvedValue({ data: [...regencies] });
 
       const result = await service.find();
 
-      expect(findManySpy).toHaveBeenCalledTimes(1);
-      expect(findManySpy).toHaveBeenCalledWith({});
-      expect(result).toEqual(regencies);
+      expect(paginatorSpy).toHaveBeenCalledTimes(1);
+      expect(paginatorSpy).toHaveBeenCalledWith(paginatorOptions);
+      expect(result.data).toEqual(regencies);
     });
 
     it('should filter regencies by name', async () => {
@@ -106,24 +114,27 @@ describe('RegencyService', () => {
         r.name.toLowerCase().includes(testName),
       );
 
-      const findManySpy = vitest
-        .spyOn(prismaService.regency, 'findMany')
-        .mockResolvedValue(expectedRegencies);
+      const paginatorSpy = vitest
+        .spyOn(prismaService, 'paginator')
+        .mockResolvedValue({ data: expectedRegencies });
 
       const result = await service.find({ name: testName });
 
-      expect(findManySpy).toHaveBeenCalledTimes(1);
-      expect(findManySpy).toHaveBeenCalledWith({
-        where: {
-          name: {
-            contains: testName,
-            ...(getDBProviderFeatures()?.filtering?.insensitive && {
-              mode: 'insensitive',
-            }),
+      expect(paginatorSpy).toHaveBeenCalledTimes(1);
+      expect(paginatorSpy).toHaveBeenCalledWith({
+        ...paginatorOptions,
+        args: {
+          where: {
+            name: {
+              contains: testName,
+              ...(getDBProviderFeatures()?.filtering?.insensitive && {
+                mode: 'insensitive',
+              }),
+            },
           },
         },
       });
-      expect(result).toEqual(expectedRegencies);
+      expect(result.data).toEqual(expectedRegencies);
     });
 
     it('should sort regencies by name in ascending order by default', async () => {
@@ -131,21 +142,19 @@ describe('RegencyService', () => {
         a.name.localeCompare(b.name),
       );
 
-      const findManySpy = vitest
-        .spyOn(prismaService.regency, 'findMany')
-        .mockResolvedValue(expectedRegencies);
+      const paginatorSpy = vitest
+        .spyOn(prismaService, 'paginator')
+        .mockResolvedValue({ data: expectedRegencies });
 
-      const result = await service.find({
-        sortBy: 'name',
-      });
+      const result = await service.find({ sortBy: 'name' });
 
-      expect(findManySpy).toHaveBeenCalledTimes(1);
-      expect(findManySpy).toHaveBeenCalledWith({
-        orderBy: {
-          name: 'asc',
-        },
+      expect(paginatorSpy).toHaveBeenCalledTimes(1);
+      expect(paginatorSpy).toHaveBeenCalledWith({
+        ...paginatorOptions,
+        args: { orderBy: { name: 'asc' } },
+        params: { sortBy: 'name' },
       });
-      expect(result).toEqual(expectedRegencies);
+      expect(result.data).toEqual(expectedRegencies);
     });
 
     it('should sort regencies by name in descending order', async () => {
@@ -154,19 +163,18 @@ describe('RegencyService', () => {
       );
 
       const findManySpy = vitest
-        .spyOn(prismaService.regency, 'findMany')
-        .mockResolvedValue(expectedRegencies);
+        .spyOn(prismaService, 'paginator')
+        .mockResolvedValue({ data: expectedRegencies });
 
-      const result = await service.find({
-        sortBy: 'name',
-        sortOrder: 'desc',
-      });
+      const result = await service.find({ sortBy: 'name', sortOrder: 'desc' });
 
       expect(findManySpy).toHaveBeenCalledTimes(1);
       expect(findManySpy).toHaveBeenCalledWith({
-        orderBy: { name: 'desc' },
+        ...paginatorOptions,
+        args: { orderBy: { name: 'desc' } },
+        params: { sortBy: 'name', sortOrder: 'desc' },
       });
-      expect(result).toEqual(expectedRegencies);
+      expect(result.data).toEqual(expectedRegencies);
     });
   });
 

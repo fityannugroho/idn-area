@@ -1,4 +1,5 @@
 import { CommonService, FindOptions } from '@/common/common.service';
+import { PaginatedReturn } from '@/common/interceptor/paginate.interceptor';
 import { getDBProviderFeatures } from '@/common/utils/db';
 import { DistrictService } from '@/district/district.service';
 import { Island as IslandDTO } from '@/island/island.dto';
@@ -23,24 +24,31 @@ export class RegencyService implements CommonService<Regency> {
     });
   }
 
-  async find(options?: FindOptions<Regency>): Promise<Regency[]> {
-    return this.prisma.regency.findMany({
-      ...(options?.name && {
-        where: {
-          name: {
-            contains: options.name,
-            ...(getDBProviderFeatures()?.filtering?.insensitive && {
-              mode: 'insensitive',
-            }),
+  async find(
+    options?: FindOptions<Regency>,
+  ): Promise<PaginatedReturn<Regency>> {
+    const { name, sortBy, sortOrder, page, limit } = options ?? {};
+
+    return this.prisma.paginator({
+      model: 'Regency',
+      pathTemplate: '/regencies',
+      args: {
+        ...(name && {
+          where: {
+            name: {
+              contains: options.name,
+              ...(getDBProviderFeatures()?.filtering?.insensitive && {
+                mode: 'insensitive',
+              }),
+            },
           },
-        },
-      }),
-      ...((options?.sortBy || options?.sortOrder) && {
-        orderBy: this.sorter.object({
-          sortBy: options?.sortBy,
-          sortOrder: options?.sortOrder,
         }),
-      }),
+        ...((sortBy || sortOrder) && {
+          orderBy: this.sorter.object({ sortBy, sortOrder }),
+        }),
+      },
+      params: { sortBy, sortOrder },
+      paginate: { page, limit },
     });
   }
 

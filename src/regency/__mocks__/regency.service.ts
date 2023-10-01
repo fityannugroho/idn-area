@@ -24,7 +24,7 @@ export class MockRegencyService {
       regency.name.toLowerCase().includes(name.toLowerCase()),
     );
 
-    return Promise.resolve(sortArray(res, sortBy, sortOrder));
+    return Promise.resolve({ data: sortArray(res, sortBy, sortOrder) });
   }
 
   async findByCode(code: string) {

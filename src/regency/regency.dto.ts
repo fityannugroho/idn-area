@@ -5,6 +5,7 @@ import { ApiProperty, IntersectionType, PickType } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumberString, Length } from 'class-validator';
 import { DistrictSortQuery } from '../district/district.dto';
 import { IslandSortQuery } from '../island/island.dto';
+import { PaginationQuery } from '@/common/dto/pagination.dto';
 
 export class Regency {
   @IsNotEmpty()
@@ -34,6 +35,7 @@ export class RegencySortQuery extends SortQuery {
 export class RegencyFindQueries extends IntersectionType(
   PickType(Regency, ['name'] as const),
   RegencySortQuery,
+  PaginationQuery,
 ) {}
 
 export class RegencyFindByCodeParams extends PickType(Regency, [
