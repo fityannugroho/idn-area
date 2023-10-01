@@ -124,20 +124,22 @@ describe('ProvinceController', () => {
     });
 
     it('should return all regencies in the matching province', async () => {
-      const testRegencies = await controller.findRegencies({
+      const { data } = await controller.findRegencies({
         code: testProvCode,
       });
 
-      expect(testRegencies).toEqual(
-        expect.arrayContaining([
+      for (const regency of data) {
+        expect(regency).toEqual(
           expect.objectContaining({
             code: expect.stringMatching(new RegExp(`^${testProvCode}\\d{2}$`)),
             name: expect.any(String),
             provinceCode: testProvCode,
           }),
-        ]),
-      );
-      expect(testRegencies).toHaveLength(expectedRegencies.length);
+        );
+      }
+
+      expect(data).toEqual(expect.arrayContaining([]));
+      expect(data).toHaveLength(expectedRegencies.length);
     });
 
     it('should throw NotFoundException if there is no matching province', async () => {
@@ -147,23 +149,23 @@ describe('ProvinceController', () => {
     });
 
     it('should return all regencies in the matching province sorted by name ascending', async () => {
-      const testRegencies = await controller.findRegencies(
+      const { data } = await controller.findRegencies(
         { code: testProvCode },
         { sortBy: 'name', sortOrder: SortOrder.ASC },
       );
 
-      expect(getValues(testRegencies, 'code')).toEqual(
+      expect(getValues(data, 'code')).toEqual(
         getValues(sortArray(expectedRegencies, 'name'), 'code'),
       );
     });
 
     it('should return all regencies in the matching province sorted by name descending', async () => {
-      const testRegencies = await controller.findRegencies(
+      const { data } = await controller.findRegencies(
         { code: testProvCode },
         { sortBy: 'name', sortOrder: SortOrder.DESC },
       );
 
-      expect(getValues(testRegencies, 'code')).toEqual(
+      expect(getValues(data, 'code')).toEqual(
         getValues(sortArray(expectedRegencies, 'name', SortOrder.DESC), 'code'),
       );
     });

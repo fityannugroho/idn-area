@@ -87,9 +87,8 @@ export class ProvinceController {
     type: 'string',
     example: 'code',
   })
-  @ApiDataResponse({
+  @ApiPaginatedResponse({
     model: Regency,
-    multiple: true,
     description: 'Returns array of regencies.',
   })
   @ApiBadRequestResponse({ description: 'If the `code` is invalid.' })
@@ -100,13 +99,11 @@ export class ProvinceController {
   async findRegencies(
     @Param() { code }: ProvinceFindRegencyParams,
     @Query() queries?: ProvinceFindRegencyQueries,
-  ): Promise<Regency[]> {
-    const regencies = await this.provinceService.findRegencies(code, queries);
-
-    if (regencies === null) {
+  ): Promise<PaginatedReturn<Regency>> {
+    if ((await this.provinceService.findByCode(code)) === null) {
       throw new NotFoundException(`There are no province with code '${code}'`);
     }
 
-    return regencies;
+    return this.provinceService.findRegencies(code, queries);
   }
 }

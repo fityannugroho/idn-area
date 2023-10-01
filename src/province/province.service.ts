@@ -1,4 +1,5 @@
 import { CommonService, FindOptions } from '@/common/common.service';
+import { PaginationQuery } from '@/common/dto/pagination.dto';
 import { PaginatedReturn } from '@/common/interceptor/paginate.interceptor';
 import { getDBProviderFeatures } from '@/common/utils/db';
 import { PrismaService } from '@/prisma/prisma.service';
@@ -61,21 +62,24 @@ export class ProvinceService implements CommonService<Province> {
   /**
    * Find all regencies in a province.
    * @param provinceCode The province code.
-   * @param sortOptions The sort options.
-   * @returns An array of regencies, or `null` if there are no match province.
+   * @param options The options.
+   * @returns An array of regencies, `[]` if there are no match province.
    */
   async findRegencies(
     provinceCode: string,
-    sortOptions?: SortOptions<Regency>,
-  ): Promise<Regency[] | null> {
-    return this.prisma.province
-      .findUnique({
-        where: {
-          code: provinceCode,
-        },
-      })
-      .regencies({
-        orderBy: this.regencyService.sorter.object(sortOptions),
-      });
+    options?: SortOptions<Regency> & PaginationQuery,
+  ): Promise<PaginatedReturn<Regency>> {
+    const { sortBy, sortOrder, page, limit } = options ?? {};
+
+    return this.prisma.paginator({
+      model: 'Regency',
+      args: {
+        where: { provinceCode },
+        orderBy: this.regencyService.sorter.object({ sortBy, sortOrder }),
+      },
+      paginate: { page, limit },
+      pathTemplate: '/provinces/:code/regencies',
+      params: { code: provinceCode, sortBy, sortOrder },
+    });
   }
 }

@@ -44,4 +44,7 @@ export class ProvinceFindRegencyParams extends PickType(Province, [
   'code',
 ] as const) {}
 
-export class ProvinceFindRegencyQueries extends RegencySortQuery {}
+export class ProvinceFindRegencyQueries extends IntersectionType(
+  RegencySortQuery,
+  PaginationQuery,
+) {}

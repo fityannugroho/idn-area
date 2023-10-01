@@ -181,43 +181,44 @@ describe('ProvinceService', () => {
   });
 
   describe('findRegencies', () => {
+    const getPaginatorOptions = (testCode: string) => ({
+      model: 'Regency',
+      paginate: { limit: undefined, page: undefined },
+      args: { where: { provinceCode: testCode }, orderBy: { code: 'asc' } },
+      pathTemplate: '/provinces/:code/regencies',
+      params: { code: testCode, sortBy: undefined, sortOrder: undefined },
+    });
+
     it('should return all regencies in a province', async () => {
       const testCode = '11';
       const expectedRegencies = regencies.filter(
         (r) => r.provinceCode === testCode,
       );
 
-      const findUniqueSpy = vitest
-        .spyOn(prismaService.province, 'findUnique')
-        .mockReturnValue({
-          regencies: vitest.fn().mockResolvedValue(expectedRegencies),
-        } as any);
+      const paginatorSpy = vitest
+        .spyOn(prismaService, 'paginator')
+        .mockResolvedValue({ data: expectedRegencies });
 
       const result = await provinceService.findRegencies(testCode);
 
-      expect(findUniqueSpy).toHaveBeenCalledTimes(1);
-      expect(findUniqueSpy).toHaveBeenCalledWith({
-        where: { code: testCode },
-      });
-      expect(result).toEqual(expectedRegencies);
+      expect(paginatorSpy).toHaveBeenCalledTimes(1);
+      expect(paginatorSpy).toHaveBeenCalledWith(getPaginatorOptions(testCode));
+
+      expect(result.data).toEqual(expectedRegencies);
     });
 
-    it('should return null if there is no match province code', async () => {
+    it('should return empty array if there is no match province code', async () => {
       const testCode = '9999';
 
-      const findUniqueSpy = vitest
-        .spyOn(prismaService.province, 'findUnique')
-        .mockReturnValue({
-          regencies: vitest.fn().mockResolvedValue(null),
-        } as any);
+      const paginatorSpy = vitest
+        .spyOn(prismaService, 'paginator')
+        .mockResolvedValue({ data: [] });
 
       const result = await provinceService.findRegencies(testCode);
 
-      expect(findUniqueSpy).toHaveBeenCalledTimes(1);
-      expect(findUniqueSpy).toHaveBeenCalledWith({
-        where: { code: testCode },
-      });
-      expect(result).toBeNull();
+      expect(paginatorSpy).toHaveBeenCalledTimes(1);
+      expect(paginatorSpy).toHaveBeenCalledWith(getPaginatorOptions(testCode));
+      expect(result.data).toEqual([]);
     });
 
     it.todo(
