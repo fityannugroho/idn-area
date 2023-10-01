@@ -1,4 +1,5 @@
 import { CommonService, FindOptions } from '@/common/common.service';
+import { PaginatedReturn } from '@/common/interceptor/paginate.interceptor';
 import { getDBProviderFeatures } from '@/common/utils/db';
 import { PrismaService } from '@/prisma/prisma.service';
 import { RegencyService } from '@/regency/regency.service';
@@ -20,24 +21,32 @@ export class ProvinceService implements CommonService<Province> {
     });
   }
 
-  async find(options?: FindOptions<Province>): Promise<Province[]> {
-    return this.prisma.province.findMany({
-      ...(options?.name && {
-        where: {
-          name: {
-            contains: options.name,
-            ...(getDBProviderFeatures()?.filtering?.insensitive && {
-              mode: 'insensitive',
-            }),
+  async find(
+    options?: FindOptions<Province>,
+  ): Promise<PaginatedReturn<Province>> {
+    return this.prisma.paginator({
+      model: 'Province',
+      args: {
+        ...(options?.name && {
+          where: {
+            name: {
+              contains: options.name,
+              ...(getDBProviderFeatures()?.filtering?.insensitive && {
+                mode: 'insensitive',
+              }),
+            },
           },
-        },
-      }),
-      ...((options?.sortBy || options?.sortOrder) && {
-        orderBy: this.sorter.object({
-          sortBy: options?.sortBy,
-          sortOrder: options?.sortOrder,
         }),
-      }),
+        ...((options?.sortBy || options?.sortOrder) && {
+          orderBy: this.sorter.object({
+            sortBy: options?.sortBy,
+            sortOrder: options?.sortOrder,
+          }),
+        }),
+      },
+      paginate: { limit: options?.limit, page: options?.page },
+      pathTemplate: '/provinces',
+      params: { sortBy: options?.sortBy, sortOrder: options?.sortOrder },
     });
   }
 

@@ -40,17 +40,18 @@ describe('ProvinceController', () => {
 
   describe('find', () => {
     it('should return all provinces', async () => {
-      const testProvinces = await controller.find();
+      const { data } = await controller.find();
 
-      expect(testProvinces).toEqual(
-        expect.arrayContaining([
+      for (const province of data) {
+        expect(province).toEqual(
           expect.objectContaining({
             code: expect.any(String),
             name: expect.any(String),
           }),
-        ]),
-      );
-      expect(testProvinces).toHaveLength(provinces.length);
+        );
+      }
+
+      expect(data).toHaveLength(provinces.length);
     });
 
     it('should return all provinces sorted by name ascending', async () => {
@@ -59,7 +60,7 @@ describe('ProvinceController', () => {
         sortOrder: SortOrder.ASC,
       });
 
-      expect(getValues(testProvinces, 'code')).toEqual(
+      expect(getValues(testProvinces.data, 'code')).toEqual(
         getValues(sortArray(provinces, 'name'), 'code'),
       );
     });
@@ -70,27 +71,27 @@ describe('ProvinceController', () => {
         sortOrder: SortOrder.DESC,
       });
 
-      expect(getValues(testProvinces, 'code')).toEqual(
+      expect(getValues(testProvinces.data, 'code')).toEqual(
         getValues(sortArray(provinces, 'name', 'desc'), 'code'),
       );
     });
 
     it('should return all provinces filtered by name', async () => {
       const testProvName = 'jawa';
-      const testProvinces = await controller.find({
+      const { data } = await controller.find({
         name: testProvName,
       });
 
-      expect(testProvinces).toEqual(
-        expect.arrayContaining([
+      for (const province of data) {
+        expect(province).toEqual(
           expect.objectContaining({
             code: expect.any(String),
             name: expect.stringMatching(new RegExp(testProvName, 'i')),
           }),
-        ]),
-      );
+        );
+      }
 
-      expect(testProvinces.length).toEqual(
+      expect(data.length).toEqual(
         provinces.filter((p) =>
           p.name.toLowerCase().includes(testProvName.toLowerCase()),
         ).length,

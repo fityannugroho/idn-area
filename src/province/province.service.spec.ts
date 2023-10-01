@@ -50,16 +50,24 @@ describe('ProvinceService', () => {
   });
 
   describe('find', () => {
+    const paginatorOptions = {
+      model: 'Province',
+      paginate: { limit: undefined, page: undefined },
+      args: {},
+      pathTemplate: '/provinces',
+      params: {},
+    };
+
     it('should return all provinces', async () => {
-      const findManySpy = vitest
-        .spyOn(prismaService.province, 'findMany')
-        .mockResolvedValue([...provinces]);
+      const paginatorSpy = vitest
+        .spyOn(prismaService, 'paginator')
+        .mockResolvedValue({ data: [...provinces] });
 
       const result = await provinceService.find();
 
-      expect(findManySpy).toHaveBeenCalledTimes(1);
-      expect(findManySpy).toHaveBeenCalledWith({});
-      expect(result).toEqual(provinces);
+      expect(paginatorSpy).toHaveBeenCalledTimes(1);
+      expect(paginatorSpy).toHaveBeenCalledWith(paginatorOptions);
+      expect(result.data).toEqual(provinces);
     });
 
     it('should return provinces filtered by name', async () => {
@@ -68,24 +76,27 @@ describe('ProvinceService', () => {
         p.name.toLowerCase().includes(testName),
       );
 
-      const findManySpy = vitest
-        .spyOn(prismaService.province, 'findMany')
-        .mockResolvedValue(expectedProvinces);
+      const paginatorSpy = vitest
+        .spyOn(prismaService, 'paginator')
+        .mockResolvedValue({ data: expectedProvinces });
 
       const result = await provinceService.find({ name: testName });
 
-      expect(findManySpy).toHaveBeenCalledTimes(1);
-      expect(findManySpy).toHaveBeenCalledWith({
-        where: {
-          name: {
-            contains: testName,
-            ...(getDBProviderFeatures()?.filtering?.insensitive && {
-              mode: 'insensitive',
-            }),
+      expect(paginatorSpy).toHaveBeenCalledTimes(1);
+      expect(paginatorSpy).toHaveBeenCalledWith({
+        ...paginatorOptions,
+        args: {
+          where: {
+            name: {
+              contains: testName,
+              ...(getDBProviderFeatures()?.filtering?.insensitive && {
+                mode: 'insensitive',
+              }),
+            },
           },
         },
       });
-      expect(result).toEqual(expectedProvinces);
+      expect(result.data).toEqual(expectedProvinces);
     });
 
     it('should return provinces sorted by name in ascending order', async () => {
@@ -93,19 +104,21 @@ describe('ProvinceService', () => {
         a.name.localeCompare(b.name),
       );
 
-      const findManySpy = vitest
-        .spyOn(prismaService.province, 'findMany')
-        .mockResolvedValue(expectedProvinces);
+      const paginatorSpy = vitest
+        .spyOn(prismaService, 'paginator')
+        .mockResolvedValue({ data: expectedProvinces });
 
       const result = await provinceService.find({
         sortBy: 'name',
       });
 
-      expect(findManySpy).toHaveBeenCalledTimes(1);
-      expect(findManySpy).toHaveBeenCalledWith({
-        orderBy: { name: 'asc' },
+      expect(paginatorSpy).toHaveBeenCalledTimes(1);
+      expect(paginatorSpy).toHaveBeenCalledWith({
+        ...paginatorOptions,
+        args: { orderBy: { name: 'asc' } },
+        params: { sortBy: 'name', sortOrder: undefined },
       });
-      expect(result).toEqual(expectedProvinces);
+      expect(result.data).toEqual(expectedProvinces);
     });
 
     it('should return provinces sorted by name in descending order', async () => {
@@ -113,20 +126,22 @@ describe('ProvinceService', () => {
         b.name.localeCompare(a.name),
       );
 
-      const findManySpy = vitest
-        .spyOn(prismaService.province, 'findMany')
-        .mockResolvedValue(expectedProvinces);
+      const paginatorSpy = vitest
+        .spyOn(prismaService, 'paginator')
+        .mockResolvedValue({ data: expectedProvinces });
 
       const result = await provinceService.find({
         sortBy: 'name',
         sortOrder: 'desc',
       });
 
-      expect(findManySpy).toHaveBeenCalledTimes(1);
-      expect(findManySpy).toHaveBeenCalledWith({
-        orderBy: { name: 'desc' },
+      expect(paginatorSpy).toHaveBeenCalledTimes(1);
+      expect(paginatorSpy).toHaveBeenCalledWith({
+        ...paginatorOptions,
+        args: { orderBy: { name: 'desc' } },
+        params: { sortBy: 'name', sortOrder: 'desc' },
       });
-      expect(result).toEqual(expectedProvinces);
+      expect(result.data).toEqual(expectedProvinces);
     });
   });
 

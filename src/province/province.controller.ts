@@ -22,6 +22,8 @@ import {
   ProvinceFindRegencyQueries,
 } from './province.dto';
 import { ProvinceService } from './province.service';
+import { PaginatedReturn } from '@/common/interceptor/paginate.interceptor';
+import { ApiPaginatedResponse } from '@/common/decorator/api-paginated-response.decorator';
 
 @ApiTags('Province')
 @Controller('provinces')
@@ -45,14 +47,15 @@ export class ProvinceController {
     type: 'string',
     example: 'code',
   })
-  @ApiDataResponse({
+  @ApiPaginatedResponse({
     model: Province,
-    multiple: true,
     description: 'Returns array of province.',
   })
   @ApiBadRequestResponse({ description: 'If there are invalid query values.' })
   @Get()
-  async find(@Query() queries?: ProvinceFindQueries): Promise<Province[]> {
+  async find(
+    @Query() queries?: ProvinceFindQueries,
+  ): Promise<PaginatedReturn<Province>> {
     return this.provinceService.find(queries);
   }
 
