@@ -22,6 +22,8 @@ import {
   DistrictFindVillageQueries,
 } from './district.dto';
 import { DistrictService } from './district.service';
+import { ApiPaginatedResponse } from '@/common/decorator/api-paginated-response.decorator';
+import { PaginatedReturn } from '@/common/interceptor/paginate.interceptor';
 
 @ApiTags('District')
 @Controller('districts')
@@ -36,14 +38,15 @@ export class DistrictController {
     type: 'string',
     example: 'code',
   })
-  @ApiDataResponse({
+  @ApiPaginatedResponse({
     model: District,
-    multiple: true,
     description: 'Returns array of district.',
   })
   @ApiBadRequestResponse({ description: 'If there are invalid query values.' })
   @Get()
-  async find(@Query() queries?: DistrictFindQueries): Promise<District[]> {
+  async find(
+    @Query() queries?: DistrictFindQueries,
+  ): Promise<PaginatedReturn<District>> {
     return this.districtService.find(queries);
   }
 

@@ -4,6 +4,7 @@ import { SortQuery } from '@/sort/sort.dto';
 import { ApiProperty, IntersectionType, PickType } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumberString, Length } from 'class-validator';
 import { VillageSortQuery } from '../village/village.dto';
+import { PaginationQuery } from '@/common/dto/pagination.dto';
 
 export class District {
   @IsNotEmpty()
@@ -33,6 +34,7 @@ export class DistrictSortQuery extends SortQuery {
 export class DistrictFindQueries extends IntersectionType(
   PickType(District, ['name'] as const),
   DistrictSortQuery,
+  PaginationQuery,
 ) {}
 
 export class DistrictFindByCodeParams extends PickType(District, [
