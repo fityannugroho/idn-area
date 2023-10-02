@@ -46,6 +46,9 @@ export class RegencyFindDistrictParams extends PickType(Regency, [
   'code',
 ] as const) {}
 
-export class RegencyFindDistrictQueries extends DistrictSortQuery {}
+export class RegencyFindDistrictQueries extends IntersectionType(
+  DistrictSortQuery,
+  PaginationQuery,
+) {}
 
 export class RegencyFindIslandsQueries extends IslandSortQuery {}

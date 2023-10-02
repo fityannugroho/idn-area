@@ -208,43 +208,41 @@ describe('RegencyService', () => {
   });
 
   describe('findDistricts', () => {
+    const getPaginatorOptions = (testCode: string) => ({
+      model: 'District',
+      paginate: { page: undefined, limit: undefined },
+      args: { where: { regencyCode: testCode }, orderBy: { code: 'asc' } },
+    });
+
     it('should return all districts in a regency', async () => {
       const testCode = '1101';
       const expectedDistricts = districts.filter(
         (d) => d.regencyCode === testCode,
       );
 
-      const findUniqueSpy = vitest
-        .spyOn(prismaService.regency, 'findUnique')
-        .mockReturnValue({
-          districts: vitest.fn().mockResolvedValue(expectedDistricts),
-        } as any);
+      const paginatorSpy = vitest
+        .spyOn(prismaService, 'paginator')
+        .mockResolvedValue({ data: [...expectedDistricts] });
 
       const result = await service.findDistricts(testCode);
 
-      expect(findUniqueSpy).toHaveBeenCalledTimes(1);
-      expect(findUniqueSpy).toHaveBeenCalledWith({
-        where: { code: testCode },
-      });
-      expect(result).toEqual(expectedDistricts);
+      expect(paginatorSpy).toHaveBeenCalledTimes(1);
+      expect(paginatorSpy).toHaveBeenCalledWith(getPaginatorOptions(testCode));
+      expect(result.data).toEqual(expectedDistricts);
     });
 
-    it('should return null if there is no match regency code', async () => {
+    it('should return empty array if there is no match regency code', async () => {
       const testCode = '9999';
 
-      const findUniqueSpy = vitest
-        .spyOn(prismaService.regency, 'findUnique')
-        .mockReturnValue({
-          districts: vitest.fn().mockResolvedValue(null),
-        } as any);
+      const paginatorSpy = vitest
+        .spyOn(prismaService, 'paginator')
+        .mockResolvedValue({ data: [] });
 
       const result = await service.findDistricts(testCode);
 
-      expect(findUniqueSpy).toHaveBeenCalledTimes(1);
-      expect(findUniqueSpy).toHaveBeenCalledWith({
-        where: { code: testCode },
-      });
-      expect(result).toBeNull();
+      expect(paginatorSpy).toHaveBeenCalledTimes(1);
+      expect(paginatorSpy).toHaveBeenCalledWith(getPaginatorOptions(testCode));
+      expect(result.data).toEqual([]);
     });
 
     it.todo('should sort districts by name in ascending order', async () => {

@@ -144,12 +144,12 @@ describe('RegencyController', () => {
     });
 
     it('should return all districts in the matching regency', async () => {
-      const testDistricts = await controller.findDistricts({
+      const { data } = await controller.findDistricts({
         code: testRegencyCode,
       });
 
-      expect(testDistricts).toEqual(
-        expect.arrayContaining([
+      for (const district of data) {
+        expect(district).toEqual(
           expect.objectContaining({
             code: expect.stringMatching(
               new RegExp(`^${testRegencyCode}\\d{2}$`),
@@ -157,9 +157,10 @@ describe('RegencyController', () => {
             name: expect.any(String),
             regencyCode: testRegencyCode,
           }),
-        ]),
-      );
-      expect(testDistricts).toHaveLength(expectedDistricts.length);
+        );
+      }
+
+      expect(data).toHaveLength(expectedDistricts.length);
     });
 
     it('should throw NotFoundException if there is no matching regency', async () => {
@@ -169,23 +170,23 @@ describe('RegencyController', () => {
     });
 
     it('should return all districts in the matching regency sorted by name ascending', async () => {
-      const testDistricts = await controller.findDistricts(
+      const { data } = await controller.findDistricts(
         { code: testRegencyCode },
         { sortBy: 'name', sortOrder: SortOrder.ASC },
       );
 
-      expect(getValues(testDistricts, 'code')).toEqual(
+      expect(getValues(data, 'code')).toEqual(
         getValues(sortArray(expectedDistricts, 'name'), 'code'),
       );
     });
 
     it('should return all districts in the matching regency sorted by name descending', async () => {
-      const testDistricts = await controller.findDistricts(
+      const { data } = await controller.findDistricts(
         { code: testRegencyCode },
         { sortBy: 'name', sortOrder: SortOrder.DESC },
       );
 
-      expect(getValues(testDistricts, 'code')).toEqual(
+      expect(getValues(data, 'code')).toEqual(
         getValues(sortArray(expectedDistricts, 'name', SortOrder.DESC), 'code'),
       );
     });

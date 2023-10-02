@@ -45,7 +45,7 @@ export class MockRegencyService {
       (district) => district.regencyCode === regencyCode,
     );
 
-    return Promise.resolve(sortArray(res, sortBy, sortOrder));
+    return Promise.resolve({ data: sortArray(res, sortBy, sortOrder) });
   }
 
   async findIslands(
