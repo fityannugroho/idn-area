@@ -92,8 +92,6 @@ describe('RegencyService', () => {
       model: 'Regency',
       paginate: { limit: undefined, page: undefined },
       args: {},
-      pathTemplate: '/regencies',
-      params: { sortBy: undefined, sortOrder: undefined },
     };
 
     it('should return all regencies ', async () => {
@@ -152,7 +150,6 @@ describe('RegencyService', () => {
       expect(paginatorSpy).toHaveBeenCalledWith({
         ...paginatorOptions,
         args: { orderBy: { name: 'asc' } },
-        params: { sortBy: 'name' },
       });
       expect(result.data).toEqual(expectedRegencies);
     });
@@ -172,7 +169,6 @@ describe('RegencyService', () => {
       expect(findManySpy).toHaveBeenCalledWith({
         ...paginatorOptions,
         args: { orderBy: { name: 'desc' } },
-        params: { sortBy: 'name', sortOrder: 'desc' },
       });
       expect(result.data).toEqual(expectedRegencies);
     });

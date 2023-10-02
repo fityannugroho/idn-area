@@ -8,11 +8,14 @@ import {
 
 // See issue: https://stackoverflow.com/questions/69462870/how-to-replace-object-with-recordstring-unknown
 export type PaginationMeta = {
-  first: string;
-  last: string;
-  current: string | null;
-  previous: string | null;
-  next: string | null;
+  total: number;
+  pages: {
+    first: number;
+    last: number;
+    current: number | null;
+    previous: number | null;
+    next: number | null;
+  };
 };
 
 export type PaginatedReturn<T> = WrappedData<T[], PaginationMeta>;

@@ -38,11 +38,13 @@ type Options<Model extends Type<any>> = {
  * - `meta` (object, optional)
  *    - `total` (number)
  *    - `pagination` (object)
- *       - `first` (string)
- *       - `last` (string)
- *       - `current` (string or null)
- *       - `previous` (string or null)
- *       - `next` (string or null)
+ *       - `total` (number)
+ *       - `pages` (object)
+ *         - `first` (number)
+ *         - `last` (number)
+ *         - `current` (number or null)
+ *         - `previous` (number or null)
+ *         - `next` (number or null)
  *
  * This decorator will also add `ApiExtraModels` and `ApiOkResponse` decorator
  * to generate the swagger documentation.
@@ -68,15 +70,36 @@ export const ApiPaginatedResponse = <Model extends Type<any>>(
           meta: {
             type: 'object',
             properties: {
-              total: { type: 'number' },
+              total: { type: 'number', description: 'The total data returned' },
               pagination: {
                 type: 'object',
                 properties: {
-                  first: { type: 'string' },
-                  last: { type: 'string' },
-                  current: { type: 'string', nullable: true },
-                  previous: { type: 'string', nullable: true },
-                  next: { type: 'string', nullable: true },
+                  total: {
+                    type: 'number',
+                    description: 'The total data that match the query',
+                  },
+                  pages: {
+                    type: 'object',
+                    properties: {
+                      first: { type: 'number', description: 'The first page' },
+                      last: { type: 'number', description: 'The last page' },
+                      current: {
+                        type: 'number',
+                        nullable: true,
+                        description: 'The current page',
+                      },
+                      previous: {
+                        type: 'number',
+                        nullable: true,
+                        description: 'The previous page',
+                      },
+                      next: {
+                        type: 'number',
+                        nullable: true,
+                        description: 'The next page',
+                      },
+                    },
+                  },
                 },
               },
             },

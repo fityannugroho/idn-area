@@ -11,7 +11,6 @@ import {
   Regency,
   Village,
 } from '@prisma/client';
-import urlcat from 'urlcat';
 
 export type Models = keyof typeof Prisma.ModelName;
 
@@ -41,8 +40,6 @@ export type PaginatorOptions<T extends Models> = {
   model: T;
   paginate: PaginationQuery;
   args?: FunctionType<T>['count']['args'];
-  pathTemplate?: string;
-  params?: Record<string, string | number | null>;
 };
 
 export type MethodDelegate<T extends Models> = {
@@ -76,23 +73,17 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
 
     const totalPage = Math.ceil(total / limit);
 
-    const generateEndpoint = (page: number) => {
-      return urlcat('', options.pathTemplate ?? '/', {
-        page,
-        limit,
-        ...options.params,
-      });
-    };
-
     return {
       data,
       meta: {
-        first: generateEndpoint(1),
-        last: generateEndpoint(totalPage),
-        current: page > totalPage ? null : generateEndpoint(page),
-        previous:
-          page > 1 && page <= totalPage ? generateEndpoint(page - 1) : null,
-        next: page < totalPage ? generateEndpoint(page + 1) : null,
+        total,
+        pages: {
+          first: 1,
+          last: totalPage,
+          current: page > totalPage ? null : page,
+          previous: page > 1 && page <= totalPage ? page - 1 : null,
+          next: page < totalPage ? page + 1 : null,
+        },
       },
     };
   }

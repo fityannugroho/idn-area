@@ -31,7 +31,6 @@ export class RegencyService implements CommonService<Regency> {
 
     return this.prisma.paginator({
       model: 'Regency',
-      pathTemplate: '/regencies',
       args: {
         ...(name && {
           where: {
@@ -47,7 +46,6 @@ export class RegencyService implements CommonService<Regency> {
           orderBy: this.sorter.object({ sortBy, sortOrder }),
         }),
       },
-      params: { sortBy, sortOrder },
       paginate: { page, limit },
     });
   }

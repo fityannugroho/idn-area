@@ -90,11 +90,8 @@ describe('PrismaService', () => {
       expect(result).toEqual({
         data: provinces,
         meta: {
-          first: expect.any(String),
-          last: expect.any(String),
-          current: expect.any(String),
-          previous: null,
-          next: null,
+          total: provinces.length,
+          pages: { first: 1, last: 1, current: 1, previous: null, next: null },
         },
       });
     });
@@ -114,11 +111,8 @@ describe('PrismaService', () => {
       expect(result).toEqual({
         data: provinces,
         meta: {
-          first: expect.stringContaining('page=1'),
-          last: expect.stringContaining('page=3'),
-          current: expect.stringContaining('page=1'),
-          previous: null,
-          next: expect.stringContaining('page=2'),
+          total: provinces.length,
+          pages: { first: 1, last: 3, current: 1, previous: null, next: 2 },
         },
       });
     });
@@ -138,11 +132,8 @@ describe('PrismaService', () => {
       expect(result).toEqual({
         data: provinces,
         meta: {
-          first: expect.stringContaining('page=1'),
-          last: expect.stringContaining('page=3'),
-          current: expect.stringContaining('page=2'),
-          previous: expect.stringContaining('page=1'),
-          next: expect.stringContaining('page=3'),
+          total: provinces.length,
+          pages: { first: 1, last: 3, current: 2, previous: 1, next: 3 },
         },
       });
     });
@@ -162,11 +153,8 @@ describe('PrismaService', () => {
       expect(result).toEqual({
         data: provinces,
         meta: {
-          first: expect.stringContaining('page=1'),
-          last: expect.stringContaining('page=3'),
-          current: expect.stringContaining('page=3'),
-          previous: expect.stringContaining('page=2'),
-          next: null,
+          total: provinces.length,
+          pages: { first: 1, last: 3, current: 3, previous: 2, next: null },
         },
       });
     });
@@ -186,11 +174,14 @@ describe('PrismaService', () => {
       expect(result).toEqual({
         data: provinces,
         meta: {
-          first: expect.stringContaining('page=1'),
-          last: expect.stringContaining('page=3'),
-          current: null,
-          previous: null,
-          next: null,
+          total: provinces.length,
+          pages: {
+            first: 1,
+            last: 3,
+            current: null,
+            previous: null,
+            next: null,
+          },
         },
       });
     });
@@ -208,37 +199,6 @@ describe('PrismaService', () => {
 
       expect(service.province.count).toHaveBeenCalledTimes(1);
       expect(service.province.count).toHaveBeenCalledWith(args);
-    });
-
-    test('call with `pathTemplate`', async () => {
-      const result = await service.paginator({
-        ...requiredOptions,
-        pathTemplate: '/provinces',
-      });
-
-      expect(result.meta).toEqual({
-        first: expect.stringContaining('/provinces?page=1'),
-        last: expect.stringContaining('/provinces'),
-        current: expect.stringContaining('/provinces'),
-        previous: null,
-        next: null,
-      });
-    });
-
-    test('call with `params`', async () => {
-      const result = await service.paginator({
-        ...requiredOptions,
-        paginate: { page: 2, limit: 2 },
-        params: { sortOrder: 'desc' },
-      });
-
-      expect(result.meta).toEqual({
-        first: expect.stringContaining('page=1&limit=2&sortOrder=desc'),
-        last: expect.stringContaining('page=3&limit=2&sortOrder=desc'),
-        current: expect.stringContaining('page=2&limit=2&sortOrder=desc'),
-        previous: expect.stringContaining('page=1&limit=2&sortOrder=desc'),
-        next: expect.stringContaining('page=3&limit=2&sortOrder=desc'),
-      });
     });
   });
 });

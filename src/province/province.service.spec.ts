@@ -54,8 +54,6 @@ describe('ProvinceService', () => {
       model: 'Province',
       paginate: { limit: undefined, page: undefined },
       args: {},
-      pathTemplate: '/provinces',
-      params: {},
     };
 
     it('should return all provinces', async () => {
@@ -116,7 +114,6 @@ describe('ProvinceService', () => {
       expect(paginatorSpy).toHaveBeenCalledWith({
         ...paginatorOptions,
         args: { orderBy: { name: 'asc' } },
-        params: { sortBy: 'name', sortOrder: undefined },
       });
       expect(result.data).toEqual(expectedProvinces);
     });
@@ -139,7 +136,6 @@ describe('ProvinceService', () => {
       expect(paginatorSpy).toHaveBeenCalledWith({
         ...paginatorOptions,
         args: { orderBy: { name: 'desc' } },
-        params: { sortBy: 'name', sortOrder: 'desc' },
       });
       expect(result.data).toEqual(expectedProvinces);
     });
@@ -185,8 +181,6 @@ describe('ProvinceService', () => {
       model: 'Regency',
       paginate: { limit: undefined, page: undefined },
       args: { where: { provinceCode: testCode }, orderBy: { code: 'asc' } },
-      pathTemplate: '/provinces/:code/regencies',
-      params: { code: testCode, sortBy: undefined, sortOrder: undefined },
     });
 
     it('should return all regencies in a province', async () => {

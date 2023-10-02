@@ -46,8 +46,6 @@ export class ProvinceService implements CommonService<Province> {
         }),
       },
       paginate: { limit: options?.limit, page: options?.page },
-      pathTemplate: '/provinces',
-      params: { sortBy: options?.sortBy, sortOrder: options?.sortOrder },
     });
   }
 
@@ -78,8 +76,6 @@ export class ProvinceService implements CommonService<Province> {
         orderBy: this.regencyService.sorter.object({ sortBy, sortOrder }),
       },
       paginate: { page, limit },
-      pathTemplate: '/provinces/:code/regencies',
-      params: { code: provinceCode, sortBy, sortOrder },
     });
   }
 }
