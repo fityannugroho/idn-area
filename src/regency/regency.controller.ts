@@ -107,9 +107,8 @@ export class RegencyController {
     type: 'string',
     example: 'code',
   })
-  @ApiDataResponse({
+  @ApiPaginatedResponse({
     model: Island,
-    multiple: true,
     description: 'Returns array of islands.',
   })
   @ApiBadRequestResponse({ description: 'If the `code` is invalid.' })
@@ -121,12 +120,10 @@ export class RegencyController {
     @Param() { code }: RegencyFindByCodeParams,
     @Query() queries?: RegencyFindIslandsQueries,
   ) {
-    const islands = await this.regencyService.findIslands(code, queries);
-
-    if (islands === null) {
+    if ((await this.regencyService.findByCode(code)) === null) {
       throw new NotFoundException(`There are no regency with code '${code}'`);
     }
 
-    return islands;
+    return this.regencyService.findIslands(code, queries);
   }
 }

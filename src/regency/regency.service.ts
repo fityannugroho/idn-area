@@ -84,27 +84,25 @@ export class RegencyService implements CommonService<Regency> {
   /**
    * Find all islands in a regency.
    * @param regencyCode The regency code.
-   * @param sortOptions The sort options.
-   * @returns An array of islands, or `null` if there are no match regency.
+   * @param options The options.
+   * @returns Paginated array of islands, `[]` if there are no match regency.
    */
   async findIslands(
     regencyCode: string,
-    sortOptions?: SortOptions<Island>,
-  ): Promise<IslandDTO[] | null> {
-    const islands = await this.prisma.regency
-      .findUnique({
-        where: {
-          code: regencyCode,
-        },
-      })
-      .islands({
-        orderBy: this.islandService.sorter.object(sortOptions),
-      });
+    options?: SortOptions<Island> & PaginationQuery,
+  ): Promise<PaginatedReturn<IslandDTO>> {
+    const { page, limit, sortBy, sortOrder } = options ?? {};
 
-    if (!islands) {
-      return null;
-    }
+    const res = await this.prisma.paginator({
+      model: 'Island',
+      paginate: { page, limit },
+      args: {
+        where: { regencyCode },
+        orderBy: this.islandService.sorter.object({ sortBy, sortOrder }),
+      },
+    });
 
-    return islands.map(this.islandService.addDecimalCoordinate);
+    const islands = res.data.map(this.islandService.addDecimalCoordinate);
+    return { ...res, data: islands };
   }
 }

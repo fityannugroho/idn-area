@@ -51,4 +51,7 @@ export class RegencyFindDistrictQueries extends IntersectionType(
   PaginationQuery,
 ) {}
 
-export class RegencyFindIslandsQueries extends IslandSortQuery {}
+export class RegencyFindIslandsQueries extends IntersectionType(
+  IslandSortQuery,
+  PaginationQuery,
+) {}

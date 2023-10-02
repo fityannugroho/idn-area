@@ -274,42 +274,46 @@ describe('RegencyService', () => {
     });
   });
 
-  describe.todo('findIslands', () => {
+  describe('findIslands', () => {
+    const getPaginatorOptions = (testCode: string) => ({
+      model: 'Island',
+      paginate: { page: undefined, limit: undefined },
+      args: { where: { regencyCode: testCode }, orderBy: { code: 'asc' } },
+    });
+
     it('should return all islands in a regency', async () => {
       const testCode = '1101';
       const expectedIslands = islands.filter((i) => i.regencyCode === testCode);
 
-      const findUniqueSpy = vitest
-        .spyOn(prismaService.regency, 'findUnique')
-        .mockReturnValue({
-          islands: vitest.fn().mockResolvedValue(expectedIslands),
-        } as any);
+      const paginatorSpy = vitest
+        .spyOn(prismaService, 'paginator')
+        .mockResolvedValue({ data: expectedIslands });
 
       const result = await service.findIslands(testCode);
 
-      expect(findUniqueSpy).toHaveBeenCalledTimes(1);
-      expect(findUniqueSpy).toHaveBeenCalledWith({
-        where: { code: testCode },
-      });
-      expect(result).toEqual(expectedIslands);
+      expect(paginatorSpy).toHaveBeenCalledTimes(1);
+      expect(paginatorSpy).toHaveBeenCalledWith(getPaginatorOptions(testCode));
+
+      for (const island of result.data) {
+        expect(island).toEqual({
+          ...island,
+          latitude: expect.any(Number),
+          longitude: expect.any(Number),
+        });
+      }
     });
 
-    it('should return null if there is no match regency code', async () => {
+    it('should return empty array if there is no match regency code', async () => {
       const testCode = '9999';
-
-      const findUniqueSpy = vitest
-        .spyOn(prismaService.regency, 'findUnique')
-        .mockReturnValue({
-          islands: vitest.fn().mockResolvedValue(null),
-        } as any);
+      const paginatorSpy = vitest
+        .spyOn(prismaService, 'paginator')
+        .mockResolvedValue({ data: [] });
 
       const result = await service.findIslands(testCode);
 
-      expect(findUniqueSpy).toHaveBeenCalledTimes(1);
-      expect(findUniqueSpy).toHaveBeenCalledWith({
-        where: { code: testCode },
-      });
-      expect(result).toBeNull();
+      expect(paginatorSpy).toHaveBeenCalledTimes(1);
+      expect(paginatorSpy).toHaveBeenCalledWith(getPaginatorOptions(testCode));
+      expect(result.data).toEqual([]);
     });
 
     it.todo('should sort islands by code in ascending order ', async () => {

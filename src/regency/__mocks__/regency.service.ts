@@ -63,6 +63,6 @@ export class MockRegencyService {
         return { ...island, latitude, longitude };
       });
 
-    return Promise.resolve(sortArray(res, sortBy, sortOrder));
+    return Promise.resolve({ data: sortArray(res, sortBy, sortOrder) });
   }
 }
