@@ -1,4 +1,5 @@
 import { CommonService, FindOptions } from '@/common/common.service';
+import { PaginatedReturn } from '@/common/interceptor/paginate.interceptor';
 import { convertCoordinate } from '@/common/utils/coordinate';
 import { getDBProviderFeatures } from '@/common/utils/db';
 import { Island as IslandDTO } from '@/island/island.dto';
@@ -27,24 +28,27 @@ export class IslandService implements CommonService<Island> {
     return { ...island, latitude, longitude };
   }
 
-  async find(options?: FindOptions<Island>): Promise<Island[]> {
-    return this.prisma.island.findMany({
-      ...(options?.name && {
-        where: {
-          name: {
-            contains: options.name,
-            ...(getDBProviderFeatures()?.filtering?.insensitive && {
-              mode: 'insensitive',
-            }),
+  async find(options?: FindOptions<Island>): Promise<PaginatedReturn<Island>> {
+    const { page, limit, name, sortBy, sortOrder } = options ?? {};
+
+    return this.prisma.paginator({
+      model: 'Island',
+      paginate: { page, limit },
+      args: {
+        ...(name && {
+          where: {
+            name: {
+              contains: options.name,
+              ...(getDBProviderFeatures()?.filtering?.insensitive && {
+                mode: 'insensitive',
+              }),
+            },
           },
-        },
-      }),
-      ...((options?.sortBy || options?.sortOrder) && {
-        orderBy: this.sorter.object({
-          sortBy: options?.sortBy,
-          sortOrder: options?.sortOrder,
         }),
-      }),
+        ...((sortBy || sortOrder) && {
+          orderBy: this.sorter.object({ sortBy, sortOrder }),
+        }),
+      },
     });
   }
 

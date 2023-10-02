@@ -19,6 +19,8 @@ import {
   IslandFindQueries,
 } from './island.dto';
 import { IslandService } from './island.service';
+import { ApiPaginatedResponse } from '@/common/decorator/api-paginated-response.decorator';
+import { PaginatedReturn } from '@/common/interceptor/paginate.interceptor';
 
 @ApiTags('Island')
 @Controller('islands')
@@ -35,17 +37,21 @@ export class IslandController {
     type: 'string',
     example: 'code',
   })
-  @ApiDataResponse({
+  @ApiPaginatedResponse({
     model: Island,
-    multiple: true,
     description: 'Returns array of islands.',
   })
   @ApiBadRequestResponse({ description: 'If there are invalid query values.' })
   @Get()
-  async find(@Query() queries?: IslandFindQueries): Promise<Island[]> {
-    return (await this.islandService.find(queries)).map((island) =>
+  async find(
+    @Query() queries?: IslandFindQueries,
+  ): Promise<PaginatedReturn<Island>> {
+    const res = await this.islandService.find(queries);
+    const islands = res.data.map((island) =>
       this.islandService.addDecimalCoordinate(island),
     );
+
+    return { ...res, data: islands };
   }
 
   @ApiOperation({ description: 'Get an island by its code.' })

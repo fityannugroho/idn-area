@@ -10,6 +10,7 @@ import {
 } from 'class-validator';
 import { EqualsAny } from '../common/decorator/EqualsAny';
 import { IsNotSymbol } from '../common/decorator/IsNotSymbol';
+import { PaginationQuery } from '@/common/dto/pagination.dto';
 
 export class Island {
   @IsNotEmpty()
@@ -61,6 +62,7 @@ export class IslandSortQuery extends SortQuery {
 export class IslandFindQueries extends IntersectionType(
   PickType(Island, ['name'] as const),
   IslandSortQuery,
+  PaginationQuery,
 ) {}
 
 export class IslandFindByCodeParams extends PickType(Island, [

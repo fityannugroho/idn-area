@@ -65,40 +65,49 @@ describe('IslandService', () => {
   });
 
   describe('find', () => {
+    const paginatorOptions = {
+      model: 'Island',
+      paginate: { page: undefined, limit: undefined },
+      args: {},
+    };
+
     it('should return all islands', async () => {
-      const findManySpy = vitest
-        .spyOn(prismaService.island, 'findMany')
-        .mockResolvedValue([...islands]);
+      const paginatorSpy = vitest
+        .spyOn(prismaService, 'paginator')
+        .mockResolvedValue({ data: [...islands] });
 
       const result = await service.find();
 
-      expect(findManySpy).toHaveBeenCalledTimes(1);
-      expect(findManySpy).toHaveBeenCalledWith({});
-      expect(result).toEqual(islands);
+      expect(paginatorSpy).toHaveBeenCalledTimes(1);
+      expect(paginatorSpy).toHaveBeenCalledWith(paginatorOptions);
+      expect(result.data).toEqual(islands);
     });
 
     it('should return filtered islands by name', async () => {
       const testName = 'Batu';
       const expectedIslands = islands.filter((i) => i.name.includes(testName));
 
-      const findManySpy = vitest
-        .spyOn(prismaService.island, 'findMany')
-        .mockResolvedValue(expectedIslands);
+      const paginatorSpy = vitest
+        .spyOn(prismaService, 'paginator')
+        .mockResolvedValue({ data: expectedIslands });
 
       const result = await service.find({ name: testName });
 
-      expect(findManySpy).toHaveBeenCalledTimes(1);
-      expect(findManySpy).toHaveBeenCalledWith({
-        where: {
-          name: {
-            contains: testName,
-            ...(getDBProviderFeatures()?.filtering?.insensitive && {
-              mode: 'insensitive',
-            }),
+      expect(paginatorSpy).toHaveBeenCalledTimes(1);
+      expect(paginatorSpy).toHaveBeenCalledWith({
+        ...paginatorOptions,
+        args: {
+          where: {
+            name: {
+              contains: testName,
+              ...(getDBProviderFeatures()?.filtering?.insensitive && {
+                mode: 'insensitive',
+              }),
+            },
           },
         },
       });
-      expect(result).toEqual(expectedIslands);
+      expect(result.data).toEqual(expectedIslands);
     });
 
     it('should return islands sorted by name in ascending order', async () => {
@@ -106,22 +115,18 @@ describe('IslandService', () => {
         a.name.localeCompare(b.name),
       );
 
-      const findManySpy = vitest
-        .spyOn(prismaService.island, 'findMany')
-        .mockResolvedValue(expectedIslands);
+      const paginatorSpy = vitest
+        .spyOn(prismaService, 'paginator')
+        .mockResolvedValue({ data: expectedIslands });
 
-      const result = await service.find({
-        sortBy: 'name',
-        sortOrder: 'asc',
-      });
+      const result = await service.find({ sortBy: 'name', sortOrder: 'asc' });
 
-      expect(findManySpy).toHaveBeenCalledTimes(1);
-      expect(findManySpy).toHaveBeenCalledWith({
-        orderBy: {
-          name: 'asc',
-        },
+      expect(paginatorSpy).toHaveBeenCalledTimes(1);
+      expect(paginatorSpy).toHaveBeenCalledWith({
+        ...paginatorOptions,
+        args: { orderBy: { name: 'asc' } },
       });
-      expect(result).toEqual(expectedIslands);
+      expect(result.data).toEqual(expectedIslands);
     });
 
     it('should return islands sorted by name in descending order', async () => {
@@ -129,22 +134,18 @@ describe('IslandService', () => {
         b.name.localeCompare(a.name),
       );
 
-      const findManySpy = vitest
-        .spyOn(prismaService.island, 'findMany')
-        .mockResolvedValue(expectedIslands);
+      const paginatorSpy = vitest
+        .spyOn(prismaService, 'paginator')
+        .mockResolvedValue({ data: expectedIslands });
 
-      const result = await service.find({
-        sortBy: 'name',
-        sortOrder: 'desc',
-      });
+      const result = await service.find({ sortBy: 'name', sortOrder: 'desc' });
 
-      expect(findManySpy).toHaveBeenCalledTimes(1);
-      expect(findManySpy).toHaveBeenCalledWith({
-        orderBy: {
-          name: 'desc',
-        },
+      expect(paginatorSpy).toHaveBeenCalledTimes(1);
+      expect(paginatorSpy).toHaveBeenCalledWith({
+        ...paginatorOptions,
+        args: { orderBy: { name: 'desc' } },
       });
-      expect(result).toEqual(expectedIslands);
+      expect(result.data).toEqual(expectedIslands);
     });
   });
 
