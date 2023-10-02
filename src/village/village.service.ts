@@ -1,4 +1,5 @@
 import { CommonService, FindOptions } from '@/common/common.service';
+import { PaginatedReturn } from '@/common/interceptor/paginate.interceptor';
 import { getDBProviderFeatures } from '@/common/utils/db';
 import { PrismaService } from '@/prisma/prisma.service';
 import { SortService } from '@/sort/sort.service';
@@ -16,24 +17,29 @@ export class VillageService implements CommonService<Village> {
     });
   }
 
-  async find(options?: FindOptions<Village>): Promise<Village[]> {
-    return this.prisma.village.findMany({
-      ...(options?.name && {
-        where: {
-          name: {
-            contains: options?.name,
-            ...(getDBProviderFeatures()?.filtering?.insensitive && {
-              mode: 'insensitive',
-            }),
+  async find(
+    options?: FindOptions<Village>,
+  ): Promise<PaginatedReturn<Village>> {
+    const { name, page, limit, sortBy, sortOrder } = options ?? {};
+
+    return this.prisma.paginator({
+      model: 'Village',
+      paginate: { page, limit },
+      args: {
+        ...(name && {
+          where: {
+            name: {
+              contains: name,
+              ...(getDBProviderFeatures()?.filtering?.insensitive && {
+                mode: 'insensitive',
+              }),
+            },
           },
-        },
-      }),
-      ...((options?.sortBy || options?.sortOrder) && {
-        orderBy: this.sorter.object({
-          sortBy: options?.sortBy,
-          sortOrder: options?.sortOrder,
         }),
-      }),
+        ...((sortBy || sortOrder) && {
+          orderBy: this.sorter.object({ sortBy, sortOrder }),
+        }),
+      },
     });
   }
 

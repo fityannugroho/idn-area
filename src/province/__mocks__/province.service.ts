@@ -21,7 +21,7 @@ export class MockProvinceService {
       province.name.toLowerCase().includes(name.toLowerCase()),
     );
 
-    return Promise.resolve(sortArray(res, sortBy, sortOrder));
+    return Promise.resolve({ data: sortArray(res, sortBy, sortOrder) });
   }
 
   async findByCode(code: string) {
@@ -34,14 +34,10 @@ export class MockProvinceService {
     provinceCode: string,
     { sortBy = 'code', sortOrder }: SortOptions<Regency> = {},
   ) {
-    if (this.provinces.every((p) => p.code !== provinceCode)) {
-      return null;
-    }
-
     const res = this.regencies.filter(
       (regency) => regency.provinceCode === provinceCode,
     );
 
-    return Promise.resolve(sortArray(res, sortBy, sortOrder));
+    return Promise.resolve({ data: sortArray(res, sortBy, sortOrder) });
   }
 }

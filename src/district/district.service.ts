@@ -1,4 +1,6 @@
 import { CommonService, FindOptions } from '@/common/common.service';
+import { PaginationQuery } from '@/common/dto/pagination.dto';
+import { PaginatedReturn } from '@/common/interceptor/paginate.interceptor';
 import { getDBProviderFeatures } from '@/common/utils/db';
 import { PrismaService } from '@/prisma/prisma.service';
 import { SortOptions, SortService } from '@/sort/sort.service';
@@ -20,24 +22,29 @@ export class DistrictService implements CommonService<District> {
     });
   }
 
-  async find(options?: FindOptions<District>): Promise<District[]> {
-    return this.prisma.district.findMany({
-      ...(options?.name && {
-        where: {
-          name: {
-            contains: options?.name,
-            ...(getDBProviderFeatures()?.filtering?.insensitive && {
-              mode: 'insensitive',
-            }),
+  async find(
+    options?: FindOptions<District>,
+  ): Promise<PaginatedReturn<District>> {
+    const { name, page, limit, sortBy, sortOrder } = options ?? {};
+
+    return this.prisma.paginator({
+      model: 'District',
+      paginate: { page, limit },
+      args: {
+        ...(name && {
+          where: {
+            name: {
+              contains: name,
+              ...(getDBProviderFeatures()?.filtering?.insensitive && {
+                mode: 'insensitive',
+              }),
+            },
           },
-        },
-      }),
-      ...((options?.sortBy || options?.sortOrder) && {
-        orderBy: this.sorter.object({
-          sortBy: options?.sortBy,
-          sortOrder: options?.sortOrder,
         }),
-      }),
+        ...((sortBy || sortOrder) && {
+          orderBy: this.sorter.object({ sortBy, sortOrder }),
+        }),
+      },
     });
   }
 
@@ -50,21 +57,24 @@ export class DistrictService implements CommonService<District> {
   /**
    * Find all villages in a district.
    * @param districtCode The district code.
-   * @param sortOptions The sort options.
-   * @returns An array of villages, or `null` if there are no match district.
+   * @param options The options.
+   * @returns Paginated array of villages, `[]` if there are no match district.
    */
   async findVillages(
     districtCode: string,
-    sortOptions?: SortOptions<Village>,
-  ): Promise<Village[] | null> {
-    return this.prisma.district
-      .findUnique({
-        where: {
-          code: districtCode,
-        },
-      })
-      .villages({
-        orderBy: this.villageService.sorter.object(sortOptions),
-      });
+    options?: SortOptions<Village> & PaginationQuery,
+  ): Promise<PaginatedReturn<Village>> {
+    const { page, limit, sortBy, sortOrder } = options ?? {};
+
+    return this.prisma.paginator({
+      model: 'Village',
+      paginate: { page, limit },
+      args: {
+        where: { districtCode },
+        ...((sortBy || sortOrder) && {
+          orderBy: this.villageService.sorter.object({ sortBy, sortOrder }),
+        }),
+      },
+    });
   }
 }

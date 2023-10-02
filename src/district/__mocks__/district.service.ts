@@ -21,7 +21,7 @@ export class MockDistrictService {
       district.name.toLowerCase().includes(name.toLowerCase()),
     );
 
-    return Promise.resolve(sortArray(res, sortBy, sortOrder));
+    return Promise.resolve({ data: sortArray(res, sortBy, sortOrder) });
   }
 
   async findByCode(code: string) {
@@ -42,6 +42,6 @@ export class MockDistrictService {
       (village) => village.districtCode === districtCode,
     );
 
-    return Promise.resolve(sortArray(res, sortBy, sortOrder));
+    return Promise.resolve({ data: sortArray(res, sortBy, sortOrder) });
   }
 }

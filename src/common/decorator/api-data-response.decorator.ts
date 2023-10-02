@@ -7,7 +7,7 @@ import {
 import { ApiExtraModels, ApiOkResponse, getSchemaPath } from '@nestjs/swagger';
 import { TransformInterceptor } from '../interceptor/transform.interceptor';
 
-interface Options<Model extends Type<any>> {
+type Options<Model extends Type<any>> = {
   /**
    * The model that will be used in the response.
    */
@@ -27,7 +27,7 @@ interface Options<Model extends Type<any>> {
    * @default 'OK'
    */
   message?: string | string[];
-}
+};
 
 /**
  * This decorator will wrap the response into `data` property.

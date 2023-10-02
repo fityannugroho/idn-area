@@ -50,16 +50,22 @@ describe('ProvinceService', () => {
   });
 
   describe('find', () => {
+    const paginatorOptions = {
+      model: 'Province',
+      paginate: { limit: undefined, page: undefined },
+      args: {},
+    };
+
     it('should return all provinces', async () => {
-      const findManySpy = vitest
-        .spyOn(prismaService.province, 'findMany')
-        .mockResolvedValue([...provinces]);
+      const paginatorSpy = vitest
+        .spyOn(prismaService, 'paginator')
+        .mockResolvedValue({ data: [...provinces] });
 
       const result = await provinceService.find();
 
-      expect(findManySpy).toHaveBeenCalledTimes(1);
-      expect(findManySpy).toHaveBeenCalledWith({});
-      expect(result).toEqual(provinces);
+      expect(paginatorSpy).toHaveBeenCalledTimes(1);
+      expect(paginatorSpy).toHaveBeenCalledWith(paginatorOptions);
+      expect(result.data).toEqual(provinces);
     });
 
     it('should return provinces filtered by name', async () => {
@@ -68,24 +74,27 @@ describe('ProvinceService', () => {
         p.name.toLowerCase().includes(testName),
       );
 
-      const findManySpy = vitest
-        .spyOn(prismaService.province, 'findMany')
-        .mockResolvedValue(expectedProvinces);
+      const paginatorSpy = vitest
+        .spyOn(prismaService, 'paginator')
+        .mockResolvedValue({ data: expectedProvinces });
 
       const result = await provinceService.find({ name: testName });
 
-      expect(findManySpy).toHaveBeenCalledTimes(1);
-      expect(findManySpy).toHaveBeenCalledWith({
-        where: {
-          name: {
-            contains: testName,
-            ...(getDBProviderFeatures()?.filtering?.insensitive && {
-              mode: 'insensitive',
-            }),
+      expect(paginatorSpy).toHaveBeenCalledTimes(1);
+      expect(paginatorSpy).toHaveBeenCalledWith({
+        ...paginatorOptions,
+        args: {
+          where: {
+            name: {
+              contains: testName,
+              ...(getDBProviderFeatures()?.filtering?.insensitive && {
+                mode: 'insensitive',
+              }),
+            },
           },
         },
       });
-      expect(result).toEqual(expectedProvinces);
+      expect(result.data).toEqual(expectedProvinces);
     });
 
     it('should return provinces sorted by name in ascending order', async () => {
@@ -93,19 +102,20 @@ describe('ProvinceService', () => {
         a.name.localeCompare(b.name),
       );
 
-      const findManySpy = vitest
-        .spyOn(prismaService.province, 'findMany')
-        .mockResolvedValue(expectedProvinces);
+      const paginatorSpy = vitest
+        .spyOn(prismaService, 'paginator')
+        .mockResolvedValue({ data: expectedProvinces });
 
       const result = await provinceService.find({
         sortBy: 'name',
       });
 
-      expect(findManySpy).toHaveBeenCalledTimes(1);
-      expect(findManySpy).toHaveBeenCalledWith({
-        orderBy: { name: 'asc' },
+      expect(paginatorSpy).toHaveBeenCalledTimes(1);
+      expect(paginatorSpy).toHaveBeenCalledWith({
+        ...paginatorOptions,
+        args: { orderBy: { name: 'asc' } },
       });
-      expect(result).toEqual(expectedProvinces);
+      expect(result.data).toEqual(expectedProvinces);
     });
 
     it('should return provinces sorted by name in descending order', async () => {
@@ -113,20 +123,21 @@ describe('ProvinceService', () => {
         b.name.localeCompare(a.name),
       );
 
-      const findManySpy = vitest
-        .spyOn(prismaService.province, 'findMany')
-        .mockResolvedValue(expectedProvinces);
+      const paginatorSpy = vitest
+        .spyOn(prismaService, 'paginator')
+        .mockResolvedValue({ data: expectedProvinces });
 
       const result = await provinceService.find({
         sortBy: 'name',
         sortOrder: 'desc',
       });
 
-      expect(findManySpy).toHaveBeenCalledTimes(1);
-      expect(findManySpy).toHaveBeenCalledWith({
-        orderBy: { name: 'desc' },
+      expect(paginatorSpy).toHaveBeenCalledTimes(1);
+      expect(paginatorSpy).toHaveBeenCalledWith({
+        ...paginatorOptions,
+        args: { orderBy: { name: 'desc' } },
       });
-      expect(result).toEqual(expectedProvinces);
+      expect(result.data).toEqual(expectedProvinces);
     });
   });
 
@@ -166,43 +177,42 @@ describe('ProvinceService', () => {
   });
 
   describe('findRegencies', () => {
+    const getPaginatorOptions = (testCode: string) => ({
+      model: 'Regency',
+      paginate: { limit: undefined, page: undefined },
+      args: { where: { provinceCode: testCode }, orderBy: { code: 'asc' } },
+    });
+
     it('should return all regencies in a province', async () => {
       const testCode = '11';
       const expectedRegencies = regencies.filter(
         (r) => r.provinceCode === testCode,
       );
 
-      const findUniqueSpy = vitest
-        .spyOn(prismaService.province, 'findUnique')
-        .mockReturnValue({
-          regencies: vitest.fn().mockResolvedValue(expectedRegencies),
-        } as any);
+      const paginatorSpy = vitest
+        .spyOn(prismaService, 'paginator')
+        .mockResolvedValue({ data: expectedRegencies });
 
       const result = await provinceService.findRegencies(testCode);
 
-      expect(findUniqueSpy).toHaveBeenCalledTimes(1);
-      expect(findUniqueSpy).toHaveBeenCalledWith({
-        where: { code: testCode },
-      });
-      expect(result).toEqual(expectedRegencies);
+      expect(paginatorSpy).toHaveBeenCalledTimes(1);
+      expect(paginatorSpy).toHaveBeenCalledWith(getPaginatorOptions(testCode));
+
+      expect(result.data).toEqual(expectedRegencies);
     });
 
-    it('should return null if there is no match province code', async () => {
+    it('should return empty array if there is no match province code', async () => {
       const testCode = '9999';
 
-      const findUniqueSpy = vitest
-        .spyOn(prismaService.province, 'findUnique')
-        .mockReturnValue({
-          regencies: vitest.fn().mockResolvedValue(null),
-        } as any);
+      const paginatorSpy = vitest
+        .spyOn(prismaService, 'paginator')
+        .mockResolvedValue({ data: [] });
 
       const result = await provinceService.findRegencies(testCode);
 
-      expect(findUniqueSpy).toHaveBeenCalledTimes(1);
-      expect(findUniqueSpy).toHaveBeenCalledWith({
-        where: { code: testCode },
-      });
-      expect(result).toBeNull();
+      expect(paginatorSpy).toHaveBeenCalledTimes(1);
+      expect(paginatorSpy).toHaveBeenCalledWith(getPaginatorOptions(testCode));
+      expect(result.data).toEqual([]);
     });
 
     it.todo(

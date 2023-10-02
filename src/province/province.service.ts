@@ -1,4 +1,6 @@
 import { CommonService, FindOptions } from '@/common/common.service';
+import { PaginationQuery } from '@/common/dto/pagination.dto';
+import { PaginatedReturn } from '@/common/interceptor/paginate.interceptor';
 import { getDBProviderFeatures } from '@/common/utils/db';
 import { PrismaService } from '@/prisma/prisma.service';
 import { RegencyService } from '@/regency/regency.service';
@@ -20,24 +22,30 @@ export class ProvinceService implements CommonService<Province> {
     });
   }
 
-  async find(options?: FindOptions<Province>): Promise<Province[]> {
-    return this.prisma.province.findMany({
-      ...(options?.name && {
-        where: {
-          name: {
-            contains: options.name,
-            ...(getDBProviderFeatures()?.filtering?.insensitive && {
-              mode: 'insensitive',
-            }),
+  async find(
+    options?: FindOptions<Province>,
+  ): Promise<PaginatedReturn<Province>> {
+    return this.prisma.paginator({
+      model: 'Province',
+      args: {
+        ...(options?.name && {
+          where: {
+            name: {
+              contains: options.name,
+              ...(getDBProviderFeatures()?.filtering?.insensitive && {
+                mode: 'insensitive',
+              }),
+            },
           },
-        },
-      }),
-      ...((options?.sortBy || options?.sortOrder) && {
-        orderBy: this.sorter.object({
-          sortBy: options?.sortBy,
-          sortOrder: options?.sortOrder,
         }),
-      }),
+        ...((options?.sortBy || options?.sortOrder) && {
+          orderBy: this.sorter.object({
+            sortBy: options?.sortBy,
+            sortOrder: options?.sortOrder,
+          }),
+        }),
+      },
+      paginate: { limit: options?.limit, page: options?.page },
     });
   }
 
@@ -52,21 +60,22 @@ export class ProvinceService implements CommonService<Province> {
   /**
    * Find all regencies in a province.
    * @param provinceCode The province code.
-   * @param sortOptions The sort options.
-   * @returns An array of regencies, or `null` if there are no match province.
+   * @param options The options.
+   * @returns An array of regencies, `[]` if there are no match province.
    */
   async findRegencies(
     provinceCode: string,
-    sortOptions?: SortOptions<Regency>,
-  ): Promise<Regency[] | null> {
-    return this.prisma.province
-      .findUnique({
-        where: {
-          code: provinceCode,
-        },
-      })
-      .regencies({
-        orderBy: this.regencyService.sorter.object(sortOptions),
-      });
+    options?: SortOptions<Regency> & PaginationQuery,
+  ): Promise<PaginatedReturn<Regency>> {
+    const { sortBy, sortOrder, page, limit } = options ?? {};
+
+    return this.prisma.paginator({
+      model: 'Regency',
+      args: {
+        where: { provinceCode },
+        orderBy: this.regencyService.sorter.object({ sortBy, sortOrder }),
+      },
+      paginate: { page, limit },
+    });
   }
 }

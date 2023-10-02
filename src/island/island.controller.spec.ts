@@ -44,10 +44,10 @@ describe('IslandController', () => {
     });
 
     it('should return all islands', async () => {
-      const testIslands = await controller.find();
+      const { data } = await controller.find();
 
-      expect(testIslands).toEqual(
-        expect.arrayContaining([
+      for (const island of data) {
+        expect(island).toEqual(
           expect.objectContaining({
             code: expect.any(String),
             coordinate: expect.any(String),
@@ -56,18 +56,20 @@ describe('IslandController', () => {
             latitude: expect.any(Number),
             longitude: expect.any(Number),
             name: expect.any(String),
-            regencyCode: expect.any(String),
+            regencyCode:
+              island.regencyCode === null ? null : expect.any(String),
           }),
-        ]),
-      );
-      expect(testIslands).toHaveLength(islands.length);
+        );
+      }
+
+      expect(data).toHaveLength(islands.length);
     });
 
     it('should return islands filtered by name', async () => {
-      const testIslands = await controller.find({ name: testIslandName });
+      const { data } = await controller.find({ name: testIslandName });
 
-      expect(testIslands).toEqual(
-        expect.arrayContaining([
+      for (const island of data) {
+        expect(island).toEqual(
           expect.objectContaining({
             code: expect.any(String),
             coordinate: expect.any(String),
@@ -76,38 +78,40 @@ describe('IslandController', () => {
             latitude: expect.any(Number),
             longitude: expect.any(Number),
             name: expect.stringMatching(new RegExp(testIslandName, 'i')),
-            regencyCode: expect.any(String),
+            regencyCode:
+              island.regencyCode === null ? null : expect.any(String),
           }),
-        ]),
-      );
-      expect(testIslands).toHaveLength(filteredIslandsByName.length);
+        );
+      }
+
+      expect(data).toHaveLength(filteredIslandsByName.length);
     });
 
     it('should return empty array if there is no island with the corresponding name', async () => {
-      const testIslands = await controller.find({ name: 'unknown island' });
+      const { data } = await controller.find({ name: 'unknown island' });
 
-      expect(testIslands).toEqual([]);
+      expect(data).toEqual([]);
     });
 
     it('should return islands filtered and sorted by name ascending', async () => {
-      const testIslands = await controller.find({
+      const { data } = await controller.find({
         name: testIslandName,
         sortBy: 'name',
       });
 
-      expect(getValues(testIslands, 'code')).toEqual(
+      expect(getValues(data, 'code')).toEqual(
         getValues(sortArray(filteredIslandsByName, 'name'), 'code'),
       );
     });
 
     it('should return islands filtered and sorted by name descending', async () => {
-      const testIslands = await controller.find({
+      const { data } = await controller.find({
         name: testIslandName,
         sortBy: 'name',
         sortOrder: SortOrder.DESC,
       });
 
-      expect(getValues(testIslands, 'code')).toEqual(
+      expect(getValues(data, 'code')).toEqual(
         getValues(
           sortArray(filteredIslandsByName, 'name', SortOrder.DESC),
           'code',
@@ -116,24 +120,24 @@ describe('IslandController', () => {
     });
 
     it('should return islands filtered by name and sorted by coordinate ascending', async () => {
-      const testIslands = await controller.find({
+      const { data } = await controller.find({
         name: testIslandName,
         sortBy: 'coordinate',
       });
 
-      expect(getValues(testIslands, 'code')).toEqual(
+      expect(getValues(data, 'code')).toEqual(
         getValues(sortArray(filteredIslandsByName, 'coordinate'), 'code'),
       );
     });
 
     it('should return islands filtered by name and sorted by coordinate descending', async () => {
-      const testIslands = await controller.find({
+      const { data } = await controller.find({
         name: testIslandName,
         sortBy: 'coordinate',
         sortOrder: SortOrder.DESC,
       });
 
-      expect(getValues(testIslands, 'code')).toEqual(
+      expect(getValues(data, 'code')).toEqual(
         getValues(
           sortArray(filteredIslandsByName, 'coordinate', SortOrder.DESC),
           'code',

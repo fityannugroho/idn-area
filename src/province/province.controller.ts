@@ -22,6 +22,8 @@ import {
   ProvinceFindRegencyQueries,
 } from './province.dto';
 import { ProvinceService } from './province.service';
+import { PaginatedReturn } from '@/common/interceptor/paginate.interceptor';
+import { ApiPaginatedResponse } from '@/common/decorator/api-paginated-response.decorator';
 
 @ApiTags('Province')
 @Controller('provinces')
@@ -45,14 +47,15 @@ export class ProvinceController {
     type: 'string',
     example: 'code',
   })
-  @ApiDataResponse({
+  @ApiPaginatedResponse({
     model: Province,
-    multiple: true,
     description: 'Returns array of province.',
   })
   @ApiBadRequestResponse({ description: 'If there are invalid query values.' })
   @Get()
-  async find(@Query() queries?: ProvinceFindQueries): Promise<Province[]> {
+  async find(
+    @Query() queries?: ProvinceFindQueries,
+  ): Promise<PaginatedReturn<Province>> {
     return this.provinceService.find(queries);
   }
 
@@ -84,9 +87,8 @@ export class ProvinceController {
     type: 'string',
     example: 'code',
   })
-  @ApiDataResponse({
+  @ApiPaginatedResponse({
     model: Regency,
-    multiple: true,
     description: 'Returns array of regencies.',
   })
   @ApiBadRequestResponse({ description: 'If the `code` is invalid.' })
@@ -97,13 +99,11 @@ export class ProvinceController {
   async findRegencies(
     @Param() { code }: ProvinceFindRegencyParams,
     @Query() queries?: ProvinceFindRegencyQueries,
-  ): Promise<Regency[]> {
-    const regencies = await this.provinceService.findRegencies(code, queries);
-
-    if (regencies === null) {
+  ): Promise<PaginatedReturn<Regency>> {
+    if ((await this.provinceService.findByCode(code)) === null) {
       throw new NotFoundException(`There are no province with code '${code}'`);
     }
 
-    return regencies;
+    return this.provinceService.findRegencies(code, queries);
   }
 }

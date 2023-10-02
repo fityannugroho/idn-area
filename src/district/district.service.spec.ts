@@ -36,16 +36,22 @@ describe('DistrictService', () => {
   });
 
   describe('find', () => {
+    const paginatorOptions = {
+      model: 'District',
+      paginate: { page: undefined, limit: undefined },
+      args: {},
+    };
+
     it('should return all districts', async () => {
-      const findManySpy = vitest
-        .spyOn(prismaService.district, 'findMany')
-        .mockResolvedValue([...districts]);
+      const paginatorSpy = vitest
+        .spyOn(prismaService, 'paginator')
+        .mockResolvedValue({ data: [...districts] });
 
       const result = await service.find();
 
-      expect(findManySpy).toHaveBeenCalledTimes(1);
-      expect(findManySpy).toHaveBeenCalledWith({});
-      expect(result).toEqual(districts);
+      expect(paginatorSpy).toHaveBeenCalledTimes(1);
+      expect(paginatorSpy).toHaveBeenCalledWith(paginatorOptions);
+      expect(result.data).toEqual(districts);
     });
 
     it('should return districts filtered by name', async () => {
@@ -54,24 +60,27 @@ describe('DistrictService', () => {
         d.name.includes(testName),
       );
 
-      const findManySpy = vitest
-        .spyOn(prismaService.district, 'findMany')
-        .mockResolvedValue(expectedDistricts);
+      const paginatorSpy = vitest
+        .spyOn(prismaService, 'paginator')
+        .mockResolvedValue({ data: expectedDistricts });
 
       const result = await service.find({ name: testName });
 
-      expect(findManySpy).toHaveBeenCalledTimes(1);
-      expect(findManySpy).toHaveBeenCalledWith({
-        where: {
-          name: {
-            contains: testName,
-            ...(getDBProviderFeatures()?.filtering?.insensitive && {
-              mode: 'insensitive',
-            }),
+      expect(paginatorSpy).toHaveBeenCalledTimes(1);
+      expect(paginatorSpy).toHaveBeenCalledWith({
+        ...paginatorOptions,
+        args: {
+          where: {
+            name: {
+              contains: testName,
+              ...(getDBProviderFeatures()?.filtering?.insensitive && {
+                mode: 'insensitive',
+              }),
+            },
           },
         },
       });
-      expect(result).toEqual(expectedDistricts);
+      expect(result.data).toEqual(expectedDistricts);
     });
 
     it('should return districts sorted by name in ascending order', async () => {
@@ -79,19 +88,18 @@ describe('DistrictService', () => {
         a.name.localeCompare(b.name),
       );
 
-      const findManySpy = vitest
-        .spyOn(prismaService.district, 'findMany')
-        .mockResolvedValue(expectedDistricts);
+      const paginatorSpy = vitest
+        .spyOn(prismaService, 'paginator')
+        .mockResolvedValue({ data: expectedDistricts });
 
       const result = await service.find({ sortBy: 'name', sortOrder: 'asc' });
 
-      expect(findManySpy).toHaveBeenCalledTimes(1);
-      expect(findManySpy).toHaveBeenCalledWith({
-        orderBy: {
-          name: 'asc',
-        },
+      expect(paginatorSpy).toHaveBeenCalledTimes(1);
+      expect(paginatorSpy).toHaveBeenCalledWith({
+        ...paginatorOptions,
+        args: { orderBy: { name: 'asc' } },
       });
-      expect(result).toEqual(expectedDistricts);
+      expect(result.data).toEqual(expectedDistricts);
     });
 
     it('should return districts sorted by name in descending order', async () => {
@@ -99,19 +107,18 @@ describe('DistrictService', () => {
         b.name.localeCompare(a.name),
       );
 
-      const findManySpy = vitest
-        .spyOn(prismaService.district, 'findMany')
-        .mockResolvedValue(expectedDistricts);
+      const paginatorSpy = vitest
+        .spyOn(prismaService, 'paginator')
+        .mockResolvedValue({ data: expectedDistricts });
 
       const result = await service.find({ sortBy: 'name', sortOrder: 'desc' });
 
-      expect(findManySpy).toHaveBeenCalledTimes(1);
-      expect(findManySpy).toHaveBeenCalledWith({
-        orderBy: {
-          name: 'desc',
-        },
+      expect(paginatorSpy).toHaveBeenCalledTimes(1);
+      expect(paginatorSpy).toHaveBeenCalledWith({
+        ...paginatorOptions,
+        args: { orderBy: { name: 'desc' } },
       });
-      expect(result).toEqual(expectedDistricts);
+      expect(result.data).toEqual(expectedDistricts);
     });
   });
 
@@ -155,22 +162,24 @@ describe('DistrictService', () => {
   });
 
   describe('findVillages', async () => {
-    it('should return null if there is no match district code', async () => {
+    const getPaginatorOptions = (testCode: string) => ({
+      model: 'Village',
+      paginate: { page: undefined, limit: undefined },
+      args: { where: { districtCode: testCode } },
+    });
+
+    it('should return empty array if there is no match district code', async () => {
       const testCode = '999999';
 
-      const findUniqueSpy = vitest
-        .spyOn(prismaService.district, 'findUnique')
-        .mockReturnValueOnce({
-          villages: vitest.fn().mockResolvedValue(null),
-        } as any);
+      const paginatorSpy = vitest
+        .spyOn(prismaService, 'paginator')
+        .mockResolvedValue({ data: [] });
 
       const result = await service.findVillages(testCode);
 
-      expect(findUniqueSpy).toHaveBeenCalledTimes(1);
-      expect(findUniqueSpy).toHaveBeenCalledWith({
-        where: { code: testCode },
-      });
-      expect(result).toBeNull();
+      expect(paginatorSpy).toHaveBeenCalledTimes(1);
+      expect(paginatorSpy).toHaveBeenCalledWith(getPaginatorOptions(testCode));
+      expect(result.data).toEqual([]);
     });
 
     it('should return all villages in a district', async () => {
@@ -179,19 +188,15 @@ describe('DistrictService', () => {
         (v) => v.districtCode === testCode,
       );
 
-      const findUniqueSpy = vitest
-        .spyOn(prismaService.district, 'findUnique')
-        .mockReturnValueOnce({
-          villages: vitest.fn().mockResolvedValue(expectedVillages),
-        } as any);
+      const paginatorSpy = vitest
+        .spyOn(prismaService, 'paginator')
+        .mockResolvedValue({ data: expectedVillages });
 
       const result = await service.findVillages(testCode);
 
-      expect(findUniqueSpy).toHaveBeenCalledTimes(1);
-      expect(findUniqueSpy).toHaveBeenCalledWith({
-        where: { code: testCode },
-      });
-      expect(result).toEqual(expectedVillages);
+      expect(paginatorSpy).toHaveBeenCalledTimes(1);
+      expect(paginatorSpy).toHaveBeenCalledWith(getPaginatorOptions(testCode));
+      expect(result.data).toEqual(expectedVillages);
     });
   });
 });

@@ -49,64 +49,66 @@ describe('DistrictController', () => {
     });
 
     it('should return all districts', async () => {
-      const testDistricts = await controller.find();
+      const { data } = await controller.find();
 
-      expect(testDistricts).toEqual(
-        expect.arrayContaining([
+      for (const district of data) {
+        expect(district).toEqual(
           expect.objectContaining({
             code: expect.any(String),
             name: expect.any(String),
             regencyCode: expect.any(String),
           }),
-        ]),
-      );
-      expect(testDistricts).toHaveLength(districts.length);
+        );
+      }
+
+      expect(data).toHaveLength(districts.length);
     });
 
     it('should return districts filtered by name', async () => {
-      const testDistricts = await controller.find({
+      const { data } = await controller.find({
         name: testDistrictName,
       });
 
-      expect(testDistricts).toEqual(
-        expect.arrayContaining([
+      for (const district of data) {
+        expect(district).toEqual(
           expect.objectContaining({
             code: expect.any(String),
             name: expect.stringMatching(new RegExp(testDistrictName, 'i')),
             regencyCode: expect.any(String),
           }),
-        ]),
-      );
-      expect(testDistricts).toHaveLength(filteredDistrictsByName.length);
+        );
+      }
+
+      expect(data).toHaveLength(filteredDistrictsByName.length);
     });
 
     it('should return empty array if there is no district with the corresponding name', async () => {
-      const testDistricts = await controller.find({
+      const { data } = await controller.find({
         name: 'unknown district',
       });
 
-      expect(testDistricts).toEqual([]);
+      expect(data).toEqual([]);
     });
 
     it('should return districts filtered and sorted by name ascending', async () => {
-      const testDistricts = await controller.find({
+      const { data } = await controller.find({
         name: testDistrictName,
         sortBy: 'name',
       });
 
-      expect(getValues(testDistricts, 'code')).toEqual(
+      expect(getValues(data, 'code')).toEqual(
         getValues(sortArray(filteredDistrictsByName, 'name'), 'code'),
       );
     });
 
     it('should return districts filtered and sorted by name descending', async () => {
-      const testDistricts = await controller.find({
+      const { data } = await controller.find({
         name: testDistrictName,
         sortBy: 'name',
         sortOrder: SortOrder.DESC,
       });
 
-      expect(getValues(testDistricts, 'code')).toEqual(
+      expect(getValues(data, 'code')).toEqual(
         getValues(
           sortArray(filteredDistrictsByName, 'name', SortOrder.DESC),
           'code',
@@ -144,12 +146,12 @@ describe('DistrictController', () => {
     });
 
     it('should return all villages in the matching district', async () => {
-      const testVillages = await controller.findVillages({
+      const { data } = await controller.findVillages({
         code: testDistrictCode,
       });
 
-      expect(testVillages).toEqual(
-        expect.arrayContaining([
+      for (const village of data) {
+        expect(village).toEqual(
           expect.objectContaining({
             code: expect.stringMatching(
               new RegExp(`^${testDistrictCode}\\d{4}$`),
@@ -157,9 +159,10 @@ describe('DistrictController', () => {
             name: expect.any(String),
             districtCode: testDistrictCode,
           }),
-        ]),
-      );
-      expect(testVillages).toHaveLength(
+        );
+      }
+
+      expect(data).toHaveLength(
         villages.filter((p) => p.districtCode === testDistrictCode).length,
       );
     });
@@ -171,23 +174,23 @@ describe('DistrictController', () => {
     });
 
     it('should return all villages in the matching district sorted by name ascending', async () => {
-      const testVillages = await controller.findVillages(
+      const { data } = await controller.findVillages(
         { code: testDistrictCode },
         { sortBy: 'name' },
       );
 
-      expect(getValues(testVillages, 'code')).toEqual(
+      expect(getValues(data, 'code')).toEqual(
         getValues(sortArray(expectedVillages, 'name'), 'code'),
       );
     });
 
     it('should return all villages in the matching district sorted by name descending', async () => {
-      const testVillages = await controller.findVillages(
+      const { data } = await controller.findVillages(
         { code: testDistrictCode },
         { sortBy: 'name', sortOrder: SortOrder.DESC },
       );
 
-      expect(getValues(testVillages, 'code')).toEqual(
+      expect(getValues(data, 'code')).toEqual(
         getValues(sortArray(expectedVillages, 'name', SortOrder.DESC), 'code'),
       );
     });

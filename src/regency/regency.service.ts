@@ -1,4 +1,6 @@
 import { CommonService, FindOptions } from '@/common/common.service';
+import { PaginationQuery } from '@/common/dto/pagination.dto';
+import { PaginatedReturn } from '@/common/interceptor/paginate.interceptor';
 import { getDBProviderFeatures } from '@/common/utils/db';
 import { DistrictService } from '@/district/district.service';
 import { Island as IslandDTO } from '@/island/island.dto';
@@ -23,24 +25,29 @@ export class RegencyService implements CommonService<Regency> {
     });
   }
 
-  async find(options?: FindOptions<Regency>): Promise<Regency[]> {
-    return this.prisma.regency.findMany({
-      ...(options?.name && {
-        where: {
-          name: {
-            contains: options.name,
-            ...(getDBProviderFeatures()?.filtering?.insensitive && {
-              mode: 'insensitive',
-            }),
+  async find(
+    options?: FindOptions<Regency>,
+  ): Promise<PaginatedReturn<Regency>> {
+    const { name, sortBy, sortOrder, page, limit } = options ?? {};
+
+    return this.prisma.paginator({
+      model: 'Regency',
+      args: {
+        ...(name && {
+          where: {
+            name: {
+              contains: options.name,
+              ...(getDBProviderFeatures()?.filtering?.insensitive && {
+                mode: 'insensitive',
+              }),
+            },
           },
-        },
-      }),
-      ...((options?.sortBy || options?.sortOrder) && {
-        orderBy: this.sorter.object({
-          sortBy: options?.sortBy,
-          sortOrder: options?.sortOrder,
         }),
-      }),
+        ...((sortBy || sortOrder) && {
+          orderBy: this.sorter.object({ sortBy, sortOrder }),
+        }),
+      },
+      paginate: { page, limit },
     });
   }
 
@@ -55,48 +62,47 @@ export class RegencyService implements CommonService<Regency> {
   /**
    * Find all districts in a regency.
    * @param regencyCode The regency code.
-   * @param sortOptions The sort options.
-   * @returns An array of districts, or `null` if there are no match regency.
+   * @param options The options.
+   * @returns Paginated array of districts, `[]` if there are no match regency.
    */
   async findDistricts(
     regencyCode: string,
-    sortOptions?: SortOptions<District>,
-  ): Promise<District[] | null> {
-    return this.prisma.regency
-      .findUnique({
-        where: {
-          code: regencyCode,
-        },
-      })
-      .districts({
-        orderBy: this.districtService.sorter.object(sortOptions),
-      });
+    options?: SortOptions<District> & PaginationQuery,
+  ): Promise<PaginatedReturn<District>> {
+    const { page, limit, sortBy, sortOrder } = options ?? {};
+
+    return this.prisma.paginator({
+      model: 'District',
+      args: {
+        where: { regencyCode },
+        orderBy: this.districtService.sorter.object({ sortBy, sortOrder }),
+      },
+      paginate: { page, limit },
+    });
   }
 
   /**
    * Find all islands in a regency.
    * @param regencyCode The regency code.
-   * @param sortOptions The sort options.
-   * @returns An array of islands, or `null` if there are no match regency.
+   * @param options The options.
+   * @returns Paginated array of islands, `[]` if there are no match regency.
    */
   async findIslands(
     regencyCode: string,
-    sortOptions?: SortOptions<Island>,
-  ): Promise<IslandDTO[] | null> {
-    const islands = await this.prisma.regency
-      .findUnique({
-        where: {
-          code: regencyCode,
-        },
-      })
-      .islands({
-        orderBy: this.islandService.sorter.object(sortOptions),
-      });
+    options?: SortOptions<Island> & PaginationQuery,
+  ): Promise<PaginatedReturn<IslandDTO>> {
+    const { page, limit, sortBy, sortOrder } = options ?? {};
 
-    if (!islands) {
-      return null;
-    }
+    const res = await this.prisma.paginator({
+      model: 'Island',
+      paginate: { page, limit },
+      args: {
+        where: { regencyCode },
+        orderBy: this.islandService.sorter.object({ sortBy, sortOrder }),
+      },
+    });
 
-    return islands.map(this.islandService.addDecimalCoordinate);
+    const islands = res.data.map(this.islandService.addDecimalCoordinate);
+    return { ...res, data: islands };
   }
 }

@@ -24,7 +24,7 @@ export class MockRegencyService {
       regency.name.toLowerCase().includes(name.toLowerCase()),
     );
 
-    return Promise.resolve(sortArray(res, sortBy, sortOrder));
+    return Promise.resolve({ data: sortArray(res, sortBy, sortOrder) });
   }
 
   async findByCode(code: string) {
@@ -45,7 +45,7 @@ export class MockRegencyService {
       (district) => district.regencyCode === regencyCode,
     );
 
-    return Promise.resolve(sortArray(res, sortBy, sortOrder));
+    return Promise.resolve({ data: sortArray(res, sortBy, sortOrder) });
   }
 
   async findIslands(
@@ -63,6 +63,6 @@ export class MockRegencyService {
         return { ...island, latitude, longitude };
       });
 
-    return Promise.resolve(sortArray(res, sortBy, sortOrder));
+    return Promise.resolve({ data: sortArray(res, sortBy, sortOrder) });
   }
 }
