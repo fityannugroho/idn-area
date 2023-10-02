@@ -77,9 +77,8 @@ export class DistrictController {
     type: 'string',
     example: 'code',
   })
-  @ApiDataResponse({
+  @ApiPaginatedResponse({
     model: Village,
-    multiple: true,
     description: 'Returns array of villages.',
   })
   @ApiBadRequestResponse({ description: 'If the `code` is invalid.' })
@@ -90,13 +89,11 @@ export class DistrictController {
   async findVillages(
     @Param() { code }: DistrictFindVillageParams,
     @Query() queries?: DistrictFindVillageQueries,
-  ): Promise<Village[]> {
-    const villages = await this.districtService.findVillages(code, queries);
-
-    if (villages === null) {
+  ): Promise<PaginatedReturn<Village>> {
+    if ((await this.districtService.findByCode(code)) === null) {
       throw new NotFoundException(`There are no district with code '${code}'`);
     }
 
-    return villages;
+    return this.districtService.findVillages(code, queries);
   }
 }

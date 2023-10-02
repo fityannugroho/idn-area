@@ -42,6 +42,6 @@ export class MockDistrictService {
       (village) => village.districtCode === districtCode,
     );
 
-    return Promise.resolve(sortArray(res, sortBy, sortOrder));
+    return Promise.resolve({ data: sortArray(res, sortBy, sortOrder) });
   }
 }

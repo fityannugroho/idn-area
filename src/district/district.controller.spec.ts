@@ -146,12 +146,12 @@ describe('DistrictController', () => {
     });
 
     it('should return all villages in the matching district', async () => {
-      const testVillages = await controller.findVillages({
+      const { data } = await controller.findVillages({
         code: testDistrictCode,
       });
 
-      expect(testVillages).toEqual(
-        expect.arrayContaining([
+      for (const village of data) {
+        expect(village).toEqual(
           expect.objectContaining({
             code: expect.stringMatching(
               new RegExp(`^${testDistrictCode}\\d{4}$`),
@@ -159,9 +159,10 @@ describe('DistrictController', () => {
             name: expect.any(String),
             districtCode: testDistrictCode,
           }),
-        ]),
-      );
-      expect(testVillages).toHaveLength(
+        );
+      }
+
+      expect(data).toHaveLength(
         villages.filter((p) => p.districtCode === testDistrictCode).length,
       );
     });
@@ -173,23 +174,23 @@ describe('DistrictController', () => {
     });
 
     it('should return all villages in the matching district sorted by name ascending', async () => {
-      const testVillages = await controller.findVillages(
+      const { data } = await controller.findVillages(
         { code: testDistrictCode },
         { sortBy: 'name' },
       );
 
-      expect(getValues(testVillages, 'code')).toEqual(
+      expect(getValues(data, 'code')).toEqual(
         getValues(sortArray(expectedVillages, 'name'), 'code'),
       );
     });
 
     it('should return all villages in the matching district sorted by name descending', async () => {
-      const testVillages = await controller.findVillages(
+      const { data } = await controller.findVillages(
         { code: testDistrictCode },
         { sortBy: 'name', sortOrder: SortOrder.DESC },
       );
 
-      expect(getValues(testVillages, 'code')).toEqual(
+      expect(getValues(data, 'code')).toEqual(
         getValues(sortArray(expectedVillages, 'name', SortOrder.DESC), 'code'),
       );
     });

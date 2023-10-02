@@ -45,4 +45,7 @@ export class DistrictFindVillageParams extends PickType(District, [
   'code',
 ] as const) {}
 
-export class DistrictFindVillageQueries extends VillageSortQuery {}
+export class DistrictFindVillageQueries extends IntersectionType(
+  VillageSortQuery,
+  PaginationQuery,
+) {}

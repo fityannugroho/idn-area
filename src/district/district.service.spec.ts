@@ -162,22 +162,24 @@ describe('DistrictService', () => {
   });
 
   describe('findVillages', async () => {
-    it('should return null if there is no match district code', async () => {
+    const getPaginatorOptions = (testCode: string) => ({
+      model: 'Village',
+      paginate: { page: undefined, limit: undefined },
+      args: { where: { districtCode: testCode } },
+    });
+
+    it('should return empty array if there is no match district code', async () => {
       const testCode = '999999';
 
-      const findUniqueSpy = vitest
-        .spyOn(prismaService.district, 'findUnique')
-        .mockReturnValueOnce({
-          villages: vitest.fn().mockResolvedValue(null),
-        } as any);
+      const paginatorSpy = vitest
+        .spyOn(prismaService, 'paginator')
+        .mockResolvedValue({ data: [] });
 
       const result = await service.findVillages(testCode);
 
-      expect(findUniqueSpy).toHaveBeenCalledTimes(1);
-      expect(findUniqueSpy).toHaveBeenCalledWith({
-        where: { code: testCode },
-      });
-      expect(result).toBeNull();
+      expect(paginatorSpy).toHaveBeenCalledTimes(1);
+      expect(paginatorSpy).toHaveBeenCalledWith(getPaginatorOptions(testCode));
+      expect(result.data).toEqual([]);
     });
 
     it('should return all villages in a district', async () => {
@@ -186,19 +188,15 @@ describe('DistrictService', () => {
         (v) => v.districtCode === testCode,
       );
 
-      const findUniqueSpy = vitest
-        .spyOn(prismaService.district, 'findUnique')
-        .mockReturnValueOnce({
-          villages: vitest.fn().mockResolvedValue(expectedVillages),
-        } as any);
+      const paginatorSpy = vitest
+        .spyOn(prismaService, 'paginator')
+        .mockResolvedValue({ data: expectedVillages });
 
       const result = await service.findVillages(testCode);
 
-      expect(findUniqueSpy).toHaveBeenCalledTimes(1);
-      expect(findUniqueSpy).toHaveBeenCalledWith({
-        where: { code: testCode },
-      });
-      expect(result).toEqual(expectedVillages);
+      expect(paginatorSpy).toHaveBeenCalledTimes(1);
+      expect(paginatorSpy).toHaveBeenCalledWith(getPaginatorOptions(testCode));
+      expect(result.data).toEqual(expectedVillages);
     });
   });
 });
