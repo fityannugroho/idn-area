@@ -29,16 +29,22 @@ describe('VillageService', () => {
   });
 
   describe('find', () => {
+    const paginatorOptions = {
+      model: 'Village',
+      paginate: { page: undefined, limit: undefined },
+      args: {},
+    };
+
     it('should return all villages', async () => {
-      const findManySpy = vitest
-        .spyOn(prismaService.village, 'findMany')
-        .mockResolvedValue([...villages]);
+      const paginatorSpy = vitest
+        .spyOn(prismaService, 'paginator')
+        .mockResolvedValue({ data: [...villages] });
 
       const result = await service.find();
 
-      expect(findManySpy).toHaveBeenCalledTimes(1);
-      expect(findManySpy).toHaveBeenCalledWith({});
-      expect(result).toEqual(villages);
+      expect(paginatorSpy).toHaveBeenCalledTimes(1);
+      expect(paginatorSpy).toHaveBeenCalledWith(paginatorOptions);
+      expect(result.data).toEqual(villages);
     });
 
     it('should return filtered villages by name', async () => {
@@ -47,24 +53,27 @@ describe('VillageService', () => {
         v.name.includes(testName),
       );
 
-      const findManySpy = vitest
-        .spyOn(prismaService.village, 'findMany')
-        .mockResolvedValue(expectedVillages);
+      const paginatorSpy = vitest
+        .spyOn(prismaService, 'paginator')
+        .mockResolvedValue({ data: expectedVillages });
 
       const result = await service.find({ name: testName });
 
-      expect(findManySpy).toHaveBeenCalledTimes(1);
-      expect(findManySpy).toHaveBeenCalledWith({
-        where: {
-          name: {
-            contains: testName,
-            ...(getDBProviderFeatures()?.filtering?.insensitive && {
-              mode: 'insensitive',
-            }),
+      expect(paginatorSpy).toHaveBeenCalledTimes(1);
+      expect(paginatorSpy).toHaveBeenCalledWith({
+        ...paginatorOptions,
+        args: {
+          where: {
+            name: {
+              contains: testName,
+              ...(getDBProviderFeatures()?.filtering?.insensitive && {
+                mode: 'insensitive',
+              }),
+            },
           },
         },
       });
-      expect(result).toEqual(expectedVillages);
+      expect(result.data).toEqual(expectedVillages);
     });
 
     it('should return all villages sorted by name in ascending order', async () => {
@@ -72,22 +81,20 @@ describe('VillageService', () => {
         a.name.localeCompare(b.name),
       );
 
-      const findManySpy = vitest
-        .spyOn(prismaService.village, 'findMany')
-        .mockResolvedValue(expectedVillages);
+      const paginatorSpy = vitest
+        .spyOn(prismaService, 'paginator')
+        .mockResolvedValue({ data: expectedVillages });
 
       const result = await service.find({ sortBy: 'name' });
-      const result2 = await service.find({
-        sortBy: 'name',
-        sortOrder: 'asc',
-      });
+      const result2 = await service.find({ sortBy: 'name', sortOrder: 'asc' });
 
-      expect(findManySpy).toHaveBeenCalledTimes(2);
-      expect(findManySpy).toHaveBeenCalledWith({
-        orderBy: { name: 'asc' },
+      expect(paginatorSpy).toHaveBeenCalledTimes(2);
+      expect(paginatorSpy).toHaveBeenCalledWith({
+        ...paginatorOptions,
+        args: { orderBy: { name: 'asc' } },
       });
       expect(result).toEqual(result2);
-      expect(result).toEqual(expectedVillages);
+      expect(result.data).toEqual(expectedVillages);
     });
 
     it('should return all villages sorted by name in descending order', async () => {
@@ -95,20 +102,18 @@ describe('VillageService', () => {
         .sort((a, b) => a.name.localeCompare(b.name))
         .reverse();
 
-      const findManySpy = vitest
-        .spyOn(prismaService.village, 'findMany')
-        .mockResolvedValue(expectedVillages);
+      const paginatorSpy = vitest
+        .spyOn(prismaService, 'paginator')
+        .mockResolvedValue({ data: expectedVillages });
 
-      const result = await service.find({
-        sortBy: 'name',
-        sortOrder: 'desc',
-      });
+      const result = await service.find({ sortBy: 'name', sortOrder: 'desc' });
 
-      expect(findManySpy).toHaveBeenCalledTimes(1);
-      expect(findManySpy).toHaveBeenCalledWith({
-        orderBy: { name: 'desc' },
+      expect(paginatorSpy).toHaveBeenCalledTimes(1);
+      expect(paginatorSpy).toHaveBeenCalledWith({
+        ...paginatorOptions,
+        args: { orderBy: { name: 'desc' } },
       });
-      expect(result).toEqual(expectedVillages);
+      expect(result.data).toEqual(expectedVillages);
     });
   });
 

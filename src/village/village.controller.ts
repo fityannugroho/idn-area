@@ -19,6 +19,8 @@ import {
   VillageFindQueries,
 } from './village.dto';
 import { VillageService } from './village.service';
+import { ApiPaginatedResponse } from '@/common/decorator/api-paginated-response.decorator';
+import { PaginatedReturn } from '@/common/interceptor/paginate.interceptor';
 
 @ApiTags('Village')
 @Controller('villages')
@@ -33,14 +35,15 @@ export class VillageController {
     type: 'string',
     example: 'code',
   })
-  @ApiDataResponse({
+  @ApiPaginatedResponse({
     model: Village,
-    multiple: true,
     description: 'Returns array of village.',
   })
   @ApiBadRequestResponse({ description: 'If there are invalid query values.' })
   @Get()
-  async find(@Query() queries?: VillageFindQueries): Promise<Village[]> {
+  async find(
+    @Query() queries?: VillageFindQueries,
+  ): Promise<PaginatedReturn<Village>> {
     return this.villageService.find(queries);
   }
 
