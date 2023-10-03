@@ -32,7 +32,7 @@ import { PaginatedReturn } from '@/common/interceptor/paginate.interceptor';
 export class RegencyController {
   constructor(private readonly regencyService: RegencyService) {}
 
-  @ApiOperation({ description: 'Get the regencies by its name.' })
+  @ApiOperation({ description: 'Get the regencies.' })
   @ApiQuery({
     name: 'sortBy',
     description: 'Sort by regency code or name.',

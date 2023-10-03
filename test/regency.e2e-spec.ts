@@ -13,9 +13,17 @@ describe('Regency (e2e)', () => {
     await tester.bootApp();
   });
 
-  describe(`GET ${baseUrl}?name={name}`, () => {
-    it('should return 400 if the `name` does not present', async () => {
-      await tester.expectBadRequest(`${baseUrl}`);
+  describe(`GET ${baseUrl}`, () => {
+    it('should return regencies', async () => {
+      const regencies = await tester.expectData<Regency[]>(baseUrl);
+
+      regencies.forEach((regency) => {
+        expect(regency).toEqual({
+          code: expect.stringMatching(regencyRegex.code),
+          name: expect.stringMatching(regencyRegex.name),
+          provinceCode: expect.stringMatching(regencyRegex.provinceCode),
+        });
+      });
     });
 
     it('should return 400 if the `name` is empty, less than 3 chars, more than 255 chars, or contains any symbols', async () => {

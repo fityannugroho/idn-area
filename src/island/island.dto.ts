@@ -1,5 +1,10 @@
 import { SortQuery } from '@/sort/sort.dto';
-import { ApiProperty, IntersectionType, PickType } from '@nestjs/swagger';
+import {
+  ApiProperty,
+  IntersectionType,
+  PartialType,
+  PickType,
+} from '@nestjs/swagger';
 import {
   IsBooleanString,
   IsNotEmpty,
@@ -38,7 +43,10 @@ export class Island {
   @IsNotEmpty()
   @IsNotSymbol("'-/")
   @Length(3, 255)
-  @ApiProperty({ example: 'Pulau Batukapal' })
+  @ApiProperty({
+    description: 'The island name',
+    example: 'Pulau Batukapal',
+  })
   name: string;
 
   @IsOptional()
@@ -60,7 +68,7 @@ export class IslandSortQuery extends SortQuery {
 }
 
 export class IslandFindQueries extends IntersectionType(
-  PickType(Island, ['name'] as const),
+  PartialType(PickType(Island, ['name'] as const)),
   IslandSortQuery,
   PaginationQuery,
 ) {}

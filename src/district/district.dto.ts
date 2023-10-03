@@ -1,7 +1,12 @@
 import { EqualsAny } from '@/common/decorator/EqualsAny';
 import { IsNotSymbol } from '@/common/decorator/IsNotSymbol';
 import { SortQuery } from '@/sort/sort.dto';
-import { ApiProperty, IntersectionType, PickType } from '@nestjs/swagger';
+import {
+  ApiProperty,
+  IntersectionType,
+  PartialType,
+  PickType,
+} from '@nestjs/swagger';
 import { IsNotEmpty, IsNumberString, Length } from 'class-validator';
 import { VillageSortQuery } from '../village/village.dto';
 import { PaginationQuery } from '@/common/dto/pagination.dto';
@@ -16,7 +21,7 @@ export class District {
   @IsNotEmpty()
   @IsNotSymbol("'()-./")
   @Length(3, 255)
-  @ApiProperty({ example: 'Bakongan' })
+  @ApiProperty({ description: 'The district name', example: 'Bakongan' })
   name: string;
 
   @IsNotEmpty()
@@ -32,7 +37,7 @@ export class DistrictSortQuery extends SortQuery {
 }
 
 export class DistrictFindQueries extends IntersectionType(
-  PickType(District, ['name'] as const),
+  PartialType(PickType(District, ['name'] as const)),
   DistrictSortQuery,
   PaginationQuery,
 ) {}
