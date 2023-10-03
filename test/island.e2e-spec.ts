@@ -13,9 +13,22 @@ describe('Island (e2e)', () => {
     await tester.bootApp();
   });
 
-  describe(`GET ${baseUrl}?name={name}`, () => {
-    it('should return 400 if the `name` does not present', async () => {
-      await tester.expectBadRequest(`${baseUrl}`);
+  describe(`GET ${baseUrl}`, () => {
+    it('should return islands', async () => {
+      const islands = await tester.expectData<Island[]>(baseUrl);
+
+      islands.forEach((island) => {
+        expect(island).toEqual({
+          code: expect.stringMatching(islandRegex.code),
+          coordinate: expect.stringMatching(islandRegex.coordinate),
+          isOutermostSmall: expect.any(Boolean),
+          isPopulated: expect.any(Boolean),
+          latitude: expect.any(Number),
+          longitude: expect.any(Number),
+          name: expect.stringMatching(islandRegex.name),
+          regencyCode: island.regencyCode ? island.code.slice(0, 4) : null,
+        });
+      });
     });
 
     it('should return 400 if the `name` is empty, less than 3 chars, more than 255 chars, or contains any symbols', async () => {

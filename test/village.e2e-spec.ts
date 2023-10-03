@@ -13,9 +13,17 @@ describe('Village (e2e)', () => {
     await tester.bootApp();
   });
 
-  describe(`GET ${baseUrl}?name={name}`, () => {
-    it('should return 400 if the `name` does not present', async () => {
-      await tester.expectBadRequest(`${baseUrl}`);
+  describe(`GET ${baseUrl}`, () => {
+    it('should return villages', async () => {
+      const villages = await tester.expectData<Village[]>(baseUrl);
+
+      villages.forEach((village) => {
+        expect(village).toEqual({
+          code: expect.stringMatching(villageRegex.code),
+          name: expect.stringMatching(villageRegex.name),
+          districtCode: village.code.slice(0, 6),
+        });
+      });
     });
 
     it("should return 400 if the `name` is empty, less than 3 chars, more than 255 chars, or contains any other symbols besides '()-./", async () => {
