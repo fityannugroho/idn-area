@@ -1,7 +1,12 @@
 import { EqualsAny } from '@/common/decorator/EqualsAny';
 import { IsNotSymbol } from '@/common/decorator/IsNotSymbol';
 import { SortQuery } from '@/sort/sort.dto';
-import { ApiProperty, IntersectionType, PickType } from '@nestjs/swagger';
+import {
+  ApiProperty,
+  IntersectionType,
+  PartialType,
+  PickType,
+} from '@nestjs/swagger';
 import { IsNotEmpty, IsNumberString, Length } from 'class-validator';
 import { DistrictSortQuery } from '../district/district.dto';
 import { IslandSortQuery } from '../island/island.dto';
@@ -17,7 +22,10 @@ export class Regency {
   @IsNotEmpty()
   @IsNotSymbol()
   @Length(3, 255)
-  @ApiProperty({ example: 'KABUPATEN ACEH SELATAN' })
+  @ApiProperty({
+    description: 'The regency name',
+    example: 'KABUPATEN ACEH SELATAN',
+  })
   name: string;
 
   @IsNotEmpty()
@@ -33,7 +41,7 @@ export class RegencySortQuery extends SortQuery {
 }
 
 export class RegencyFindQueries extends IntersectionType(
-  PickType(Regency, ['name'] as const),
+  PartialType(PickType(Regency, ['name'] as const)),
   RegencySortQuery,
   PaginationQuery,
 ) {}
