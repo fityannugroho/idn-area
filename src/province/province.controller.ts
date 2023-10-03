@@ -30,16 +30,7 @@ import { ApiPaginatedResponse } from '@/common/decorator/api-paginated-response.
 export class ProvinceController {
   constructor(private readonly provinceService: ProvinceService) {}
 
-  @ApiOperation({
-    description: `Get the provinces. If the \`name\` is empty, all provinces will be returned.
-      Otherwise, it will only return the provinces with the matching name.
-    `,
-  })
-  @ApiQuery({
-    name: 'name',
-    description: 'Get provinces by its name.',
-    required: false,
-  })
+  @ApiOperation({ description: 'Get the provinces.' })
   @ApiQuery({
     name: 'sortBy',
     description: 'Sort by province code or name.',

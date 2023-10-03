@@ -21,7 +21,7 @@ export class Province {
   @IsNotEmpty()
   @IsNotSymbol()
   @Length(3, 255)
-  @ApiProperty({ example: 'ACEH' })
+  @ApiProperty({ description: 'The province name', example: 'ACEH' })
   name: string;
 }
 
