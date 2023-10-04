@@ -1,7 +1,7 @@
-import { FindOptions } from '@/common/common.service';
 import { sortArray } from '@/common/utils/array';
 import { convertCoordinate } from '@/common/utils/coordinate';
 import { Island } from '@prisma/client';
+import { IslandFindQueries } from '../island.dto';
 
 export class MockIslandService {
   readonly islands: Island[];
@@ -18,12 +18,21 @@ export class MockIslandService {
 
   async find({
     name = '',
+    regencyCode,
     sortBy = 'code',
     sortOrder,
-  }: FindOptions<Island> = {}) {
-    const res = this.islands.filter((island) =>
+  }: IslandFindQueries = {}) {
+    let res = this.islands.filter((island) =>
       island.name.toLowerCase().includes(name.toLowerCase()),
     );
+
+    if (typeof regencyCode === 'string') {
+      res = res.filter((island) =>
+        regencyCode === ''
+          ? island.regencyCode === null
+          : island.regencyCode === regencyCode,
+      );
+    }
 
     return Promise.resolve({ data: sortArray(res, sortBy, sortOrder) });
   }

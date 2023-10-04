@@ -3,6 +3,7 @@ import { IslandService } from './island.service';
 import { PrismaService } from '@/prisma/prisma.service';
 import { Island } from '@prisma/client';
 import { getDBProviderFeatures } from '@/common/utils/db';
+import { SortOrder } from '@/sort/sort.dto';
 
 const islands: readonly Island[] = [
   {
@@ -45,6 +46,14 @@ const islands: readonly Island[] = [
     name: 'Pulau Tengku Palsu',
     regencyCode: '1101',
   },
+  {
+    code: '120040001',
+    coordinate: '01°45\'42.58" N 098°45\'09.03" E',
+    isOutermostSmall: false,
+    isPopulated: false,
+    name: 'Pulau Babi',
+    regencyCode: null,
+  },
 ] as const;
 
 describe('IslandService', () => {
@@ -68,7 +77,7 @@ describe('IslandService', () => {
     const paginatorOptions = {
       model: 'Island',
       paginate: { page: undefined, limit: undefined },
-      args: {},
+      args: { where: {} },
     };
 
     it('should return all islands', async () => {
@@ -119,12 +128,15 @@ describe('IslandService', () => {
         .spyOn(prismaService, 'paginator')
         .mockResolvedValue({ data: expectedIslands });
 
-      const result = await service.find({ sortBy: 'name', sortOrder: 'asc' });
+      const result = await service.find({
+        sortBy: 'name',
+        sortOrder: SortOrder.ASC,
+      });
 
       expect(paginatorSpy).toHaveBeenCalledTimes(1);
       expect(paginatorSpy).toHaveBeenCalledWith({
         ...paginatorOptions,
-        args: { orderBy: { name: 'asc' } },
+        args: { where: {}, orderBy: { name: 'asc' } },
       });
       expect(result.data).toEqual(expectedIslands);
     });
@@ -138,12 +150,53 @@ describe('IslandService', () => {
         .spyOn(prismaService, 'paginator')
         .mockResolvedValue({ data: expectedIslands });
 
-      const result = await service.find({ sortBy: 'name', sortOrder: 'desc' });
+      const result = await service.find({
+        sortBy: 'name',
+        sortOrder: SortOrder.DESC,
+      });
 
       expect(paginatorSpy).toHaveBeenCalledTimes(1);
       expect(paginatorSpy).toHaveBeenCalledWith({
         ...paginatorOptions,
-        args: { orderBy: { name: 'desc' } },
+        args: { where: {}, orderBy: { name: 'desc' } },
+      });
+      expect(result.data).toEqual(expectedIslands);
+    });
+
+    it('should return filtered islands by regency code', async () => {
+      const regencyCode = '1101';
+      const expectedIslands = islands.filter(
+        (i) => i.regencyCode === regencyCode,
+      );
+
+      const paginatorSpy = vitest
+        .spyOn(prismaService, 'paginator')
+        .mockResolvedValue({ data: expectedIslands });
+
+      const result = await service.find({ regencyCode });
+
+      expect(paginatorSpy).toHaveBeenCalledTimes(1);
+      expect(paginatorSpy).toHaveBeenCalledWith({
+        ...paginatorOptions,
+        args: { where: { regencyCode } },
+      });
+      expect(result.data).toEqual(expectedIslands);
+    });
+
+    it('should return filtered islands that does not belongs to any regency', async () => {
+      const regencyCode = '';
+      const expectedIslands = islands.filter((i) => i.regencyCode === null);
+
+      const paginatorSpy = vitest
+        .spyOn(prismaService, 'paginator')
+        .mockResolvedValue({ data: expectedIslands });
+
+      const result = await service.find({ regencyCode });
+
+      expect(paginatorSpy).toHaveBeenCalledTimes(1);
+      expect(paginatorSpy).toHaveBeenCalledWith({
+        ...paginatorOptions,
+        args: { where: { regencyCode: null } },
       });
       expect(result.data).toEqual(expectedIslands);
     });

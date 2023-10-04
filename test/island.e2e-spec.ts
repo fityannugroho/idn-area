@@ -73,6 +73,45 @@ describe('Island (e2e)', () => {
         });
       });
     });
+
+    it('should return all islands match with the `regencyCode`', async () => {
+      const testRegencyCode = '1101';
+      const islands = await tester.expectData<Island[]>(
+        `${baseUrl}?regencyCode=${testRegencyCode}`,
+      );
+
+      islands.forEach((island) => {
+        expect(island).toEqual({
+          code: expect.stringMatching(islandRegex.code),
+          coordinate: expect.stringMatching(islandRegex.coordinate),
+          isOutermostSmall: expect.any(Boolean),
+          isPopulated: expect.any(Boolean),
+          latitude: expect.any(Number),
+          longitude: expect.any(Number),
+          name: expect.stringMatching(islandRegex.name),
+          regencyCode: testRegencyCode,
+        });
+      });
+    });
+
+    it('should return all islands that does not belong to any regency', async () => {
+      const islands = await tester.expectData<Island[]>(
+        `${baseUrl}?regencyCode`,
+      );
+
+      islands.forEach((island) => {
+        expect(island).toEqual({
+          code: expect.stringMatching(islandRegex.code),
+          coordinate: expect.stringMatching(islandRegex.coordinate),
+          isOutermostSmall: expect.any(Boolean),
+          isPopulated: expect.any(Boolean),
+          latitude: expect.any(Number),
+          longitude: expect.any(Number),
+          name: expect.stringMatching(islandRegex.name),
+          regencyCode: null,
+        });
+      });
+    });
   });
 
   describe(`GET ${baseUrl}/{code}`, () => {
