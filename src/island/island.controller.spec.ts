@@ -144,6 +144,31 @@ describe('IslandController', () => {
         ),
       );
     });
+
+    it('should return islands filtered by regencyCode', async () => {
+      const regencyCode = '1101';
+      const { data } = await controller.find({ regencyCode });
+
+      for (const island of data) {
+        expect(island).toEqual(expect.objectContaining({ regencyCode }));
+      }
+
+      expect(data).toHaveLength(
+        islands.filter((island) => island.regencyCode === regencyCode).length,
+      );
+    });
+
+    it('should return islands that does not belong to any regency', async () => {
+      const { data } = await controller.find({ regencyCode: '' });
+
+      for (const island of data) {
+        expect(island).toEqual(expect.objectContaining({ regencyCode: null }));
+      }
+
+      expect(data).toHaveLength(
+        islands.filter((island) => island.regencyCode === null).length,
+      );
+    });
   });
 
   describe('findByCode', () => {

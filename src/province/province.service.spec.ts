@@ -1,12 +1,13 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaService } from '@/prisma/prisma.service';
-import { ProvinceService } from './province.service';
-import { RegencyService } from '@/regency/regency.service';
-import { Province, Regency } from '@prisma/client';
 import { getDBProviderFeatures } from '@/common/utils/db';
 import { DistrictService } from '@/district/district.service';
 import { IslandService } from '@/island/island.service';
+import { PrismaService } from '@/prisma/prisma.service';
+import { RegencyService } from '@/regency/regency.service';
+import { SortOrder } from '@/sort/sort.dto';
 import { VillageService } from '@/village/village.service';
+import { Test, TestingModule } from '@nestjs/testing';
+import { Province, Regency } from '@prisma/client';
+import { ProvinceService } from './province.service';
 
 const provinces: readonly Province[] = [
   { code: '11', name: 'ACEH' },
@@ -129,7 +130,7 @@ describe('ProvinceService', () => {
 
       const result = await provinceService.find({
         sortBy: 'name',
-        sortOrder: 'desc',
+        sortOrder: SortOrder.DESC,
       });
 
       expect(paginatorSpy).toHaveBeenCalledTimes(1);

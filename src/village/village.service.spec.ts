@@ -1,8 +1,9 @@
-import { VillageService } from './village.service';
-import { Village } from '@prisma/client';
 import { getDBProviderFeatures } from '@/common/utils/db';
 import { PrismaService } from '@/prisma/prisma.service';
+import { SortOrder } from '@/sort/sort.dto';
 import { Test } from '@nestjs/testing';
+import { Village } from '@prisma/client';
+import { VillageService } from './village.service';
 
 const villages: readonly Village[] = [
   { code: '1101012001', name: 'Desa 1', districtCode: '110101' },
@@ -32,7 +33,7 @@ describe('VillageService', () => {
     const paginatorOptions = {
       model: 'Village',
       paginate: { page: undefined, limit: undefined },
-      args: {},
+      args: { where: {} },
     };
 
     it('should return all villages', async () => {
@@ -86,12 +87,15 @@ describe('VillageService', () => {
         .mockResolvedValue({ data: expectedVillages });
 
       const result = await service.find({ sortBy: 'name' });
-      const result2 = await service.find({ sortBy: 'name', sortOrder: 'asc' });
+      const result2 = await service.find({
+        sortBy: 'name',
+        sortOrder: SortOrder.ASC,
+      });
 
       expect(paginatorSpy).toHaveBeenCalledTimes(2);
       expect(paginatorSpy).toHaveBeenCalledWith({
         ...paginatorOptions,
-        args: { orderBy: { name: 'asc' } },
+        args: { where: {}, orderBy: { name: 'asc' } },
       });
       expect(result).toEqual(result2);
       expect(result.data).toEqual(expectedVillages);
@@ -106,12 +110,35 @@ describe('VillageService', () => {
         .spyOn(prismaService, 'paginator')
         .mockResolvedValue({ data: expectedVillages });
 
-      const result = await service.find({ sortBy: 'name', sortOrder: 'desc' });
+      const result = await service.find({
+        sortBy: 'name',
+        sortOrder: SortOrder.DESC,
+      });
 
       expect(paginatorSpy).toHaveBeenCalledTimes(1);
       expect(paginatorSpy).toHaveBeenCalledWith({
         ...paginatorOptions,
-        args: { orderBy: { name: 'desc' } },
+        args: { where: {}, orderBy: { name: 'desc' } },
+      });
+      expect(result.data).toEqual(expectedVillages);
+    });
+
+    it('should return filtered villages by district code', async () => {
+      const districtCode = '110101';
+      const expectedVillages = villages.filter(
+        (v) => v.districtCode === districtCode,
+      );
+
+      const paginatorSpy = vitest
+        .spyOn(prismaService, 'paginator')
+        .mockResolvedValue({ data: expectedVillages });
+
+      const result = await service.find({ districtCode });
+
+      expect(paginatorSpy).toHaveBeenCalledTimes(1);
+      expect(paginatorSpy).toHaveBeenCalledWith({
+        ...paginatorOptions,
+        args: { where: { districtCode } },
       });
       expect(result.data).toEqual(expectedVillages);
     });

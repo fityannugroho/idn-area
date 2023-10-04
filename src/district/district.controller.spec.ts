@@ -115,6 +115,20 @@ describe('DistrictController', () => {
         ),
       );
     });
+
+    it('should return districts filtered by regency code', async () => {
+      const regencyCode = '1101';
+      const filteredDistrictsByRegencyCode = districts.filter(
+        (p) => p.regencyCode === regencyCode,
+      );
+      const { data } = await controller.find({ regencyCode });
+
+      for (const district of data) {
+        expect(district).toEqual(expect.objectContaining({ regencyCode }));
+      }
+
+      expect(data).toHaveLength(filteredDistrictsByRegencyCode.length);
+    });
   });
 
   describe('findByCode', () => {

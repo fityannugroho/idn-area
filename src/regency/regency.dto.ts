@@ -31,7 +31,10 @@ export class Regency {
   @IsNotEmpty()
   @IsNumberString()
   @Length(2, 2)
-  @ApiProperty({ example: '11' })
+  @ApiProperty({
+    description: 'The province code of the regency',
+    example: '11',
+  })
   provinceCode: string;
 }
 
@@ -41,7 +44,7 @@ export class RegencySortQuery extends SortQuery {
 }
 
 export class RegencyFindQueries extends IntersectionType(
-  PartialType(PickType(Regency, ['name'] as const)),
+  PartialType(PickType(Regency, ['name', 'provinceCode'] as const)),
   RegencySortQuery,
   PaginationQuery,
 ) {}

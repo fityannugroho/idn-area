@@ -106,6 +106,20 @@ describe('VillageController', () => {
         ),
       );
     });
+
+    it('should return filtered villages by district code', async () => {
+      const districtCode = '110101';
+      const expectedVillage = villages.filter(
+        (v) => v.districtCode === districtCode,
+      );
+      const { data } = await controller.find({ districtCode });
+
+      for (const village of data) {
+        expect(village).toEqual(expect.objectContaining({ districtCode }));
+      }
+
+      expect(data).toHaveLength(expectedVillage.length);
+    });
   });
 
   describe('findByCode', () => {

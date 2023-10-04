@@ -1,4 +1,3 @@
-import { CommonService, FindOptions } from '@/common/common.service';
 import { PaginationQuery } from '@/common/dto/pagination.dto';
 import { PaginatedReturn } from '@/common/interceptor/paginate.interceptor';
 import { getDBProviderFeatures } from '@/common/utils/db';
@@ -9,9 +8,10 @@ import { PrismaService } from '@/prisma/prisma.service';
 import { SortOptions, SortService } from '@/sort/sort.service';
 import { Injectable } from '@nestjs/common';
 import { District, Island, Regency } from '@prisma/client';
+import { RegencyFindQueries } from './regency.dto';
 
 @Injectable()
-export class RegencyService implements CommonService<Regency> {
+export class RegencyService {
   readonly sorter: SortService<Regency>;
 
   constructor(
@@ -25,24 +25,24 @@ export class RegencyService implements CommonService<Regency> {
     });
   }
 
-  async find(
-    options?: FindOptions<Regency>,
-  ): Promise<PaginatedReturn<Regency>> {
-    const { name, sortBy, sortOrder, page, limit } = options ?? {};
+  async find(options?: RegencyFindQueries): Promise<PaginatedReturn<Regency>> {
+    const { name, sortBy, sortOrder, page, limit, provinceCode } =
+      options ?? {};
 
     return this.prisma.paginator({
       model: 'Regency',
       args: {
-        ...(name && {
-          where: {
+        where: {
+          ...(name && {
             name: {
-              contains: options.name,
+              contains: name,
               ...(getDBProviderFeatures()?.filtering?.insensitive && {
                 mode: 'insensitive',
               }),
             },
-          },
-        }),
+          }),
+          ...(provinceCode && { provinceCode }),
+        },
         ...((sortBy || sortOrder) && {
           orderBy: this.sorter.object({ sortBy, sortOrder }),
         }),

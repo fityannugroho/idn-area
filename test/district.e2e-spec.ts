@@ -63,6 +63,21 @@ describe('District (e2e)', () => {
         });
       });
     });
+
+    it('should return all districts match with the `regencyCode`', async () => {
+      const regencyCode = '1101';
+      const districts = await tester.expectData<District[]>(
+        `${baseUrl}?regencyCode=${regencyCode}`,
+      );
+
+      districts.forEach((district) => {
+        expect(district).toEqual({
+          code: expect.stringMatching(districtRegex.code),
+          name: expect.stringMatching(districtRegex.name),
+          regencyCode,
+        });
+      });
+    });
   });
 
   describe(`GET ${baseUrl}/{code}`, () => {

@@ -1,7 +1,7 @@
-import { FindOptions } from '@/common/common.service';
 import { sortArray } from '@/common/utils/array';
 import { SortOptions } from '@/sort/sort.service';
 import { District, Village } from '@prisma/client';
+import { DistrictFindQueries } from '../district.dto';
 
 export class MockDistrictService {
   readonly districts: District[];
@@ -14,12 +14,17 @@ export class MockDistrictService {
 
   async find({
     name = '',
+    regencyCode,
     sortBy = 'code',
     sortOrder,
-  }: FindOptions<District> = {}) {
-    const res = this.districts.filter((district) =>
+  }: DistrictFindQueries = {}) {
+    let res = this.districts.filter((district) =>
       district.name.toLowerCase().includes(name.toLowerCase()),
     );
+
+    if (regencyCode) {
+      res = res.filter((district) => district.regencyCode === regencyCode);
+    }
 
     return Promise.resolve({ data: sortArray(res, sortBy, sortOrder) });
   }

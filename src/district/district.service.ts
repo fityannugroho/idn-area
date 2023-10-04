@@ -1,4 +1,3 @@
-import { CommonService, FindOptions } from '@/common/common.service';
 import { PaginationQuery } from '@/common/dto/pagination.dto';
 import { PaginatedReturn } from '@/common/interceptor/paginate.interceptor';
 import { getDBProviderFeatures } from '@/common/utils/db';
@@ -7,9 +6,10 @@ import { SortOptions, SortService } from '@/sort/sort.service';
 import { VillageService } from '@/village/village.service';
 import { Injectable } from '@nestjs/common';
 import { District, Village } from '@prisma/client';
+import { DistrictFindQueries } from './district.dto';
 
 @Injectable()
-export class DistrictService implements CommonService<District> {
+export class DistrictService {
   readonly sorter: SortService<District>;
 
   constructor(
@@ -23,24 +23,25 @@ export class DistrictService implements CommonService<District> {
   }
 
   async find(
-    options?: FindOptions<District>,
+    options?: DistrictFindQueries,
   ): Promise<PaginatedReturn<District>> {
-    const { name, page, limit, sortBy, sortOrder } = options ?? {};
+    const { name, regencyCode, page, limit, sortBy, sortOrder } = options ?? {};
 
     return this.prisma.paginator({
       model: 'District',
       paginate: { page, limit },
       args: {
-        ...(name && {
-          where: {
+        where: {
+          ...(name && {
             name: {
               contains: name,
               ...(getDBProviderFeatures()?.filtering?.insensitive && {
                 mode: 'insensitive',
               }),
             },
-          },
-        }),
+          }),
+          ...(regencyCode && { regencyCode }),
+        },
         ...((sortBy || sortOrder) && {
           orderBy: this.sorter.object({ sortBy, sortOrder }),
         }),

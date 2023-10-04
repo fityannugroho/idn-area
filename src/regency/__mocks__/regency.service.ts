@@ -1,8 +1,8 @@
-import { FindOptions } from '@/common/common.service';
 import { sortArray } from '@/common/utils/array';
 import { convertCoordinate } from '@/common/utils/coordinate';
 import { SortOptions } from '@/sort/sort.service';
 import { District, Island, Regency } from '@prisma/client';
+import { RegencyFindQueries } from '../regency.dto';
 
 export class MockRegencyService {
   readonly regencies: readonly Regency[];
@@ -17,12 +17,17 @@ export class MockRegencyService {
 
   async find({
     name = '',
+    provinceCode,
     sortBy = 'code',
     sortOrder,
-  }: FindOptions<Regency> = {}) {
-    const res = this.regencies.filter((regency) =>
+  }: RegencyFindQueries = {}) {
+    let res = this.regencies.filter((regency) =>
       regency.name.toLowerCase().includes(name.toLowerCase()),
     );
+
+    if (provinceCode) {
+      res = res.filter((regency) => regency.provinceCode === provinceCode);
+    }
 
     return Promise.resolve({ data: sortArray(res, sortBy, sortOrder) });
   }

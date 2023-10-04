@@ -12,6 +12,7 @@ import {
   IsOptional,
   IsString,
   Length,
+  ValidateIf,
 } from 'class-validator';
 import { EqualsAny } from '../common/decorator/EqualsAny';
 import { IsNotSymbol } from '../common/decorator/IsNotSymbol';
@@ -49,10 +50,15 @@ export class Island {
   })
   name: string;
 
+  @ValidateIf((o) => o.regencyCode)
   @IsOptional()
   @IsNumberString()
   @Length(4, 4)
-  @ApiProperty({ example: '1101' })
+  @ApiProperty({
+    description: `The regency code of the island.
+      Providing an empty string will filter islands that are not part of any regency.`,
+    example: '1101',
+  })
   regencyCode?: string;
 
   @ApiProperty({ example: 3.317622222222222 })
@@ -68,7 +74,7 @@ export class IslandSortQuery extends SortQuery {
 }
 
 export class IslandFindQueries extends IntersectionType(
-  PartialType(PickType(Island, ['name'] as const)),
+  PartialType(PickType(Island, ['name', 'regencyCode'] as const)),
   IslandSortQuery,
   PaginationQuery,
 ) {}
