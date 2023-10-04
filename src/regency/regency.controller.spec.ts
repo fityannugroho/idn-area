@@ -113,6 +113,20 @@ describe('RegencyController', () => {
         ),
       );
     });
+
+    it('should return regencies filtered by province code', async () => {
+      const provinceCode = '11';
+      const filteredRegenciesByProvince = regencies.filter(
+        (p) => p.provinceCode === provinceCode,
+      );
+      const { data } = await controller.find({ provinceCode });
+
+      for (const regency of data) {
+        expect(regency).toEqual(expect.objectContaining({ provinceCode }));
+      }
+
+      expect(data.length).toEqual(filteredRegenciesByProvince.length);
+    });
   });
 
   describe('findByCode', () => {
