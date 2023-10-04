@@ -1,7 +1,7 @@
-import { FindOptions } from '@/common/common.service';
 import { sortArray } from '@/common/utils/array';
 import { SortOptions } from '@/sort/sort.service';
 import { Province, Regency } from '@prisma/client';
+import { ProvinceFindQueries } from '../province.dto';
 
 export class MockProvinceService {
   readonly provinces: readonly Province[];
@@ -16,7 +16,7 @@ export class MockProvinceService {
     name = '',
     sortBy = 'code',
     sortOrder,
-  }: FindOptions<Province> = {}) {
+  }: ProvinceFindQueries = {}) {
     const res = this.provinces.filter((province) =>
       province.name.toLowerCase().includes(name.toLowerCase()),
     );
