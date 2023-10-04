@@ -27,7 +27,10 @@ export class District {
   @IsNotEmpty()
   @IsNumberString()
   @Length(4, 4)
-  @ApiProperty({ example: '1101' })
+  @ApiProperty({
+    description: 'The regency code of the district',
+    example: '1101',
+  })
   regencyCode: string;
 }
 
@@ -37,7 +40,7 @@ export class DistrictSortQuery extends SortQuery {
 }
 
 export class DistrictFindQueries extends IntersectionType(
-  PartialType(PickType(District, ['name'] as const)),
+  PartialType(PickType(District, ['name', 'regencyCode'] as const)),
   DistrictSortQuery,
   PaginationQuery,
 ) {}
