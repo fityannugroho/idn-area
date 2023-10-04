@@ -63,6 +63,21 @@ describe('Village (e2e)', () => {
         });
       });
     });
+
+    it('should return all villages match with the `districtCode`', async () => {
+      const districtCode = '110101';
+      const villages = await tester.expectData<Village[]>(
+        `${baseUrl}?districtCode=${districtCode}`,
+      );
+
+      villages.forEach((village) => {
+        expect(village).toEqual({
+          code: expect.stringMatching(villageRegex.code),
+          name: expect.stringMatching(villageRegex.name),
+          districtCode,
+        });
+      });
+    });
   });
 
   describe(`GET ${baseUrl}/{code}`, () => {

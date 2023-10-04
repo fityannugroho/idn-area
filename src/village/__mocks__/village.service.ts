@@ -1,6 +1,6 @@
-import { FindOptions } from '@/common/common.service';
 import { sortArray } from '@/common/utils/array';
 import { Village } from '@prisma/client';
+import { VillageFindQueries } from '../village.dto';
 
 export class MockVillageService {
   readonly villages: Village[];
@@ -11,12 +11,17 @@ export class MockVillageService {
 
   async find({
     name = '',
+    districtCode,
     sortBy = 'code',
     sortOrder,
-  }: FindOptions<Village> = {}) {
-    const res = this.villages.filter((village) =>
+  }: VillageFindQueries = {}) {
+    let res = this.villages.filter((village) =>
       village.name.toLowerCase().includes(name.toLowerCase()),
     );
+
+    if (districtCode) {
+      res = res.filter((district) => district.districtCode === districtCode);
+    }
 
     return Promise.resolve({ data: sortArray(res, sortBy, sortOrder) });
   }

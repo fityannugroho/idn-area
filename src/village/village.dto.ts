@@ -26,7 +26,10 @@ export class Village {
   @IsNotEmpty()
   @IsNumberString()
   @Length(6, 6)
-  @ApiProperty({ example: '110101' })
+  @ApiProperty({
+    description: 'The district code of the village',
+    example: '110101',
+  })
   districtCode: string;
 }
 
@@ -36,7 +39,7 @@ export class VillageSortQuery extends SortQuery {
 }
 
 export class VillageFindQueries extends IntersectionType(
-  PartialType(PickType(Village, ['name'] as const)),
+  PartialType(PickType(Village, ['name', 'districtCode'] as const)),
   VillageSortQuery,
   PaginationQuery,
 ) {}
