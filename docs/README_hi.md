@@ -9,7 +9,7 @@
   <a href="https://www.mysql.com"><img alt="माई एसक्यूएल" src="https://img.shields.io/badge/-MySQL-00688F?style=flat-square&logo=mysql&logoColor=white" /></a>
 </p>
 
-एपीआई जो इंडोनेशिया के **प्रशासनिक क्षेत्रों**, प्रांत, रीजेंसी, जिले से लेकर ग्राम स्तर तक की जानकारी प्रदान करता है। यह [संस्करण 1.1.0] से द्वीप डेटा भी प्रदान करता है (https://github.com/fityannugroho/idn-area/releases/tag/v1.1.0)।
+एपीआई जो इंडोनेशिया के **प्रशासनिक क्षेत्रों**, प्रांत, रीजेंसी, जिले से लेकर ग्राम स्तर तक की जानकारी प्रदान करता है। यह [संस्करण 1.1.0](https://github.com/fityannugroho/idn-area/releases/tag/v1.1.0) से द्वीप डेटा भी प्रदान करता है।
 
 [नेस्ट जे एस फ्रेमवर्क](https://nestjs.com) के साथ निर्मित और टाइपस्क्रिप्ट में लिखा गया है। [प्रिज्मा](https://www.prisma.io) का उपयोग किसी भी प्रकार के डेटाबेस के साथ इंटरैक्ट करने के लिए ORM के रूप में किया जाता है(माई एसक्यूएल, पोस्टग्रेएसक्यूएल, और मोंगो डी बी)।
 
@@ -113,7 +113,7 @@ GET /provinces/{provinceCode}
 GET /regencies?name={regencyName}
 ```
 
-- **get the regencies by its name** के लिए इस एंडपॉइंट का उपयोग करें।
+- **get the regencies by its name**  एंडपॉइंट का उपयोग करें।
 - `{regencyName}` **आवश्यक** है और **कम से कम 3 अक्षर**, अधिकतम 255 अक्षर होना चाहिए, और इसमें कोई प्रतीक नहीं है। यदि नहीं, तो आपको `400 Bad Request` प्रतिक्रिया मिलेगी।
 - यह एंडपॉइंट रीजेंसी की एक सरणी **लौटाएगा**।
 - उपयोग उदाहरण: http://localhost:3000/regencies?name=bandung
@@ -163,7 +163,7 @@ GET /districts?name={districtName}
 GET /districts/{districtCode}
 ```
 
-- के लिए इस एंडपॉइंट का उपयोग करें**get a specific district**।
+- **get a specific district** के लिए इस एंडपॉइंट का उपयोग करें।
 - `{districtCode}` **6 संख्यात्मक वर्ण** होना चाहिए। यदि नहीं, तो आपको `400 Bad Request` प्रतिक्रिया मिलेगी।
 - यह एंडपॉइंट `{districtCode}` के समान कोड के साथ जिले को **वापस** करेगा। अन्यथा, आपको `404 नहीं मिला` प्रतिक्रिया मिलेगी।
 - उपयोग उदाहरण: http://localhost:3000/districts/327311
