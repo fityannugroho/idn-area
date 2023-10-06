@@ -1,11 +1,9 @@
 import { dbConfig } from '@/common/config/db';
-import { DatabaseConfigError } from '@/common/utils/db/errors';
+import { validateDBConfig } from '@/common/utils/db';
 import { runOrFail } from '@/common/utils/runner';
 
 const main = async () => {
-  if (!dbConfig.provider) {
-    throw new DatabaseConfigError('`DB_PROVIDER` is not defined.');
-  }
+  validateDBConfig('provider');
 
   await runOrFail(
     `prisma generate --schema prisma/${dbConfig.provider}/schema.prisma`,
