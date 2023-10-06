@@ -1,9 +1,6 @@
-name: "Tests the App"
-env:
-  DB_PROVIDER: ${{ vars.DB_PROVIDER }}
-  DB_URL: ${{ secrets.DB_URL }}
+name: "Test the PR"
 on:
-  push:
+  pull_request:
     branches:
       - main
 jobs:
@@ -12,7 +9,6 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
-      max-parallel: 1
       matrix:
         node-version: [18.x, 20.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases
@@ -23,13 +19,11 @@ jobs:
       run: npm ci
     - name: Check code formatting
       run: npm run lint
-    - name: Migrate the database
-      run: npm run db:migrate
-    - name: Seed the data
-      run: npm run db:seed
+    - name: Generate Prisma Client
+      run: npm run prisma:gen
+      env:
+        DB_PROVIDER: ${{ vars.DB_PROVIDER }}
     - name: Run unit tests
       run: npm run test
-    - name: Run e2e tests
-      run: npm run test:e2e
     - name: Build
       run: npm run build

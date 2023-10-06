@@ -1,9 +1,9 @@
 import { dbConfig } from '@/common/config/db';
-import { runOrFail } from '@/common/utils/runner';
 import { validateDBConfig } from '@/common/utils/db';
+import { runOrFail } from '@/common/utils/runner';
 
 const main = async () => {
-  validateDBConfig();
+  validateDBConfig('provider');
 
   await runOrFail(
     `prisma generate --schema prisma/${dbConfig.provider}/schema.prisma`,
