@@ -1,8 +1,13 @@
 name: "Test the PR"
 on:
-  pull_request:
+  pull_request_target:
     branches:
       - main
+    types:
+      - opened
+      - syncronize
+      - reopened
+      - edited
 jobs:
   run_test:
     name: "Run tests"
