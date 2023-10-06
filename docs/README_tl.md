@@ -9,7 +9,7 @@
   <a href="https://www.mysql.com"><img alt="MySQL" src="https://img.shields.io/badge/-MySQL-00688F?style=flat-square&logo=mysql&logoColor=white" /></a>
 </p>
 
-API na nagbibigay ng impormasyon tungkol sa **Mga administratibong lugar sa Indonesia**, sa antas ng lalawigan, bayan, distrito, hanggang sa mga barangay. Isinasama rin nito ang datos tungkol sa mga isla simula [version 1.1.0](https://github.com/fityannugroho/idn-area/releases/tag/v1.1.0).
+API na nagbibigay ng impormasyon tungkol sa **Mga administratibong lugar sa Indonesia**, sa antas ng lalawigan, bayan, distrito, hanggang sa mga barangay. Isinasama rin nito ang datos tungkol sa mga isla simula [bersyon 1.1.0](https://github.com/fityannugroho/idn-area/releases/tag/v1.1.0).
 
 Ginawa gamit ang [NestJS framework](https://nestjs.com) At isinulat sa TypeScript. [Prisma](https://www.prisma.io) ay ginagamit bilang ORM upang makipag-ugnay sa anumang uri ng mga database (MySQL, PostgreSQL, at MongoDB).
 
