@@ -34,17 +34,17 @@ Ginawa gamit ang [NestJS framework](https://nestjs.com) At isinulat sa TypeScrip
 
 ## Pagsisimula
 
-Pakibasa ang [installation guide](docs/installation.md) upang i-install at patakbuhin ang aplikasyong ito.
+Pakibasa ang [gabay sa Pag-Install](docs/installation.md) upang i-install at patakbuhin ang aplikasyong ito.
 
 ## Data
 
 Ang datos na aming ginamit ay batay sa opisyal na pinagkukunan na kinakalagaan sa loob ng [**idn-area-data**](https://github.com/fityannugroho/idn-area-data) repositoriyo at Ipinapamahagi bilang isang [npm package](https://www.npmjs.com/package/idn-area-data).
 
-> Ang [data](https://github.com/fityannugroho/idn-area-data/tree/main/data) Ipinapamahagi dito sa ilalim ng [Open Database License (ODbL)](https://github.com/fityannugroho/idn-area-data/blob/main/data/LICENSE.md).
+> Ang [data](https://github.com/fityannugroho/idn-area-data/tree/main/data) Ipinapamahagi dito sa ilalim ng [Lisensiyang Buksan ang Database](https://github.com/fityannugroho/idn-area-data/blob/main/data/LICENSE.md).
 
-## Documentation
+## Dokumentasyon
 
-Basahin ang pinakabagong bersyon ng dokumentasyon ng API sa [documentation page](https://idn-area.cyclic.app/docs). Ang dokumentasyong ito ay awtomatikong nalilikha gamit ang [`@nestjs/swagger`](https://docs.nestjs.com/openapi/introduction).
+Basahin ang pinakabagong bersyon ng dokumentasyon ng API sa [Pahina ng dokumentasyon](https://idn-area.cyclic.app/docs). Ang dokumentasyong ito ay awtomatikong nalilikha gamit ang [`@nestjs/swagger`](https://docs.nestjs.com/openapi/introduction).
 
 > Puwede rin kayong mag-access sa dokumentasyon sa inyong lokal na makina sa pamamagitan ng pagsisimula ng aplikasyon (makita [Pagsisimula](#pagsisimula)) at buksan ang http://localhost:3000/docs sa iyong browser.
 
@@ -55,27 +55,27 @@ Maaari mong subukan ang API sa pamamagitan ng pagpapalit ng http://localhost:300
 Ito ay ilang halimbawang proyekto na gumagamit ng API na ito :
 
 - [Simpleng area dropdown](https://github.com/fityannugroho/idn-area-example)
-- [idn-area Map](https://github.com/fityannugroho/idn-area-map)
+- [Mapa ng idn-area](https://github.com/fityannugroho/idn-area-map)
 
 ## Nagbibigay ng kontribusyon
 
-Kung nais mong mag-ambag sa proyektong ito, mangyaring basahin ang [CONTRIBUTING.md](CONTRIBUTING.md) na file at Siguruhing sumusunod ka sa [Pull Request guide](CONTRIBUTING.md#submitting-a-pull-request)
+Kung nais mong mag-ambag sa proyektong ito, mangyaring basahin ang [CONTRIBUTING.md](CONTRIBUTING.md) na file at Siguruhing sumusunod ka sa [Gabay sa Pull Request](CONTRIBUTING.md#submitting-a-pull-request)
 
 ## Ulat ng Problema
 
 May iba't-ibang mga channel para sa bawat problema, mangyaring gamitin ang mga ito sa pamamagitan ng pagsunod sa mga kondisyon na ito :
 
 ### Pag-uulat ng Isang Bug
-Upang mag-ulat ng bug, mangyaring buksan ang isang bagong isyu ayon sa [guide](CONTRIBUTING.md#submitting-an-issue).
+Upang mag-ulat ng bug, mangyaring buksan ang isang bagong isyu ayon sa [gabay](CONTRIBUTING.md#submitting-an-issue).
 
 ### Humihiling ng Bagong Tampok
-Kung mayroon kang bagong tampok sa isip, mangyaring buksan ang isang bagong isyu ayon sa [guide](CONTRIBUTING.md#submitting-an-issue).
+Kung mayroon kang bagong tampok sa isip, mangyaring buksan ang isang bagong isyu ayon sa [gabay](CONTRIBUTING.md#submitting-an-issue).
 
 ### Nagtatanong ng Tanong
-Kung mayroon kang tanong, maaari kang maghanap ng mga sagot sa [GitHub Discussions Q&A category](https://github.com/fityannugroho/idn-area/discussions/categories/q-a). Kung wala kang makitang kaugnay na pag-uusap na umiiral na, maari kang magbukas ng isang bagong pag-uusap.
+Kung mayroon kang tanong, maaari kang maghanap ng mga sagot sa [Kategorya ng GitHub Discussions Q&A](https://github.com/fityannugroho/idn-area/discussions/categories/q-a). Kung wala kang makitang kaugnay na pag-uusap na umiiral na, maari kang magbukas ng isang bagong pag-uusap.
 
 ## Suportahan ang Proyektong Ito
 
 <a href="https://trakteer.id/fityannugroho/tip" target="_blank"><img id="wse-buttons-preview" src="https://cdn.trakteer.id/images/embed/trbtn-red-6.png" style="border: 0px none; height: 36px; --darkreader-inline-border-top: currentcolor; --darkreader-inline-border-right: currentcolor; --darkreader-inline-border-bottom: currentcolor; --darkreader-inline-border-left: currentcolor;" alt="Trakteer Saya" data-darkreader-inline-border-top="" data-darkreader-inline-border-right="" data-darkreader-inline-border-bottom="" data-darkreader-inline-border-left="" height="40"></a>
 
-Maari kang mag-suporta sa proyektong ito sa pamamagitan ng pag-donate sa pamamagitan ng  [GitHub Sponsor](https://github.com/sponsors/fityannugroho), [Trakteer](https://trakteer.id/fityannugroho/tip), o [Saweria](https://saweria.co/fityannugroho).
+Maari kang mag-suporta sa proyektong ito sa pamamagitan ng pag-donate sa pamamagitan ng [GitHub Sponsor](https://github.com/sponsors/fityannugroho), [Trakteer](https://trakteer.id/fityannugroho/tip), o [Saweria](https://saweria.co/fityannugroho).
