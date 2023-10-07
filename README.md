@@ -9,6 +9,8 @@
   <a href="https://www.mysql.com"><img alt="MySQL" src="https://img.shields.io/badge/-MySQL-00688F?style=flat-square&logo=mysql&logoColor=white" /></a>
 </p>
 
+**English** | [हिन्दी](docs/README_hi.md) | [Tagalog](docs/README_tl.md)
+
 API that provides information on the **administrative areas of Indonesia**, from the province, regency, district, to village levels. It also provides island data since [version 1.1.0](https://github.com/fityannugroho/idn-area/releases/tag/v1.1.0).
 
 Built with [NestJS framework](https://nestjs.com) and writen in TypeScript. [Prisma](https://www.prisma.io) is used as the ORM to interact with any kind of databases (MySQL, PostgreSQL, and MongoDB).
@@ -59,7 +61,7 @@ These are some sample projects that using this API :
 
 ## Contributing
 
-If you want to contribute to this project, please read the [CONTRIBUTING.md](CONTRIBUTING.md) file and make sure you follow the [Pull Request guide](CONTRIBUTING.md#submitting-a-pull-request)
+If you want to contribute to this project, please read the [CONTRIBUTING.md](CONTRIBUTING.md) file and make sure you follow the [Pull Request guide](CONTRIBUTING.md#submitting-a-pull-request).
 
 ## Problem Reporting
 

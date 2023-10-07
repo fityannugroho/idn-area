@@ -9,6 +9,8 @@
   <a href="https://www.mysql.com"><img alt="MySQL" src="https://img.shields.io/badge/-MySQL-00688F?style=flat-square&logo=mysql&logoColor=white" /></a>
 </p>
 
+[English](../README.md) | [हिन्दी](README_hi.md) | **Tagalog**
+
 API na nagbibigay ng impormasyon tungkol sa **Mga administratibong lugar sa Indonesia**, sa antas ng lalawigan, bayan, distrito, hanggang sa mga barangay. Isinasama rin nito ang datos tungkol sa mga isla simula [bersyon 1.1.0](https://github.com/fityannugroho/idn-area/releases/tag/v1.1.0).
 
 Ginawa gamit ang [NestJS framework](https://nestjs.com) At isinulat sa TypeScript. [Prisma](https://www.prisma.io) ay ginagamit bilang ORM upang makipag-ugnay sa anumang uri ng mga database (MySQL, PostgreSQL, at MongoDB).
@@ -34,7 +36,7 @@ Ginawa gamit ang [NestJS framework](https://nestjs.com) At isinulat sa TypeScrip
 
 ## Pagsisimula
 
-Pakibasa ang [gabay sa Pag-Install](docs/installation.md) upang i-install at patakbuhin ang aplikasyong ito.
+Pakibasa ang [gabay sa Pag-Install](installation.md) upang i-install at patakbuhin ang aplikasyong ito.
 
 ## Data
 
@@ -59,17 +61,17 @@ Ito ay ilang halimbawang proyekto na gumagamit ng API na ito :
 
 ## Nagbibigay ng kontribusyon
 
-Kung nais mong mag-ambag sa proyektong ito, mangyaring basahin ang [CONTRIBUTING.md](CONTRIBUTING.md) na file at Siguruhing sumusunod ka sa [Gabay sa Pull Request](CONTRIBUTING.md#submitting-a-pull-request)
+Kung nais mong mag-ambag sa proyektong ito, mangyaring basahin ang [CONTRIBUTING.md](../CONTRIBUTING.md) na file at Siguruhing sumusunod ka sa [Gabay sa Pull Request](../CONTRIBUTING.md#submitting-a-pull-request).
 
 ## Ulat ng Problema
 
 May iba't-ibang mga channel para sa bawat problema, mangyaring gamitin ang mga ito sa pamamagitan ng pagsunod sa mga kondisyon na ito :
 
 ### Pag-uulat ng Isang Bug
-Upang mag-ulat ng bug, mangyaring buksan ang isang bagong isyu ayon sa [gabay](CONTRIBUTING.md#submitting-an-issue).
+Upang mag-ulat ng bug, mangyaring buksan ang isang bagong isyu ayon sa [gabay](../CONTRIBUTING.md#submitting-an-issue).
 
 ### Humihiling ng Bagong Tampok
-Kung mayroon kang bagong tampok sa isip, mangyaring buksan ang isang bagong isyu ayon sa [gabay](CONTRIBUTING.md#submitting-an-issue).
+Kung mayroon kang bagong tampok sa isip, mangyaring buksan ang isang bagong isyu ayon sa [gabay](../CONTRIBUTING.md#submitting-an-issue).
 
 ### Nagtatanong ng Tanong
 Kung mayroon kang tanong, maaari kang maghanap ng mga sagot sa [Kategorya ng GitHub Discussions Q&A](https://github.com/fityannugroho/idn-area/discussions/categories/q-a). Kung wala kang makitang kaugnay na pag-uusap na umiiral na, maari kang magbukas ng isang bagong pag-uusap.
