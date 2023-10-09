@@ -11,9 +11,9 @@
 
 [English](README.md) | [हिन्दी](docs/README_hi.md) | [Tagalog](docs/README_tl.md) | **Indonesia**
 
-API yang memberikan informasi tentang **wilayah administratif Indonesia**, mulai dari tingkat provinsi, kabupaten, kecamatan, hingga tingkat desa. Dan juga menyediakan data pulau sejak [version 1.1.0](https://github.com/fityannugroho/idn-area/releases/tag/v1.1.0).
+API yang memberikan informasi tentang **wilayah administratif Indonesia**, mulai dari tingkat provinsi, kabupaten, kecamatan, hingga tingkat desa. Dan juga menyediakan data pulau sejak [versi 1.1.0](https://github.com/fityannugroho/idn-area/releases/tag/v1.1.0).
 
-Dibuat dengan [NestJS framework](https://nestjs.com) dan ditulis dengan bahasa TypeScript. [Prisma](https://www.prisma.io) digunakan sebagai ORM untuk berinteraksi dengan berbagai macam databases (MySQL, PostgreSQL, and MongoDB).
+Dibuat dengan [NestJS framework](https://nestjs.com) dan ditulis dengan bahasa TypeScript. [Prisma](https://www.prisma.io) digunakan sebagai ORM untuk berinteraksi dengan berbagai macam databases (MySQL, PostgreSQL, dan MongoDB).
 
 > **⚠️ Upgrading to v3.0.0 ⚠️**
 >
@@ -24,7 +24,7 @@ Dibuat dengan [NestJS framework](https://nestjs.com) dan ditulis dengan bahasa T
 - [Panduan Awal](#panduan-awal)
 - [Data](#data)
 - [Dokumentasi](#dokumentasi)
-- [Demo di Lokal](#demo-di-lokal)
+- [Demo](#demo)
 - [Kontribusi](#kontribusi)
 - [Laporan Masalah](#laporan-masalah)
   - [Lapor Error](#lapor-error)
@@ -45,11 +45,11 @@ Data yang kami gunakan menggunakan sumber yang resmi, dikelola oleh [**idn-area-
 
 ## Dokumentasi
 
-Baca versi terbaru dokumentasi API di [documentation page](https://idn-area.cyclic.app/docs). Dokumentasi ini otomatis dibuat menggunakan [`@nestjs/swagger`](https://docs.nestjs.com/openapi/introduction).
+Baca versi terbaru dokumentasi API di [halaman dokumentasi](https://idn-area.cyclic.app/docs). Dokumentasi ini otomatis dibuat menggunakan [`@nestjs/swagger`](https://docs.nestjs.com/openapi/introduction).
 
-> Anda juga dapat mengakses dokumentasi di lokal anda dengan menjalankan aplikasi ini. (lihat [Getting Started](#getting-started)) dan buka http://localhost:3000/docs di internet browser.
+> Anda juga dapat mengakses dokumentasi di lokal anda dengan menjalankan aplikasi ini. (lihat [Panduan Awal](#panduan-awal)) dan buka http://localhost:3000/docs di internet browser.
 
-## Demo di Lokal
+## Demo 
 
 Anda dapat mencoba API ini dengan mengganti http://localhost:3000 dengan endpoint yang disediakan dalam deskripsi repositori ini.
 
@@ -60,11 +60,11 @@ Berikut adalah beberapa proyek contoh yang menggunakan API ini:
 
 ## Kontribusi
 
-Jika anda ingin berkontribusi pada proyek ini, harap baca file [CONTRIBUTING.md](CONTRIBUTING.md) dan pastikan anda mengikuti aturan yang ada di [Pull Request guide](CONTRIBUTING.md#submitting-a-pull-request).
+Jika anda ingin berkontribusi pada proyek ini, harap baca file [CONTRIBUTING.md](CONTRIBUTING.md) dan pastikan anda mengikuti aturan yang ada di [Panduan Pull Request](CONTRIBUTING.md#submitting-a-pull-request).
 
 ## Laporan Masalah
 
-Kami memiliki berbagai kanal yang berbeda untuk setiap masalah, harap gunakan kanel dengan mengikuti syarat-syarat ini:
+Kami memiliki berbagai kanal yang berbeda untuk setiap masalah, harap gunakan kanal dengan mengikuti syarat-syarat ini:
 
 ### Lapor Error
 Untuk melaporkan error, silahkan buka isu baru dengan mengikuti [panduan](CONTRIBUTING.md#submitting-an-issue).
@@ -73,7 +73,7 @@ Untuk melaporkan error, silahkan buka isu baru dengan mengikuti [panduan](CONTRI
 Jika anda punya ide untuk fitur baru, silahkan buka isu baru dengan mengikuti [panduan](CONTRIBUTING.md#submitting-an-issue).
 
 ### Pertanyaan
-Jika anda punya pertanyaan, silahkan cari jawabanya di [GitHub Discussions Q&A category](https://github.com/fityannugroho/idn-area/discussions/categories/q-a). Jika anda tidak menemukan diskusi yang relevan, anda dapat membuka diskusi yang baru.
+Jika anda punya pertanyaan, silahkan cari jawabanya di [Diskusi GitHub Kategori Tanya Jawab](https://github.com/fityannugroho/idn-area/discussions/categories/q-a). Jika anda tidak menemukan diskusi yang relevan, anda dapat membuka diskusi yang baru.
 
 ## Dukung Proyek Ini
 
