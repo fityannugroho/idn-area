@@ -9,37 +9,37 @@
   <a href="https://www.mysql.com"><img alt="MySQL" src="https://img.shields.io/badge/-MySQL-00688F?style=flat-square&logo=mysql&logoColor=white" /></a>
 </p>
 
-[English](README.md) | [हिन्दी](docs/README_hi.md) | [Tagalog](docs/README_tl.md) | **Indonesia**
+[English](../README.md) | [हिन्दी](./README_hi.md) | [Tagalog](./README_tl.md) | **Indonesia**
 
-API yang memberikan informasi tentang **wilayah administratif Indonesia**, mulai dari tingkat provinsi, kabupaten, kecamatan, hingga tingkat desa. Dan juga menyediakan data pulau sejak [versi 1.1.0](https://github.com/fityannugroho/idn-area/releases/tag/v1.1.0).
+API yang menyediakan informasi tentang **wilayah administratif Indonesia**, mulai dari tingkat provinsi, kabupaten, kecamatan, hingga tingkat desa. Dan juga menyediakan data pulau sejak [versi 1.1.0](https://github.com/fityannugroho/idn-area/releases/tag/v1.1.0).
 
-Dibuat dengan [NestJS framework](https://nestjs.com) dan ditulis dengan bahasa TypeScript. [Prisma](https://www.prisma.io) digunakan sebagai ORM untuk berinteraksi dengan berbagai macam databases (MySQL, PostgreSQL, dan MongoDB).
+Dibuat dengan [NestJS framework](https://nestjs.com) dan ditulis dengan bahasa pemrograman TypeScript. [Prisma](https://www.prisma.io) digunakan sebagai ORM untuk berinteraksi dengan berbagai macam databases (MySQL, PostgreSQL, dan MongoDB).
 
-> **⚠️ Upgrading to v3.0.0 ⚠️**
+> **⚠️ Meningkatkan to v3.0.0 ⚠️**
 >
-> Sejak [v3.0.0](https://github.com/fityannugroho/idn-area/releases/tag/v3.0.0), harus menggunakan **Node.js v18** atau versi yang lebih tinggi.
+> Sejak [v3.0.0](https://github.com/fityannugroho/idn-area/releases/tag/v3.0.0), diperlukan **Node.js v18** atau versi yang lebih tinggi.
 
 <h2>Daftar Isi</h2>
 
-- [Panduan Awal](#panduan-awal)
+- [Memulai](#memulai)
 - [Data](#data)
 - [Dokumentasi](#dokumentasi)
 - [Demo](#demo)
 - [Kontribusi](#kontribusi)
-- [Laporan Masalah](#laporan-masalah)
-  - [Lapor Error](#lapor-error)
+- [Melaporkan Masalah](#melaporkan-masalah)
+  - [Melaporkan Bug](#melaporkan-bug)
   - [Meminta Fitur Baru](#meminta-fitur-baru)
   - [Pertanyaan](#pertanyaan)
 - [Dukung Proyek Ini](#dukung-proyek-ini)
 
 ---
 
-## Panduan Awal
+##  Memulai
 
-Tolong baca [panduan install](docs/installation.md) untuk menginstall dan menjalankan aplikasi ini.
+Tolong baca [panduan install](installation.md) untuk menginstall dan menjalankan aplikasi ini.
 
 ## Data
-Data yang kami gunakan menggunakan sumber yang resmi, dikelola oleh [**idn-area-data**](https://github.com/fityannugroho/idn-area-data) repositori dan didistribusikan sebagai sebuah [npm package](https://www.npmjs.com/package/idn-area-data).
+Data yang kami gunakan menggunakan sumber yang resmi, dikelola di repositori [**idn-area-data**](https://github.com/fityannugroho/idn-area-data) dan didistribusikan sebagai sebuah [npm package](https://www.npmjs.com/package/idn-area-data).
 
 > [data](https://github.com/fityannugroho/idn-area-data/tree/main/data) ini tersedia dibawah [Open Database License (ODbL)](https://github.com/fityannugroho/idn-area-data/blob/main/data/LICENSE.md).
 
@@ -47,7 +47,7 @@ Data yang kami gunakan menggunakan sumber yang resmi, dikelola oleh [**idn-area-
 
 Baca versi terbaru dokumentasi API di [halaman dokumentasi](https://idn-area.cyclic.app/docs). Dokumentasi ini otomatis dibuat menggunakan [`@nestjs/swagger`](https://docs.nestjs.com/openapi/introduction).
 
-> Anda juga dapat mengakses dokumentasi di lokal anda dengan menjalankan aplikasi ini. (lihat [Panduan Awal](#panduan-awal)) dan buka http://localhost:3000/docs di internet browser.
+> Anda juga dapat mengakses dokumentasi di lokal anda dengan menjalankan aplikasi ini. (lihat [Memulai](#memulai)) dan buka http://localhost:3000/docs di internet browser.
 
 ## Demo 
 
@@ -62,12 +62,12 @@ Berikut adalah beberapa proyek contoh yang menggunakan API ini:
 
 Jika anda ingin berkontribusi pada proyek ini, harap baca file [CONTRIBUTING.md](CONTRIBUTING.md) dan pastikan anda mengikuti aturan yang ada di [Panduan Pull Request](CONTRIBUTING.md#submitting-a-pull-request).
 
-## Laporan Masalah
+## Melaporkan Masalah
 
 Kami memiliki berbagai kanal yang berbeda untuk setiap masalah, harap gunakan kanal dengan mengikuti syarat-syarat ini:
 
-### Lapor Error
-Untuk melaporkan error, silahkan buka isu baru dengan mengikuti [panduan](CONTRIBUTING.md#submitting-an-issue).
+### Melaporkan Bug
+Untuk melaporkan bug, silahkan buka isu baru dengan mengikuti [panduan](CONTRIBUTING.md#submitting-an-issue).
 
 ### Meminta Fitur Baru
 Jika anda punya ide untuk fitur baru, silahkan buka isu baru dengan mengikuti [panduan](CONTRIBUTING.md#submitting-an-issue).
