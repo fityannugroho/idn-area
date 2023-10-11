@@ -29,14 +29,14 @@ Dibuat dengan [NestJS framework](https://nestjs.com) dan ditulis dengan bahasa p
 - [Melaporkan Masalah](#melaporkan-masalah)
   - [Melaporkan Bug](#melaporkan-bug)
   - [Meminta Fitur Baru](#meminta-fitur-baru)
-  - [Pertanyaan](#pertanyaan)
+  - [Mengajukan Pertanyaan](#mengajukan-pertanyaan)
 - [Dukung Proyek Ini](#dukung-proyek-ini)
 
 ---
 
 ##  Memulai
 
-Tolong baca [panduan install](installation.md) untuk menginstall dan menjalankan aplikasi ini.
+Tolong baca [panduan install](./installation.md) untuk menginstall dan menjalankan aplikasi ini.
 
 ## Data
 Data yang kami gunakan menggunakan sumber yang resmi, dikelola di repositori [**idn-area-data**](https://github.com/fityannugroho/idn-area-data) dan didistribusikan sebagai sebuah [npm package](https://www.npmjs.com/package/idn-area-data).
@@ -45,9 +45,9 @@ Data yang kami gunakan menggunakan sumber yang resmi, dikelola di repositori [**
 
 ## Dokumentasi
 
-Baca versi terbaru dokumentasi API di [halaman dokumentasi](https://idn-area.cyclic.app/docs). Dokumentasi ini otomatis dibuat menggunakan [`@nestjs/swagger`](https://docs.nestjs.com/openapi/introduction).
+Baca versi terbaru dokumentasi API di [halaman dokumentasi](https://idn-area.cyclic.app/docs). Dokumentasi ini dibuat secara otomatis menggunakan [`@nestjs/swagger`](https://docs.nestjs.com/openapi/introduction).
 
-> Anda juga dapat mengakses dokumentasi di lokal anda dengan menjalankan aplikasi ini. (lihat [Memulai](#memulai)) dan buka http://localhost:3000/docs di internet browser.
+> Anda juga dapat mengakses dokumentasi di lokal Anda dengan menjalankan aplikasi ini. (lihat [Memulai](#memulai)) dan buka http://localhost:3000/docs di internet browser.
 
 ## Demo 
 
@@ -60,23 +60,23 @@ Berikut adalah beberapa proyek contoh yang menggunakan API ini:
 
 ## Kontribusi
 
-Jika anda ingin berkontribusi pada proyek ini, harap baca file [CONTRIBUTING.md](CONTRIBUTING.md) dan pastikan anda mengikuti aturan yang ada di [Panduan Pull Request](CONTRIBUTING.md#submitting-a-pull-request).
+Jika Anda ingin berkontribusi pada proyek ini, harap baca file [CONTRIBUTING.md](../CONTRIBUTING.md) dan pastikan Anda mengikuti aturan yang ada di [Panduan Pull Request](../CONTRIBUTING.md#submitting-a-pull-request).
 
 ## Melaporkan Masalah
 
 Kami memiliki berbagai kanal yang berbeda untuk setiap masalah, harap gunakan kanal dengan mengikuti syarat-syarat ini:
 
 ### Melaporkan Bug
-Untuk melaporkan bug, silahkan buka isu baru dengan mengikuti [panduan](CONTRIBUTING.md#submitting-an-issue).
+Untuk melaporkan bug, silahkan buka isu baru dengan mengikuti [panduan](../CONTRIBUTING.md#submitting-an-issue).
 
 ### Meminta Fitur Baru
-Jika anda punya ide untuk fitur baru, silahkan buka isu baru dengan mengikuti [panduan](CONTRIBUTING.md#submitting-an-issue).
+Jika Anda punya ide untuk fitur baru, silahkan buka isu baru dengan mengikuti [panduan](../CONTRIBUTING.md#submitting-an-issue).
 
-### Pertanyaan
-Jika anda punya pertanyaan, silahkan cari jawabanya di [Diskusi GitHub Kategori Tanya Jawab](https://github.com/fityannugroho/idn-area/discussions/categories/q-a). Jika anda tidak menemukan diskusi yang relevan, anda dapat membuka diskusi yang baru.
+### Mengajukan Pertanyaan
+Jika Anda punya pertanyaan, silahkan cari jawabanya di [Diskusi GitHub Kategori Tanya Jawab](https://github.com/fityannugroho/idn-area/discussions/categories/q-a). Jika Anda tidak menemukan diskusi yang relevan, Anda dapat membuka diskusi yang baru.
 
 ## Dukung Proyek Ini
 
 <a href="https://trakteer.id/fityannugroho/tip" target="_blank"><img id="wse-buttons-preview" src="https://cdn.trakteer.id/images/embed/trbtn-red-6.png" style="border: 0px none; height: 36px; --darkreader-inline-border-top: currentcolor; --darkreader-inline-border-right: currentcolor; --darkreader-inline-border-bottom: currentcolor; --darkreader-inline-border-left: currentcolor;" alt="Trakteer Saya" data-darkreader-inline-border-top="" data-darkreader-inline-border-right="" data-darkreader-inline-border-bottom="" data-darkreader-inline-border-left="" height="40"></a>
 
-Anda dapat mendukung proyek ini dengan berdonasi melalui [GitHub Sponsor](https://github.com/sponsors/fityannugroho), [Trakteer](https://trakteer.id/fityannugroho/tip), or [Saweria](https://saweria.co/fityannugroho).
+Anda dapat mendukung proyek ini dengan berdonasi melalui [GitHub Sponsor](https://github.com/sponsors/fityannugroho), [Trakteer](https://trakteer.id/fityannugroho/tip), atau [Saweria](https://saweria.co/fityannugroho).
