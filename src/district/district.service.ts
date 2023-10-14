@@ -60,6 +60,7 @@ export class DistrictService {
    * @param districtCode The district code.
    * @param options The options.
    * @returns Paginated array of villages, `[]` if there are no match district.
+   * @deprecated Use `VillageService.find` instead.
    */
   async findVillages(
     districtCode: string,

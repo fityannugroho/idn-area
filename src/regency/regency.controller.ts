@@ -71,7 +71,10 @@ export class RegencyController {
     return regency;
   }
 
-  @ApiOperation({ description: 'Get all districts in a regency.' })
+  @ApiOperation({
+    description: 'Get all districts in a regency.',
+    deprecated: true,
+  })
   @ApiQuery({
     name: 'sortBy',
     description: 'Sort districts by its code or name.',
@@ -99,7 +102,10 @@ export class RegencyController {
     return this.regencyService.findDistricts(code, queries);
   }
 
-  @ApiOperation({ description: 'Get all islands in a regency.' })
+  @ApiOperation({
+    description: 'Get all islands in a regency.',
+    deprecated: true,
+  })
   @ApiQuery({
     name: 'sortBy',
     description: 'Sort islands by its code, name, or coordinate.',

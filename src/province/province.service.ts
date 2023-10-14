@@ -62,6 +62,7 @@ export class ProvinceService {
    * @param provinceCode The province code.
    * @param options The options.
    * @returns An array of regencies, `[]` if there are no match province.
+   * @deprecated Use `RegencyService.find` instead.
    */
   async findRegencies(
     provinceCode: string,

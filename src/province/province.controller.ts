@@ -70,7 +70,10 @@ export class ProvinceController {
     return province;
   }
 
-  @ApiOperation({ description: 'Get all regencies in a province.' })
+  @ApiOperation({
+    description: 'Get all regencies in a province.',
+    deprecated: true,
+  })
   @ApiQuery({
     name: 'sortBy',
     description: 'Sort regencies by its code or name.',

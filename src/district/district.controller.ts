@@ -69,7 +69,10 @@ export class DistrictController {
     return district;
   }
 
-  @ApiOperation({ description: 'Get all villages in a district.' })
+  @ApiOperation({
+    description: 'Get all villages in a district.',
+    deprecated: true,
+  })
   @ApiQuery({
     name: 'sortBy',
     description: 'Sort villages by its code or name.',

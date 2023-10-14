@@ -64,6 +64,7 @@ export class RegencyService {
    * @param regencyCode The regency code.
    * @param options The options.
    * @returns Paginated array of districts, `[]` if there are no match regency.
+   * @deprecated Use `DistrictService.find` instead.
    */
   async findDistricts(
     regencyCode: string,
@@ -86,6 +87,7 @@ export class RegencyService {
    * @param regencyCode The regency code.
    * @param options The options.
    * @returns Paginated array of islands, `[]` if there are no match regency.
+   * @deprecated Use `IslandService.find` instead.
    */
   async findIslands(
     regencyCode: string,
