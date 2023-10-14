@@ -30,7 +30,7 @@ import { PaginatedReturn } from '@/common/interceptor/paginate.interceptor';
 export class DistrictController {
   constructor(private readonly districtService: DistrictService) {}
 
-  @ApiOperation({ description: 'Get districts by its name.' })
+  @ApiOperation({ description: 'Get the districts.' })
   @ApiQuery({
     name: 'sortBy',
     description: 'Sort by district code or name.',
