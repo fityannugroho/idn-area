@@ -1,21 +1,16 @@
-import { PaginationQuery } from '@/common/dto/pagination.dto';
 import { PaginatedReturn } from '@/common/interceptor/paginate.interceptor';
 import { getDBProviderFeatures } from '@/common/utils/db';
 import { PrismaService } from '@/prisma/prisma.service';
-import { RegencyService } from '@/regency/regency.service';
-import { SortOptions, SortService } from '@/sort/sort.service';
+import { SortService } from '@/sort/sort.service';
 import { Injectable } from '@nestjs/common';
-import { Province, Regency } from '@prisma/client';
+import { Province } from '@prisma/client';
 import { ProvinceFindQueries } from './province.dto';
 
 @Injectable()
 export class ProvinceService {
   readonly sorter: SortService<Province>;
 
-  constructor(
-    private readonly prisma: PrismaService,
-    private readonly regencyService: RegencyService,
-  ) {
+  constructor(private readonly prisma: PrismaService) {
     this.sorter = new SortService<Province>({
       sortBy: 'code',
       sortOrder: 'asc',
@@ -54,29 +49,6 @@ export class ProvinceService {
       where: {
         code: code,
       },
-    });
-  }
-
-  /**
-   * Find all regencies in a province.
-   * @param provinceCode The province code.
-   * @param options The options.
-   * @returns An array of regencies, `[]` if there are no match province.
-   * @deprecated Use `RegencyService.find` instead.
-   */
-  async findRegencies(
-    provinceCode: string,
-    options?: SortOptions<Regency> & PaginationQuery,
-  ): Promise<PaginatedReturn<Regency>> {
-    const { sortBy, sortOrder, page, limit } = options ?? {};
-
-    return this.prisma.paginator({
-      model: 'Regency',
-      args: {
-        where: { provinceCode },
-        orderBy: this.regencyService.sorter.object({ sortBy, sortOrder }),
-      },
-      paginate: { page, limit },
     });
   }
 }

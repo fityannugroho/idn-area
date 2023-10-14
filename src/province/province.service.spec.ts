@@ -1,45 +1,23 @@
+import { getProvinces } from '@/common/utils/data';
 import { getDBProviderFeatures } from '@/common/utils/db';
-import { DistrictService } from '@/district/district.service';
-import { IslandService } from '@/island/island.service';
 import { PrismaService } from '@/prisma/prisma.service';
-import { RegencyService } from '@/regency/regency.service';
 import { SortOrder } from '@/sort/sort.dto';
-import { VillageService } from '@/village/village.service';
 import { Test, TestingModule } from '@nestjs/testing';
-import { Province, Regency } from '@prisma/client';
+import { Province } from '@prisma/client';
 import { ProvinceService } from './province.service';
 
-const provinces: readonly Province[] = [
-  { code: '11', name: 'ACEH' },
-  { code: '12', name: 'SUMATERA UTARA' },
-  { code: '32', name: 'JAWA BARAT' },
-  { code: '33', name: 'JAWA TENGAH' },
-  { code: '34', name: 'DI YOGYAKARTA' },
-  { code: '35', name: 'JAWA TIMUR' },
-] as const;
-
-const regencies: readonly Regency[] = [
-  { code: '1101', name: 'KABUPATEN ACEH SELATAN', provinceCode: '11' },
-  { code: '1102', name: 'KABUPATEN ACEH TENGGARA', provinceCode: '11' },
-  { code: '1201', name: 'KABUPATEN TAPANULI TENGAH', provinceCode: '12' },
-  { code: '1202', name: 'KABUPATEN TAPANULI UTARA', provinceCode: '12' },
-  { code: '1271', name: 'KOTA MEDAN', provinceCode: '12' },
-] as const;
-
 describe('ProvinceService', () => {
+  let provinces: readonly Province[];
   let provinceService: ProvinceService;
   let prismaService: PrismaService;
 
+  beforeAll(async () => {
+    provinces = await getProvinces();
+  });
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        ProvinceService,
-        PrismaService,
-        RegencyService,
-        DistrictService,
-        IslandService,
-        VillageService,
-      ],
+      providers: [ProvinceService, PrismaService],
     }).compile();
 
     provinceService = module.get<ProvinceService>(ProvinceService);
@@ -175,59 +153,5 @@ describe('ProvinceService', () => {
       });
       expect(result).toBeNull();
     });
-  });
-
-  describe('findRegencies', () => {
-    const getPaginatorOptions = (testCode: string) => ({
-      model: 'Regency',
-      paginate: { limit: undefined, page: undefined },
-      args: { where: { provinceCode: testCode }, orderBy: { code: 'asc' } },
-    });
-
-    it('should return all regencies in a province', async () => {
-      const testCode = '11';
-      const expectedRegencies = regencies.filter(
-        (r) => r.provinceCode === testCode,
-      );
-
-      const paginatorSpy = vitest
-        .spyOn(prismaService, 'paginator')
-        .mockResolvedValue({ data: expectedRegencies });
-
-      const result = await provinceService.findRegencies(testCode);
-
-      expect(paginatorSpy).toHaveBeenCalledTimes(1);
-      expect(paginatorSpy).toHaveBeenCalledWith(getPaginatorOptions(testCode));
-
-      expect(result.data).toEqual(expectedRegencies);
-    });
-
-    it('should return empty array if there is no match province code', async () => {
-      const testCode = '9999';
-
-      const paginatorSpy = vitest
-        .spyOn(prismaService, 'paginator')
-        .mockResolvedValue({ data: [] });
-
-      const result = await provinceService.findRegencies(testCode);
-
-      expect(paginatorSpy).toHaveBeenCalledTimes(1);
-      expect(paginatorSpy).toHaveBeenCalledWith(getPaginatorOptions(testCode));
-      expect(result.data).toEqual([]);
-    });
-
-    it.todo(
-      'should return regencies sorted by name in ascending order',
-      async () => {
-        // Test implementation goes here
-      },
-    );
-
-    it.todo(
-      'should return regencies sorted by name in descending order',
-      async () => {
-        // Test implementation goes here
-      },
-    );
   });
 });

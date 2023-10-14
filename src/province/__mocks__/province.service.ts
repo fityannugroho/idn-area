@@ -1,15 +1,12 @@
 import { sortArray } from '@/common/utils/array';
-import { SortOptions } from '@/sort/sort.service';
-import { Province, Regency } from '@prisma/client';
+import { Province } from '@prisma/client';
 import { ProvinceFindQueries } from '../province.dto';
 
 export class MockProvinceService {
   readonly provinces: readonly Province[];
-  readonly regencies: readonly Regency[];
 
-  constructor(provinces: Province[], regencies: Regency[]) {
+  constructor(provinces: Province[]) {
     this.provinces = provinces;
-    this.regencies = regencies;
   }
 
   async find({
@@ -28,16 +25,5 @@ export class MockProvinceService {
     return Promise.resolve(
       this.provinces.find((province) => province.code === code) ?? null,
     );
-  }
-
-  async findRegencies(
-    provinceCode: string,
-    { sortBy = 'code', sortOrder }: SortOptions<Regency> = {},
-  ) {
-    const res = this.regencies.filter(
-      (regency) => regency.provinceCode === provinceCode,
-    );
-
-    return Promise.resolve({ data: sortArray(res, sortBy, sortOrder) });
   }
 }

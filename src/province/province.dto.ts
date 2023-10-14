@@ -8,7 +8,6 @@ import {
   PickType,
 } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumberString, Length } from 'class-validator';
-import { RegencySortQuery } from '../regency/regency.dto';
 import { PaginationQuery } from '@/common/dto/pagination.dto';
 
 export class Province {
@@ -39,12 +38,3 @@ export class ProvinceFindQueries extends IntersectionType(
 export class ProvinceFindByCodeParams extends PickType(Province, [
   'code',
 ] as const) {}
-
-export class ProvinceFindRegencyParams extends PickType(Province, [
-  'code',
-] as const) {}
-
-export class ProvinceFindRegencyQueries extends IntersectionType(
-  RegencySortQuery,
-  PaginationQuery,
-) {}
