@@ -1,31 +1,23 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { District, Village } from '@prisma/client';
-import { PrismaService } from '../prisma/prisma.service';
-import { DistrictService } from './district.service';
-import { VillageService } from '@/village/village.service';
+import { getDistricts } from '@/common/utils/data';
 import { getDBProviderFeatures } from '@/common/utils/db';
 import { SortOrder } from '@/sort/sort.dto';
-
-const districts: readonly District[] = [
-  { code: '110101', name: 'Bakongan', regencyCode: '1101' },
-  { code: '110102', name: 'Kluet Utara', regencyCode: '1101' },
-  { code: '110103', name: 'Kluet Selatan', regencyCode: '1101' },
-];
-
-const villages: readonly Village[] = [
-  { code: '1101012001', name: 'Desa 1', districtCode: '110101' },
-  { code: '1101012002', name: 'Desa 2', districtCode: '110101' },
-  { code: '1212121001', name: 'Kampung Karet', districtCode: '121212' },
-  { code: '1212121002', name: 'Kampung Berkah', districtCode: '121212' },
-] as const;
+import { Test, TestingModule } from '@nestjs/testing';
+import { District } from '@prisma/client';
+import { PrismaService } from '../prisma/prisma.service';
+import { DistrictService } from './district.service';
 
 describe('DistrictService', () => {
+  let districts: District[];
   let service: DistrictService;
   let prismaService: PrismaService;
 
+  beforeAll(async () => {
+    districts = await getDistricts();
+  });
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [DistrictService, PrismaService, VillageService],
+      providers: [DistrictService, PrismaService],
     }).compile();
 
     service = module.get<DistrictService>(DistrictService);
@@ -185,45 +177,6 @@ describe('DistrictService', () => {
         },
       });
       expect(result).toEqual(expectedDistrict);
-    });
-  });
-
-  describe('findVillages', async () => {
-    const getPaginatorOptions = (testCode: string) => ({
-      model: 'Village',
-      paginate: { page: undefined, limit: undefined },
-      args: { where: { districtCode: testCode } },
-    });
-
-    it('should return empty array if there is no match district code', async () => {
-      const testCode = '999999';
-
-      const paginatorSpy = vitest
-        .spyOn(prismaService, 'paginator')
-        .mockResolvedValue({ data: [] });
-
-      const result = await service.findVillages(testCode);
-
-      expect(paginatorSpy).toHaveBeenCalledTimes(1);
-      expect(paginatorSpy).toHaveBeenCalledWith(getPaginatorOptions(testCode));
-      expect(result.data).toEqual([]);
-    });
-
-    it('should return all villages in a district', async () => {
-      const testCode = '110101';
-      const expectedVillages = villages.filter(
-        (v) => v.districtCode === testCode,
-      );
-
-      const paginatorSpy = vitest
-        .spyOn(prismaService, 'paginator')
-        .mockResolvedValue({ data: expectedVillages });
-
-      const result = await service.findVillages(testCode);
-
-      expect(paginatorSpy).toHaveBeenCalledTimes(1);
-      expect(paginatorSpy).toHaveBeenCalledWith(getPaginatorOptions(testCode));
-      expect(result.data).toEqual(expectedVillages);
     });
   });
 });

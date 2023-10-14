@@ -1,15 +1,12 @@
 import { sortArray } from '@/common/utils/array';
-import { SortOptions } from '@/sort/sort.service';
-import { District, Village } from '@prisma/client';
+import { District } from '@prisma/client';
 import { DistrictFindQueries } from '../district.dto';
 
 export class MockDistrictService {
   readonly districts: District[];
-  readonly villages: Village[];
 
-  constructor(districts: District[], villages: Village[]) {
+  constructor(districts: District[]) {
     this.districts = districts;
-    this.villages = villages;
   }
 
   async find({
@@ -33,20 +30,5 @@ export class MockDistrictService {
     return Promise.resolve(
       this.districts.find((district) => district.code === code) ?? null,
     );
-  }
-
-  async findVillages(
-    districtCode: string,
-    { sortBy = 'code', sortOrder }: SortOptions<Village> = {},
-  ) {
-    if (this.districts.every((p) => p.code !== districtCode)) {
-      return null;
-    }
-
-    const res = this.villages.filter(
-      (village) => village.districtCode === districtCode,
-    );
-
-    return Promise.resolve({ data: sortArray(res, sortBy, sortOrder) });
   }
 }

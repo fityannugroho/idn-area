@@ -1,9 +1,9 @@
 import { getValues, sortArray } from '@/common/utils/array';
-import { getDistricts, getVillages } from '@/common/utils/data';
+import { getDistricts } from '@/common/utils/data';
 import { SortOrder } from '@/sort/sort.dto';
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { District, Village } from '@prisma/client';
+import { District } from '@prisma/client';
 import { MockDistrictService } from './__mocks__/district.service';
 import { DistrictController } from './district.controller';
 import { DistrictService } from './district.service';
@@ -12,12 +12,10 @@ describe('DistrictController', () => {
   const testDistrictCode = '110101';
 
   let districts: District[];
-  let villages: Village[];
   let controller: DistrictController;
 
   beforeAll(async () => {
     districts = await getDistricts();
-    villages = await getVillages();
   });
 
   beforeEach(async () => {
@@ -26,7 +24,7 @@ describe('DistrictController', () => {
       providers: [
         {
           provide: DistrictService,
-          useValue: new MockDistrictService(districts, villages),
+          useValue: new MockDistrictService(districts),
         },
       ],
     }).compile();
@@ -147,66 +145,6 @@ describe('DistrictController', () => {
       await expect(
         controller.findByCode({ code: '000000' }),
       ).rejects.toThrowError(NotFoundException);
-    });
-  });
-
-  describe('findVillages', () => {
-    let expectedVillages: Village[];
-
-    beforeAll(() => {
-      expectedVillages = villages.filter(
-        (p) => p.districtCode === testDistrictCode,
-      );
-    });
-
-    it('should return all villages in the matching district', async () => {
-      const { data } = await controller.findVillages({
-        code: testDistrictCode,
-      });
-
-      for (const village of data) {
-        expect(village).toEqual(
-          expect.objectContaining({
-            code: expect.stringMatching(
-              new RegExp(`^${testDistrictCode}\\d{4}$`),
-            ),
-            name: expect.any(String),
-            districtCode: testDistrictCode,
-          }),
-        );
-      }
-
-      expect(data).toHaveLength(
-        villages.filter((p) => p.districtCode === testDistrictCode).length,
-      );
-    });
-
-    it('should throw NotFoundException if there is no matching district', async () => {
-      await expect(
-        controller.findVillages({ code: '000000' }),
-      ).rejects.toThrowError(NotFoundException);
-    });
-
-    it('should return all villages in the matching district sorted by name ascending', async () => {
-      const { data } = await controller.findVillages(
-        { code: testDistrictCode },
-        { sortBy: 'name' },
-      );
-
-      expect(getValues(data, 'code')).toEqual(
-        getValues(sortArray(expectedVillages, 'name'), 'code'),
-      );
-    });
-
-    it('should return all villages in the matching district sorted by name descending', async () => {
-      const { data } = await controller.findVillages(
-        { code: testDistrictCode },
-        { sortBy: 'name', sortOrder: SortOrder.DESC },
-      );
-
-      expect(getValues(data, 'code')).toEqual(
-        getValues(sortArray(expectedVillages, 'name', SortOrder.DESC), 'code'),
-      );
     });
   });
 });

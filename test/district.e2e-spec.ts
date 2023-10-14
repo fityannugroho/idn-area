@@ -1,6 +1,6 @@
-import { District, Village } from '@prisma/client';
+import { District } from '@prisma/client';
 import { AppTester } from './helper/app-tester';
-import { districtRegex, villageRegex } from './helper/data-regex';
+import { districtRegex } from './helper/data-regex';
 
 describe('District (e2e)', () => {
   const baseUrl = '/districts';
@@ -101,40 +101,6 @@ describe('District (e2e)', () => {
         code: testCode,
         name: expect.stringMatching(districtRegex.name),
         regencyCode: testCode.slice(0, 4),
-      });
-    });
-  });
-
-  describe(`GET ${baseUrl}/{code}/villages`, () => {
-    it('should return 400 if the `code` is invalid', async () => {
-      await tester.expectBadCode(
-        (code) => `${baseUrl}/${code}/villages`,
-        badDistrictCodes,
-      );
-    });
-
-    it('should return 400 if any villages sort query is invalid', async () => {
-      await tester.expectBadSortQuery(
-        (sortQueryStr) => `${baseUrl}?${sortQueryStr}`,
-        ['', 'unknown'],
-      );
-    });
-
-    it('should return 404 if the `code` does not exist', async () => {
-      await tester.expectNotFound(`${baseUrl}/000000/villages`);
-    });
-
-    it('should return all villages in the district with the `code`', async () => {
-      const villages = await tester.expectData<Village[]>(
-        `${baseUrl}/${testCode}/villages`,
-      );
-
-      villages.forEach((village) => {
-        expect(village).toEqual({
-          code: expect.stringMatching(villageRegex.code),
-          name: expect.stringMatching(villageRegex.name),
-          districtCode: testCode,
-        });
       });
     });
   });
