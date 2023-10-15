@@ -8,7 +8,6 @@ import {
   PickType,
 } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumberString, Length } from 'class-validator';
-import { VillageSortQuery } from '../village/village.dto';
 import { PaginationQuery } from '@/common/dto/pagination.dto';
 
 export class District {
@@ -48,12 +47,3 @@ export class DistrictFindQueries extends IntersectionType(
 export class DistrictFindByCodeParams extends PickType(District, [
   'code',
 ] as const) {}
-
-export class DistrictFindVillageParams extends PickType(District, [
-  'code',
-] as const) {}
-
-export class DistrictFindVillageQueries extends IntersectionType(
-  VillageSortQuery,
-  PaginationQuery,
-) {}

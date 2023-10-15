@@ -1,5 +1,4 @@
 import { ApiDataResponse } from '@/common/decorator/api-data-response.decorator';
-import { Regency } from '@/regency/regency.dto';
 import {
   Controller,
   Get,
@@ -18,8 +17,6 @@ import {
   Province,
   ProvinceFindByCodeParams,
   ProvinceFindQueries,
-  ProvinceFindRegencyParams,
-  ProvinceFindRegencyQueries,
 } from './province.dto';
 import { ProvinceService } from './province.service';
 import { PaginatedReturn } from '@/common/interceptor/paginate.interceptor';
@@ -68,33 +65,5 @@ export class ProvinceController {
     }
 
     return province;
-  }
-
-  @ApiOperation({ description: 'Get all regencies in a province.' })
-  @ApiQuery({
-    name: 'sortBy',
-    description: 'Sort regencies by its code or name.',
-    required: false,
-    type: 'string',
-    example: 'code',
-  })
-  @ApiPaginatedResponse({
-    model: Regency,
-    description: 'Returns array of regencies.',
-  })
-  @ApiBadRequestResponse({ description: 'If the `code` is invalid.' })
-  @ApiNotFoundResponse({
-    description: 'If there are no province match with the `code`.',
-  })
-  @Get(':code/regencies')
-  async findRegencies(
-    @Param() { code }: ProvinceFindRegencyParams,
-    @Query() queries?: ProvinceFindRegencyQueries,
-  ): Promise<PaginatedReturn<Regency>> {
-    if ((await this.provinceService.findByCode(code)) === null) {
-      throw new NotFoundException(`There are no province with code '${code}'`);
-    }
-
-    return this.provinceService.findRegencies(code, queries);
   }
 }

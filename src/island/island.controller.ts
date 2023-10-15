@@ -28,7 +28,7 @@ export class IslandController {
   constructor(private readonly islandService: IslandService) {}
 
   @ApiOperation({
-    description: 'Get the islands by its name.',
+    description: 'Get the islands.',
   })
   @ApiQuery({
     name: 'sortBy',

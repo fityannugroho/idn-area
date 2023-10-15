@@ -1,5 +1,4 @@
 import { ApiDataResponse } from '@/common/decorator/api-data-response.decorator';
-import { Village } from '@/village/village.dto';
 import {
   Controller,
   Get,
@@ -18,8 +17,6 @@ import {
   District,
   DistrictFindByCodeParams,
   DistrictFindQueries,
-  DistrictFindVillageParams,
-  DistrictFindVillageQueries,
 } from './district.dto';
 import { DistrictService } from './district.service';
 import { ApiPaginatedResponse } from '@/common/decorator/api-paginated-response.decorator';
@@ -30,7 +27,7 @@ import { PaginatedReturn } from '@/common/interceptor/paginate.interceptor';
 export class DistrictController {
   constructor(private readonly districtService: DistrictService) {}
 
-  @ApiOperation({ description: 'Get districts by its name.' })
+  @ApiOperation({ description: 'Get the districts.' })
   @ApiQuery({
     name: 'sortBy',
     description: 'Sort by district code or name.',
@@ -67,33 +64,5 @@ export class DistrictController {
     }
 
     return district;
-  }
-
-  @ApiOperation({ description: 'Get all villages in a district.' })
-  @ApiQuery({
-    name: 'sortBy',
-    description: 'Sort villages by its code or name.',
-    required: false,
-    type: 'string',
-    example: 'code',
-  })
-  @ApiPaginatedResponse({
-    model: Village,
-    description: 'Returns array of villages.',
-  })
-  @ApiBadRequestResponse({ description: 'If the `code` is invalid.' })
-  @ApiNotFoundResponse({
-    description: 'If there are no district match with the `code`.',
-  })
-  @Get(':code/villages')
-  async findVillages(
-    @Param() { code }: DistrictFindVillageParams,
-    @Query() queries?: DistrictFindVillageQueries,
-  ): Promise<PaginatedReturn<Village>> {
-    if ((await this.districtService.findByCode(code)) === null) {
-      throw new NotFoundException(`There are no district with code '${code}'`);
-    }
-
-    return this.districtService.findVillages(code, queries);
   }
 }

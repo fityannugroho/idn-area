@@ -27,7 +27,7 @@ import { PaginatedReturn } from '@/common/interceptor/paginate.interceptor';
 export class VillageController {
   constructor(private readonly villageService: VillageService) {}
 
-  @ApiOperation({ description: 'Get villages by its name.' })
+  @ApiOperation({ description: 'Get the villages.' })
   @ApiQuery({
     name: 'sortBy',
     description: 'Sort by village code or name.',

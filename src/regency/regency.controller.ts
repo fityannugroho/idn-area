@@ -1,7 +1,5 @@
 import { ApiDataResponse } from '@/common/decorator/api-data-response.decorator';
 import { ApiPaginatedResponse } from '@/common/decorator/api-paginated-response.decorator';
-import { District } from '@/district/district.dto';
-import { Island } from '@/island/island.dto';
 import {
   Controller,
   Get,
@@ -19,9 +17,6 @@ import {
 import {
   Regency,
   RegencyFindByCodeParams,
-  RegencyFindDistrictParams,
-  RegencyFindDistrictQueries,
-  RegencyFindIslandsQueries,
   RegencyFindQueries,
 } from './regency.dto';
 import { RegencyService } from './regency.service';
@@ -69,61 +64,5 @@ export class RegencyController {
     }
 
     return regency;
-  }
-
-  @ApiOperation({ description: 'Get all districts in a regency.' })
-  @ApiQuery({
-    name: 'sortBy',
-    description: 'Sort districts by its code or name.',
-    required: false,
-    type: 'string',
-    example: 'code',
-  })
-  @ApiPaginatedResponse({
-    model: District,
-    description: 'Returns array of districts.',
-  })
-  @ApiBadRequestResponse({ description: 'If the `code` is invalid.' })
-  @ApiNotFoundResponse({
-    description: 'If there are no regency match with the `code`.',
-  })
-  @Get(':code/districts')
-  async findDistricts(
-    @Param() { code }: RegencyFindDistrictParams,
-    @Query() queries?: RegencyFindDistrictQueries,
-  ): Promise<PaginatedReturn<District>> {
-    if ((await this.regencyService.findByCode(code)) === null) {
-      throw new NotFoundException(`There are no regency with code '${code}'`);
-    }
-
-    return this.regencyService.findDistricts(code, queries);
-  }
-
-  @ApiOperation({ description: 'Get all islands in a regency.' })
-  @ApiQuery({
-    name: 'sortBy',
-    description: 'Sort islands by its code, name, or coordinate.',
-    required: false,
-    type: 'string',
-    example: 'code',
-  })
-  @ApiPaginatedResponse({
-    model: Island,
-    description: 'Returns array of islands.',
-  })
-  @ApiBadRequestResponse({ description: 'If the `code` is invalid.' })
-  @ApiNotFoundResponse({
-    description: 'If there are no regency match with the `code`.',
-  })
-  @Get(':code/islands')
-  async findIslands(
-    @Param() { code }: RegencyFindByCodeParams,
-    @Query() queries?: RegencyFindIslandsQueries,
-  ) {
-    if ((await this.regencyService.findByCode(code)) === null) {
-      throw new NotFoundException(`There are no regency with code '${code}'`);
-    }
-
-    return this.regencyService.findIslands(code, queries);
   }
 }

@@ -1,6 +1,6 @@
-import { Province, Regency } from '@prisma/client';
+import { Province } from '@prisma/client';
 import { AppTester } from './helper/app-tester';
-import { provinceRegex, regencyRegex } from './helper/data-regex';
+import { provinceRegex } from './helper/data-regex';
 
 describe('Province (e2e)', () => {
   const baseUrl = '/provinces';
@@ -85,36 +85,6 @@ describe('Province (e2e)', () => {
       expect(province).toEqual({
         code: testCode,
         name: expect.stringMatching(provinceRegex.name),
-      });
-    });
-  });
-
-  describe(`GET ${baseUrl}/{code}/regencies`, () => {
-    it('should return 400 if the `code` is invalid', async () => {
-      await tester.expectBadCode(
-        (code) => `${baseUrl}/${code}/regencies`,
-        badProvinceCodes,
-      );
-    });
-
-    it('should return 400 if regencies sort query is invalid', async () => {
-      await tester.expectBadSortQuery(
-        (sortQueryStr) => `${baseUrl}/${testCode}/regencies?${sortQueryStr}`,
-        ['', 'unknown'],
-      );
-    });
-
-    it('should return all regencies from specific province', async () => {
-      const regencies = await tester.expectData<Regency[]>(
-        `${baseUrl}/${testCode}/regencies`,
-      );
-
-      regencies.forEach((regency) => {
-        expect(regency).toEqual({
-          code: expect.stringMatching(regencyRegex.code),
-          name: expect.stringMatching(regencyRegex.name),
-          provinceCode: testCode,
-        });
       });
     });
   });
