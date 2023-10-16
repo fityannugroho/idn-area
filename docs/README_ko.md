@@ -9,7 +9,7 @@
   <a href="https://www.mysql.com"><img alt="MySQL" src="https://img.shields.io/badge/-MySQL-00688F?style=flat-square&logo=mysql&logoColor=white" /></a>
 </p>
 
-**English** | [हिन्दी](docs/README_hi.md) | [Tagalog](docs/README_tl.md) | [한국어](docs/README_ko.md)
+[English](../README.md) | [हिन्दी](README_hi.md) | [Tagalog](README_tl.md) | **한국어**
 
 인도네시아의 행정 구역 정보를 제공하는 API입니다. 이 API는 성, 지방, 지구 및 마을 수준의 정보뿐만 아니라 [버전 1.1.0](https://github.com/fityannugroho/idn-area/releases/tag/v1.1.0)부터는 섬 데이터도 제공합니다.
 
