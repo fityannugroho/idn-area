@@ -22,7 +22,7 @@ export class Island {
   @IsNotEmpty()
   @IsNumberString()
   @Length(9, 9)
-  @ApiProperty({ description: 'The island code', example: '1101014001' })
+  @ApiProperty({ description: 'The island code', example: '110140001' })
   code: string;
 
   @IsNotEmpty()
