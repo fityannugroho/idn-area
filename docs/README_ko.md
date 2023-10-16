@@ -1,4 +1,4 @@
-<h1 align="">Indonesian Area API (<i>API Wilayah Indonesia</i>)</h1>
+<h1 align="">인도네시아 지역 API</h1>
 
 <p>
   <a href="https://nestjs.com"><img alt="NestJS" src="https://img.shields.io/badge/-NestJS-ea2845?style=flat-square&logo=nestjs&logoColor=white" /></a>
