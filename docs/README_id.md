@@ -9,13 +9,13 @@
   <a href="https://www.mysql.com"><img alt="MySQL" src="https://img.shields.io/badge/-MySQL-00688F?style=flat-square&logo=mysql&logoColor=white" /></a>
 </p>
 
-[English](../README.md) | [हिन्दी](./README_hi.md) | [Tagalog](./README_tl.md) | **Indonesia**
+[English](../README.md) | [हिन्दी](README_hi.md) | [Tagalog](README_tl.md) | **Indonesia**
 
-API yang menyediakan informasi tentang **wilayah administratif Indonesia**, mulai dari tingkat provinsi, kabupaten, kecamatan, hingga tingkat desa. Dan juga menyediakan data pulau sejak [versi 1.1.0](https://github.com/fityannugroho/idn-area/releases/tag/v1.1.0).
+API yang menyediakan informasi tentang **wilayah administratif Indonesia**, mulai dari tingkat provinsi, kabupaten, kecamatan, hingga tingkat desa. API ini juga menyediakan data pulau sejak [versi 1.1.0](https://github.com/fityannugroho/idn-area/releases/tag/v1.1.0).
 
-Dibuat dengan [NestJS framework](https://nestjs.com) dan ditulis dengan bahasa pemrograman TypeScript. [Prisma](https://www.prisma.io) digunakan sebagai ORM untuk berinteraksi dengan berbagai macam databases (MySQL, PostgreSQL, dan MongoDB).
+Dibuat dengan [NestJS framework](https://nestjs.com) dan ditulis dengan bahasa pemrograman TypeScript. [Prisma](https://www.prisma.io) digunakan sebagai ORM untuk berinteraksi dengan berbagai macam jenis database (MySQL, PostgreSQL, dan MongoDB).
 
-> **⚠️ Meningkatkan to v3.0.0 ⚠️**
+> **⚠️ Meningkatkan ke v3.0.0 ⚠️**
 >
 > Sejak [v3.0.0](https://github.com/fityannugroho/idn-area/releases/tag/v3.0.0), diperlukan **Node.js v18** atau versi yang lebih tinggi.
 
@@ -36,7 +36,7 @@ Dibuat dengan [NestJS framework](https://nestjs.com) dan ditulis dengan bahasa p
 
 ##  Memulai
 
-Tolong baca [panduan install](./installation.md) untuk menginstall dan menjalankan aplikasi ini.
+Tolong baca [panduan instalasi](installation.md) untuk memasang dan menjalankan aplikasi ini.
 
 ## Data
 Data yang kami gunakan menggunakan sumber yang resmi, dikelola di repositori [**idn-area-data**](https://github.com/fityannugroho/idn-area-data) dan didistribusikan sebagai sebuah [npm package](https://www.npmjs.com/package/idn-area-data).
@@ -47,7 +47,7 @@ Data yang kami gunakan menggunakan sumber yang resmi, dikelola di repositori [**
 
 Baca versi terbaru dokumentasi API di [halaman dokumentasi](https://idn-area.cyclic.app/docs). Dokumentasi ini dibuat secara otomatis menggunakan [`@nestjs/swagger`](https://docs.nestjs.com/openapi/introduction).
 
-> Anda juga dapat mengakses dokumentasi di lokal Anda dengan menjalankan aplikasi ini. (lihat [Memulai](#memulai)) dan buka http://localhost:3000/docs di internet browser.
+> Anda juga dapat mengakses dokumentasinya di perangkat lokal Anda dengan menjalankan aplikasi ini (lihat [Memulai](#memulai)) dan buka http://localhost:3000/docs di browser Anda.
 
 ## Demo 
 
