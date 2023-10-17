@@ -36,7 +36,7 @@
 
 ## 시작하기
 
-이 앱을 설치하고 실행하려면 [설치 가이드](docs/installation.md)를 읽어보세요.
+이 앱을 설치하고 실행하려면 [설치 가이드](./installation.md)를 읽어보세요.
 
 ## 데이터
 
@@ -59,17 +59,17 @@
 
 ## 기여
 
-이 프로젝트에 기여하고 싶다면 [CONTRIBUTING.md](CONTRIBUTING.md) 파일을 읽고 [풀 리퀘스트 가이드](CONTRIBUTING.md#submitting-a-pull-request)를 따르도록 하세요.
+이 프로젝트에 기여하고 싶다면 [CONTRIBUTING.md](../CONTRIBUTING.md) 파일을 읽고 [풀 리퀘스트 가이드](../CONTRIBUTING.md#submitting-a-pull-request)를 따르도록 하세요.
 
 ## 문제 보고
 
 다른 문제에 대해 각각 다른 채널을 가지고 있으니, 다음 조건에 따라 사용해주세요:
 
 ### 버그 보고
-버그를 보고하려면 [가이드](CONTRIBUTING.md#submitting-an-issue)를 따라 새 이슈를 열어주세요.
+버그를 보고하려면 [가이드](../CONTRIBUTING.md#submitting-an-issue)를 따라 새 이슈를 열어주세요.
 
 ### 새로운 기능 요청
-새로운 기능을 원한다면 [가이드](CONTRIBUTING.md#submitting-an-issue)를 따라 새 이슈를 열어주세요.
+새로운 기능을 원한다면 [가이드](../CONTRIBUTING.md#submitting-an-issue)를 따라 새 이슈를 열어주세요.
 
 ### 질문하기
 질문이 있을 경우, [GitHub Discussions Q&A 카테고리](https://github.com/fityannugroho/idn-area/discussions/categories/q-a)에서 답변을 찾을 수 있습니다. 이미 관련된 토론이 없다면 새 토론을 열 수 있습니다.
