@@ -9,7 +9,7 @@
   <a href="https://www.mysql.com"><img alt="MySQL" src="https://img.shields.io/badge/-MySQL-00688F?style=flat-square&logo=mysql&logoColor=white" /></a>
 </p>
 
-[English](../README.md) | [हिन्दी](README_hi.md) | [Tagalog](README_tl.md) | **Indonesia**
+[English](../README.md) | [हिन्दी](README_hi.md) | **Bahasa Indonesia** | [한국어](README_ko.md) | [Tagalog](README_tl.md)
 
 API yang menyediakan informasi tentang **wilayah administratif Indonesia**, mulai dari tingkat provinsi, kabupaten, kecamatan, hingga tingkat desa. API ini juga menyediakan data pulau sejak [versi 1.1.0](https://github.com/fityannugroho/idn-area/releases/tag/v1.1.0).
 
@@ -41,7 +41,7 @@ Tolong baca [panduan instalasi](installation.md) untuk memasang dan menjalankan 
 ## Data
 Data yang kami gunakan menggunakan sumber yang resmi, dikelola di repositori [**idn-area-data**](https://github.com/fityannugroho/idn-area-data) dan didistribusikan sebagai sebuah [npm package](https://www.npmjs.com/package/idn-area-data).
 
-> [data](https://github.com/fityannugroho/idn-area-data/tree/main/data) ini tersedia dibawah [Open Database License (ODbL)](https://github.com/fityannugroho/idn-area-data/blob/main/data/LICENSE.md).
+> [Data](https://github.com/fityannugroho/idn-area-data/tree/main/data) tersebut tersedia dibawah [Open Database License (ODbL)](https://github.com/fityannugroho/idn-area-data/blob/main/data/LICENSE.md).
 
 ## Dokumentasi
 
@@ -49,7 +49,7 @@ Baca versi terbaru dokumentasi API di [halaman dokumentasi](https://idn-area.cyc
 
 > Anda juga dapat mengakses dokumentasinya di perangkat lokal Anda dengan menjalankan aplikasi ini (lihat [Memulai](#memulai)) dan buka http://localhost:3000/docs di browser Anda.
 
-## Demo 
+## Demo
 
 Anda dapat mencoba API ini dengan mengganti http://localhost:3000 dengan endpoint yang disediakan dalam deskripsi repositori ini.
 
@@ -77,6 +77,6 @@ Jika Anda punya pertanyaan, silahkan cari jawabanya di [Diskusi GitHub Kategori 
 
 ## Dukung Proyek Ini
 
-<a href="https://trakteer.id/fityannugroho/tip" target="_blank"><img id="wse-buttons-preview" src="https://cdn.trakteer.id/images/embed/trbtn-red-6.png" style="border: 0px none; height: 36px; --darkreader-inline-border-top: currentcolor; --darkreader-inline-border-right: currentcolor; --darkreader-inline-border-bottom: currentcolor; --darkreader-inline-border-left: currentcolor;" alt="Trakteer Saya" data-darkreader-inline-border-top="" data-darkreader-inline-border-right="" data-darkreader-inline-border-bottom="" data-darkreader-inline-border-left="" height="40"></a>
+Berikan ⭐️ jika proyek ini membantu Anda!
 
 Anda dapat mendukung proyek ini dengan berdonasi melalui [GitHub Sponsor](https://github.com/sponsors/fityannugroho), [Trakteer](https://trakteer.id/fityannugroho/tip), atau [Saweria](https://saweria.co/fityannugroho).

@@ -9,7 +9,7 @@
   <a href="https://www.mysql.com"><img alt="MySQL" src="https://img.shields.io/badge/-MySQL-00688F?style=flat-square&logo=mysql&logoColor=white" /></a>
 </p>
 
-[English](../README.md) | [हिन्दी](README_hi.md) | [Tagalog](README_tl.md) | **한국어**
+[English](../README.md) | [हिन्दी](README_hi.md) | [Bahasa Indonesia](README_id.md) | **한국어** | [Tagalog](README_tl.md)
 
 인도네시아의 행정 구역 정보를 제공하는 API입니다. 이 API는 성, 지방, 지구 및 마을 수준의 정보뿐만 아니라 [버전 1.1.0](https://github.com/fityannugroho/idn-area/releases/tag/v1.1.0)부터는 섬 데이터도 제공합니다.
 
@@ -48,7 +48,7 @@
 
 최신 API 문서를 [문서 페이지](https://idn-area.cyclic.app/docs)에서 확인하세요. 이 문서는 자동으로 [`@nestjs/swagger`](https://docs.nestjs.com/openapi/introduction)를 사용하여 생성됩니다.
 
-> 또한 앱을 실행하고 브라우저에서 http://localhost:3000/docs를 열어 로컬 머신에서 문서에 액세스할 수도 있습니다. (자세한 내용은 [시작하기](#getting-started) 참조)
+> 또한 앱을 실행하고 브라우저에서 http://localhost:3000/docs를 열어 로컬 머신에서 문서에 액세스할 수도 있습니다. (자세한 내용은 [시작하기](#시작하기) 참조)
 
 ## 라이브 데모
 
@@ -75,5 +75,7 @@
 질문이 있을 경우, [GitHub Discussions Q&A 카테고리](https://github.com/fityannugroho/idn-area/discussions/categories/q-a)에서 답변을 찾을 수 있습니다. 이미 관련된 토론이 없다면 새 토론을 열 수 있습니다.
 
 ## 이 프로젝트 지원하기
+
+이 프로젝트가 도움이 되었다면 ⭐️를 눌러주세요!
 
 이 프로젝트를 지원하려면 [GitHub Sponsor](https://github.com/sponsors/fityannugroho), [Trakteer](https://trakteer.id/fityannugroho/tip) 또는 [Saweria](https://saweria.co/fityannugroho)를 통해 기부할 수 있습니다.

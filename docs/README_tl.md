@@ -1,4 +1,4 @@
-<h1 align="">Indonesyanong API ng Lugar (<i>API Wilayah Indonesia</i>)</h1>
+<h1 align="">Indonesyanong API ng Lugar</h1>
 
 <p>
   <a href="https://nestjs.com"><img alt="NestJS" src="https://img.shields.io/badge/-NestJS-ea2845?style=flat-square&logo=nestjs&logoColor=white" /></a>
@@ -9,7 +9,7 @@
   <a href="https://www.mysql.com"><img alt="MySQL" src="https://img.shields.io/badge/-MySQL-00688F?style=flat-square&logo=mysql&logoColor=white" /></a>
 </p>
 
-[English](../README.md) | [हिन्दी](README_hi.md) | **Tagalog**
+[English](../README.md) | [हिन्दी](README_hi.md) | [Bahasa Indonesia](README_id.md) | [한국어](README_ko.md) | **Tagalog**
 
 API na nagbibigay ng impormasyon tungkol sa **Mga administratibong lugar sa Indonesia**, sa antas ng lalawigan, bayan, distrito, hanggang sa mga barangay. Isinasama rin nito ang datos tungkol sa mga isla simula [bersyon 1.1.0](https://github.com/fityannugroho/idn-area/releases/tag/v1.1.0).
 
@@ -78,6 +78,6 @@ Kung mayroon kang tanong, maaari kang maghanap ng mga sagot sa [Kategorya ng Git
 
 ## Suportahan ang Proyektong Ito
 
-<a href="https://trakteer.id/fityannugroho/tip" target="_blank"><img id="wse-buttons-preview" src="https://cdn.trakteer.id/images/embed/trbtn-red-6.png" style="border: 0px none; height: 36px; --darkreader-inline-border-top: currentcolor; --darkreader-inline-border-right: currentcolor; --darkreader-inline-border-bottom: currentcolor; --darkreader-inline-border-left: currentcolor;" alt="Trakteer Saya" data-darkreader-inline-border-top="" data-darkreader-inline-border-right="" data-darkreader-inline-border-bottom="" data-darkreader-inline-border-left="" height="40"></a>
+Magbigay ng ⭐️ kung nakatulong sa iyo ang proyektong ito!
 
 Maari kang mag-suporta sa proyektong ito sa pamamagitan ng pag-donate sa pamamagitan ng [GitHub Sponsor](https://github.com/sponsors/fityannugroho), [Trakteer](https://trakteer.id/fityannugroho/tip), o [Saweria](https://saweria.co/fityannugroho).

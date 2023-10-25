@@ -1,4 +1,4 @@
-<h1 align="">Indonesian Area API (<i>API Wilayah Indonesia</i>)</h1>
+<h1 align="">Indonesian Area API</h1>
 
 <p>
   <a href="https://nestjs.com"><img alt="NestJS" src="https://img.shields.io/badge/-NestJS-ea2845?style=flat-square&logo=nestjs&logoColor=white" /></a>
@@ -9,7 +9,7 @@
   <a href="https://www.mysql.com"><img alt="MySQL" src="https://img.shields.io/badge/-MySQL-00688F?style=flat-square&logo=mysql&logoColor=white" /></a>
 </p>
 
-**English** | [हिन्दी](docs/README_hi.md) | [Tagalog](docs/README_tl.md)
+**English** | [हिन्दी](docs/README_hi.md) | [Bahasa Indonesia](docs/README_id.md) | [한국어](docs/README_ko.md) | [Tagalog](docs/README_tl.md)
 
 API that provides information on the **administrative areas of Indonesia**, from the province, regency, district, to village levels. It also provides island data since [version 1.1.0](https://github.com/fityannugroho/idn-area/releases/tag/v1.1.0).
 
@@ -78,6 +78,6 @@ If you have a question, you can search for answers in the [GitHub Discussions Q&
 
 ## Support This Project
 
-<a href="https://trakteer.id/fityannugroho/tip" target="_blank"><img id="wse-buttons-preview" src="https://cdn.trakteer.id/images/embed/trbtn-red-6.png" style="border: 0px none; height: 36px; --darkreader-inline-border-top: currentcolor; --darkreader-inline-border-right: currentcolor; --darkreader-inline-border-bottom: currentcolor; --darkreader-inline-border-left: currentcolor;" alt="Trakteer Saya" data-darkreader-inline-border-top="" data-darkreader-inline-border-right="" data-darkreader-inline-border-bottom="" data-darkreader-inline-border-left="" height="40"></a>
+Give a ⭐️ if this project helped you!
 
 You can support this project by donating via [GitHub Sponsor](https://github.com/sponsors/fityannugroho), [Trakteer](https://trakteer.id/fityannugroho/tip), or [Saweria](https://saweria.co/fityannugroho).

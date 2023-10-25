@@ -1,4 +1,4 @@
-<h1 align="">इन्डोनेशियाई क्षेत्र एपीआई (<i>API Wilayah Indonesia</i>)</h1>
+<h1 align="">इन्डोनेशियाई क्षेत्र एपीआई</h1>
 
 <p>
   <a href="https://nestjs.com"><img alt="नेस्ट जे एस" src="https://img.shields.io/badge/-NestJS-ea2845?style=flat-square&logo=nestjs&logoColor=white" /></a>
@@ -9,7 +9,7 @@
   <a href="https://www.mysql.com"><img alt="माई एसक्यूएल" src="https://img.shields.io/badge/-MySQL-00688F?style=flat-square&logo=mysql&logoColor=white" /></a>
 </p>
 
-[English](../README.md) | **हिन्दी** | [Tagalog](README_tl.md)
+[English](../README.md) | **हिन्दी** | [Bahasa Indonesia](README_id.md) | [한국어](README_ko.md) | [Tagalog](README_tl.md)
 
 एपीआई जो इंडोनेशिया के **प्रशासनिक क्षेत्रों**, प्रांत, रीजेंसी, जिले से लेकर ग्राम स्तर तक की जानकारी प्रदान करता है। यह [संस्करण 1.1.0](https://github.com/fityannugroho/idn-area/releases/tag/v1.1.0) से द्वीप डेटा भी प्रदान करता है।
 
@@ -77,6 +77,6 @@
 
 ## इस परियोजना का समर्थन करें
 
-<a href="https://trakteer.id/fityannugroho/tip" target="_blank"><img id="wse-buttons-preview" src="https://cdn.trakteer.id/images/embed/trbtn-red-6.png" style="border: 0px none; height: 36px; --darkreader-inline-border-top: currentcolor; --darkreader-inline-border-right: currentcolor; --darkreader-inline-border-bottom: currentcolor; --darkreader-inline-border-left: currentcolor;" alt="Trakteer Saya" data-darkreader-inline-border-top="" data-darkreader-inline-border-right="" data-darkreader-inline-border-bottom="" data-darkreader-inline-border-left="" height="40"></a>
+यदि इस परियोजना से आपको मदद मिली तो ⭐️ दें!
 
 आप [GitHub Sponsor](https://github.com/sponsors/fityannugroho), [Trakteer](https://trakteer.id/fityannugroho/tip), या [Saweria](https://saweria.co/fityannugroho) के माध्यम से दान करके इस परियोजना का समर्थन कर सकते हैं।
