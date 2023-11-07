@@ -27,9 +27,9 @@ jobs:
       run: npm run db:migrate
     - name: Seed the data
       run: npm run db:seed
+    - name: Build
+      run: npm run build
     - name: Run unit tests
       run: npm run test
     - name: Run e2e tests
       run: npm run test:e2e
-    - name: Build
-      run: npm run build

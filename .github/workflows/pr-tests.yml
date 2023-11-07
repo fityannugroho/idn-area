@@ -5,7 +5,7 @@ on:
       - main
     types:
       - opened
-      - syncronize
+      - synchronize
       - reopened
       - edited
 jobs:
@@ -28,7 +28,7 @@ jobs:
       run: npm run prisma:gen
       env:
         DB_PROVIDER: ${{ vars.DB_PROVIDER }}
-    - name: Run unit tests
-      run: npm run test
     - name: Build
       run: npm run build
+    - name: Run unit tests
+      run: npm run test
