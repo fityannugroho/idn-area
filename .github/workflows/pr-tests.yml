@@ -1,13 +1,8 @@
 name: "Test the PR"
 on:
-  pull_request_target:
+  pull_request:
     branches:
       - main
-    types:
-      - opened
-      - synchronize
-      - reopened
-      - edited
 jobs:
   run_test:
     name: "Run tests"
@@ -27,7 +22,7 @@ jobs:
     - name: Generate Prisma Client
       run: npm run prisma:gen
       env:
-        DB_PROVIDER: ${{ vars.DB_PROVIDER }}
+        DB_PROVIDER: ${{ vars.DB_PROVIDER || 'mongodb' }}
     - name: Build
       run: npm run build
     - name: Run unit tests
