@@ -22,14 +22,14 @@ export type FunctionNames<T extends Models> = keyof FunctionType<T>;
 type Model<T extends Models> = T extends 'Province'
   ? Province
   : T extends 'Regency'
-  ? Regency
-  : T extends 'District'
-  ? District
-  : T extends 'Village'
-  ? Village
-  : T extends 'Island'
-  ? Island
-  : never;
+    ? Regency
+    : T extends 'District'
+      ? District
+      : T extends 'Village'
+        ? Village
+        : T extends 'Island'
+          ? Island
+          : never;
 
 export type ArgsType<
   T extends Models,
