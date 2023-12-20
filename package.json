@@ -69,6 +69,9 @@
     "unplugin-swc": "^1.4.3",
     "vitest": "^0.34.6"
   },
+  "peerDependencies": {
+    "vite": "^4.5.1"
+  },
   "engines": {
     "node": ">=18.0.0"
   }
