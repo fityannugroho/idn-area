@@ -8,7 +8,7 @@
   ],
   "functions": {
     "dist/src/main.js": {
-      "runtime": "@vercel/node@3.0.14"
+      "runtime": "@vercel/node"
     }
   }
 }
