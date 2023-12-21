@@ -10,6 +10,7 @@
     "url": "https://github.com/fityannugroho/idn-area"
   },
   "scripts": {
+    "prebuild": "npm run prisma:gen",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "prisma:gen": "tsx prisma/generate.ts",
