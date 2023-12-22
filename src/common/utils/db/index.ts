@@ -28,14 +28,6 @@ export const validateDBConfig = (...vars: (keyof typeof dbConfig)[]) => {
     if (!dbConfig.url) {
       throw new DatabaseConfigError('`DB_URL` is not defined.');
     }
-
-    if (
-      !dbProviderConfig[dbConfig.provider].urlConnectionRegex.test(dbConfig.url)
-    ) {
-      throw new DatabaseConfigError(
-        `\`DB_URL\` is not valid for \`DB_PROVIDER\` '${dbConfig.provider}'.`,
-      );
-    }
   }
 };
 

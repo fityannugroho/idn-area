@@ -10,7 +10,6 @@ export type DBProvider = keyof typeof dbProvider;
 
 export type DBProviderConfig = {
   [key in DBProvider]: {
-    urlConnectionRegex: RegExp;
     features?: DBProviderFeatures;
   };
 };
@@ -26,7 +25,6 @@ export type DBProviderFeatures = {
 
 export const dbProviderConfig: DBProviderConfig = {
   mongodb: {
-    urlConnectionRegex: /^mongodb(?:\+srv)?:\/\/.+$/,
     features: {
       filtering: {
         insensitive: true,
@@ -34,16 +32,13 @@ export const dbProviderConfig: DBProviderConfig = {
     },
   },
   postgresql: {
-    urlConnectionRegex: /^postgresql:\/\/.+$/,
     features: {
       filtering: {
         insensitive: true,
       },
     },
   },
-  mysql: {
-    urlConnectionRegex: /^mysql:\/\/.+$/,
-  },
+  mysql: {},
 } as const;
 
 /**

@@ -1,0 +1,31 @@
+version: '3'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "${APP_PORT:-3000}:3000"
+    depends_on:
+      - db
+    env_file:
+      - .env
+    # Run migrations after the app is ready
+    command: sh -c "npx prisma migrate deploy --schema prisma/postgresql/schema.prisma && npm run start:prod"
+
+  db:
+    image: postgres:14
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    environment:
+      - POSTGRES_USER=${DB_USERNAME:-postgres}
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-postgres}
+      - POSTGRES_DB=${DB_NAME:-postgres}
+    env_file:
+      - .env
+    volumes:
+      - nest-postgres:/var/lib/postgresql/data
+
+volumes:
+  nest-postgres:
+    name: nest-postgres-db
