@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { IslandService } from './island.service';
 import { PrismaService } from '@/prisma/prisma.service';
 import { Island } from '@prisma/client';
-import { getDBProviderFeatures } from '@/common/utils/db';
+import { getDBProviderFeatures } from 'common/utils/db';
 import { SortOrder } from '@/sort/sort.dto';
 
 const islands: readonly Island[] = [

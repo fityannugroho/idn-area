@@ -1,4 +1,4 @@
-import { dbConfig } from '@/common/config/db';
+import { dbConfig } from 'common/config/db';
 import { DatabaseConfigError } from './errors';
 import { DBProviderFeatures, dbProviderConfig } from './provider';
 

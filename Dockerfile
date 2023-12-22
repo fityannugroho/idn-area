@@ -23,10 +23,15 @@ RUN npm run build
 # Stage 2: A minimal Docker image with node and compiled app
 FROM node:18
 
+# Set the working directory inside the container
+WORKDIR /app
+
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/tsconfig.* ./
+COPY --from=builder /app/common ./common
 
 # Expose the port that your NestJS app will listen on
 EXPOSE 3000

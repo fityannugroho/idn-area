@@ -11,7 +11,7 @@ services:
     env_file:
       - .env
     # Run migrations after the app is ready
-    command: sh -c "npx prisma migrate deploy --schema prisma/postgresql/schema.prisma && npm run start:prod"
+    command: sh -c "npm run db:migrate && npm run db:seed && npm run start:prod"
 
   db:
     image: postgres:14

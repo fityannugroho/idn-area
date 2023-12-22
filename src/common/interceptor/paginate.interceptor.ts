@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { isDBProvider } from '../utils/db/provider';
+import { isDBProvider } from '../../../common/utils/db/provider';
 import {
   TransformInterceptor,
   TransformedResponse,

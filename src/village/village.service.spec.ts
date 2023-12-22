@@ -1,4 +1,4 @@
-import { getDBProviderFeatures } from '@/common/utils/db';
+import { getDBProviderFeatures } from 'common/utils/db';
 import { PrismaService } from '@/prisma/prisma.service';
 import { SortOrder } from '@/sort/sort.dto';
 import { Test } from '@nestjs/testing';

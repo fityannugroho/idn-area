@@ -1,4 +1,4 @@
-import { appConfig } from '@/common/config/app';
+import { appConfig } from 'common/config/app';
 import { PaginationQuery } from '@/common/dto/pagination.dto';
 import { PaginatedReturn } from '@/common/interceptor/paginate.interceptor';
 import { Injectable, OnModuleInit } from '@nestjs/common';
