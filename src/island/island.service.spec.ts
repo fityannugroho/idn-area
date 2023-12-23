@@ -4,6 +4,7 @@ import { PrismaService } from '@/prisma/prisma.service';
 import { Island } from '@prisma/client';
 import { getDBProviderFeatures } from 'common/utils/db';
 import { SortOrder } from '@/sort/sort.dto';
+import { mockPrismaService } from '@/prisma/__mocks__/prisma.service';
 
 const islands: readonly Island[] = [
   {
@@ -62,7 +63,13 @@ describe('IslandService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [IslandService, PrismaService],
+      providers: [
+        IslandService,
+        {
+          provide: PrismaService,
+          useValue: mockPrismaService('Island', islands),
+        },
+      ],
     }).compile();
 
     service = module.get<IslandService>(IslandService);

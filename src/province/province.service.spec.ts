@@ -5,6 +5,7 @@ import { SortOrder } from '@/sort/sort.dto';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Province } from '@prisma/client';
 import { ProvinceService } from './province.service';
+import { mockPrismaService } from '@/prisma/__mocks__/prisma.service';
 
 describe('ProvinceService', () => {
   let provinces: readonly Province[];
@@ -17,7 +18,13 @@ describe('ProvinceService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [ProvinceService, PrismaService],
+      providers: [
+        ProvinceService,
+        {
+          provide: PrismaService,
+          useValue: mockPrismaService('Province', provinces),
+        },
+      ],
     }).compile();
 
     provinceService = module.get<ProvinceService>(ProvinceService);

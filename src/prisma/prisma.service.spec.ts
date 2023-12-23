@@ -1,7 +1,8 @@
 import { Test } from '@nestjs/testing';
-import { PaginatorOptions, PrismaService } from './prisma.service';
 import { PrismaClient, Province } from '@prisma/client';
 import { appConfig } from 'common/config/app';
+import { PaginatorOptions } from './prisma.interface';
+import { PrismaService } from './prisma.service';
 
 describe('PrismaService', () => {
   let service: PrismaService;

@@ -5,6 +5,7 @@ import { Regency } from '@prisma/client';
 import { getDBProviderFeatures } from 'common/utils/db';
 import { SortOrder } from '@/sort/sort.dto';
 import { getRegencies } from 'common/utils/data';
+import { mockPrismaService } from '@/prisma/__mocks__/prisma.service';
 
 describe('RegencyService', () => {
   let regencies: Regency[];
@@ -17,7 +18,13 @@ describe('RegencyService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [RegencyService, PrismaService],
+      providers: [
+        RegencyService,
+        {
+          provide: PrismaService,
+          useValue: mockPrismaService('Regency', regencies),
+        },
+      ],
     }).compile();
 
     service = module.get<RegencyService>(RegencyService);
