@@ -1,0 +1,30 @@
+version: '3'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "${APP_PORT:-3000}:3000"
+    depends_on:
+      - db
+    env_file:
+      - .env
+    # Run migrations after the app is ready
+    command: sh -c "npm run db:migrate && npm run db:seed && npm run start:prod"
+
+  db:
+    image: postgres:14
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    environment:
+      - POSTGRES_USER=${DB_USERNAME:?}
+      - POSTGRES_PASSWORD=${DB_PASSWORD:?}
+      - POSTGRES_DB=${DB_NAME:?}
+    env_file:
+      - .env
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:

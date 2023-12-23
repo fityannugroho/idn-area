@@ -19,6 +19,7 @@
     "noFallthroughCasesInSwitch": false,
     "paths": {
       "@/*": ["src/*"],
+      "common/*": ["common/*"],
     },
     "types": [
       "vitest/globals"

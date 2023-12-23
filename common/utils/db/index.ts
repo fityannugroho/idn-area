@@ -1,4 +1,4 @@
-import { dbConfig } from '@/common/config/db';
+import { dbConfig } from 'common/config/db';
 import { DatabaseConfigError } from './errors';
 import { DBProviderFeatures, dbProviderConfig } from './provider';
 
@@ -27,14 +27,6 @@ export const validateDBConfig = (...vars: (keyof typeof dbConfig)[]) => {
   if (vars.includes('url')) {
     if (!dbConfig.url) {
       throw new DatabaseConfigError('`DB_URL` is not defined.');
-    }
-
-    if (
-      !dbProviderConfig[dbConfig.provider].urlConnectionRegex.test(dbConfig.url)
-    ) {
-      throw new DatabaseConfigError(
-        `\`DB_URL\` is not valid for \`DB_PROVIDER\` '${dbConfig.provider}'.`,
-      );
     }
   }
 };
