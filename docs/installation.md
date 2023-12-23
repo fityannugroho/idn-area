@@ -39,24 +39,40 @@
 
     - Set the `DB_PROVIDER` with the data source provider you want to use. Current supported providers: 'mongodb', 'postgresql', and 'mysql'. See the details [here](https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#fields).
 
-    - Set the `DB_URL` with the database connection string. See the [connection string](https://pris.ly/d/connection-strings) documentation.
+    - Set the `DB_HOST`, `DB_PORT`, `DB_USERNAME`, `DB_PASSWORD`, `DB_USERNAME`, and `DB_PASSWORD`. See the [connection string](https://pris.ly/d/connection-strings) documentation.
 
-      > You must grant **read-write access** to the database.
+      > If you use local database, you must grant **read-write access** to the database.
 
-2. Generate the database
+1. Generate the database
 
     Run **`npm run db:migrate`** command to generate the database.
 
     > You can use `npx prisma migrate deploy` command to run migration in **non-development environments** and if you are using any database providers **other than MongoDB**.
     > See the details [here](https://www.prisma.io/docs/reference/api-reference/command-reference#migrate-deploy).
 
-3. Seed the data
+1. Seed the data
 
     Run **`npm run db:seed`** command to seed the data.
 
-4. Run the app
+1. Run the app
 
     Use `npm run start` command, to run the app.
+
+### Installation with Docker
+
+We also provide Docker configuration with PostgreSQL database support.
+
+- Fork and clone this project.
+- Configure the environment variables.
+
+  - `DB_PROVIDER` must be set into `postgresql`.
+  - `DB_HOST` must be set into `db`.
+
+- Run `docker compose up` command to build and run the app.
+
+  > If you change any environment variables, you need to rebuild the image using `docker compose up --build` command.
+
+- Finish
 
 ## Run the Test
 
