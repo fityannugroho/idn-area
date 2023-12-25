@@ -1,10 +1,11 @@
 import { Controller, Get, HttpStatus } from '@nestjs/common';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Home')
 @Controller()
 export class AppController {
   @Get()
+  @ApiOperation({ description: 'Base route of this API.' })
   @ApiOkResponse({
     schema: {
       type: 'object',
@@ -25,6 +26,24 @@ export class AppController {
       message: 'Welcome to Indonesia Area API.',
       version: process.env.npm_package_version,
       docs: '/docs',
+    };
+  }
+
+  @Get('health')
+  @ApiOperation({ description: 'Check the health of this API.' })
+  @ApiOkResponse({
+    schema: {
+      type: 'object',
+      properties: {
+        statusCode: { type: 'number', example: 200 },
+        message: { type: 'string' },
+      },
+    },
+  })
+  async health() {
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'OK',
     };
   }
 }
