@@ -1,6 +1,6 @@
 import { PaginatedReturn } from '@/common/interceptor/paginate.interceptor';
 import { Models, Model, PaginatorOptions } from '../prisma.interface';
-import { appConfig } from 'common/config/app';
+import { appConfig } from '@common/config/app';
 
 export const mockPrismaService = <M extends Models>(
   model: M,

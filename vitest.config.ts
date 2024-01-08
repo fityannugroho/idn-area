@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import swc from 'unplugin-swc';
 import { defineConfig } from 'vitest/config';
 
@@ -8,6 +7,7 @@ export default defineConfig({
     root: './',
     alias: {
       '@': './src',
+      '@common': './common',
     },
     coverage: {
       provider: 'v8',
@@ -16,10 +16,8 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': './src',
+      '@common': './common',
     },
   },
-  plugins: [
-    // @ts-ignore
-    swc.vite(),
-  ],
+  plugins: [swc.vite()],
 });

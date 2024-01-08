@@ -1,4 +1,4 @@
-import { sortArray } from 'common/utils/array';
+import { sortArray } from '@common/utils/array';
 import { Regency } from '@prisma/client';
 import { RegencyFindQueries } from '../regency.dto';
 

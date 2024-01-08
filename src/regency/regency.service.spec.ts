@@ -2,9 +2,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '@/prisma/prisma.service';
 import { RegencyService } from './regency.service';
 import { Regency } from '@prisma/client';
-import { getDBProviderFeatures } from 'common/utils/db';
+import { getDBProviderFeatures } from '@common/utils/db';
 import { SortOrder } from '@/sort/sort.dto';
-import { getRegencies } from 'common/utils/data';
+import { getRegencies } from '@common/utils/data';
 import { mockPrismaService } from '@/prisma/__mocks__/prisma.service';
 
 describe('RegencyService', () => {

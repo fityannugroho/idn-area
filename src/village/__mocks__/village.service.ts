@@ -1,4 +1,4 @@
-import { sortArray } from 'common/utils/array';
+import { sortArray } from '@common/utils/array';
 import { Village } from '@prisma/client';
 import { VillageFindQueries } from '../village.dto';
 

@@ -1,6 +1,6 @@
 import { PaginatedReturn } from '@/common/interceptor/paginate.interceptor';
-import { convertCoordinate } from 'common/utils/coordinate';
-import { getDBProviderFeatures } from 'common/utils/db';
+import { convertCoordinate } from '@common/utils/coordinate';
+import { getDBProviderFeatures } from '@common/utils/db';
 import { Island as IslandDTO, IslandFindQueries } from '@/island/island.dto';
 import { PrismaService } from '@/prisma/prisma.service';
 import { SortService } from '@/sort/sort.service';

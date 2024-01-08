@@ -1,4 +1,4 @@
-import { appConfig } from 'common/config/app';
+import { appConfig } from '@common/config/app';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsInt, IsOptional, Max, Min } from 'class-validator';
