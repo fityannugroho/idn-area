@@ -19,21 +19,6 @@
 >
 > [v3.0.0](https://github.com/fityannugroho/idn-area/releases/tag/v3.0.0) 부터, **Node.js v18** 또는 그 이상의 버전이 요구됩니다.
 
-<h2>목차</h2>
-
-- [시작하기](#시작하기)
-- [데이터](#데이터)
-- [문서](#문서)
-- [라이브 데모](#라이브-데모)
-- [기여](#기여)
-- [문제 보고](#문제-보고)
-  - [버그 보고](#버그-보고)
-  - [새로운 기능 요청](#새로운-기능-요청)
-  - [질문하기](#질문하기)
-- [이 프로젝트 지원하기](#이-프로젝트-지원하기)
-
----
-
 ## 시작하기
 
 이 앱을 설치하고 실행하려면 [설치 가이드](./installation.md)를 읽어보세요.
@@ -46,7 +31,7 @@
 
 ## 문서
 
-최신 API 문서를 [문서 페이지](https://idn-area.cyclic.app/docs)에서 확인하세요. 이 문서는 자동으로 [`@nestjs/swagger`](https://docs.nestjs.com/openapi/introduction)를 사용하여 생성됩니다.
+최신 API 문서를 [문서 페이지](https://idn-area.up.railway.app/docs)에서 확인하세요. 이 문서는 자동으로 [`@nestjs/swagger`](https://docs.nestjs.com/openapi/introduction)를 사용하여 생성됩니다.
 
 > 또한 앱을 실행하고 브라우저에서 http://localhost:3000/docs를 열어 로컬 머신에서 문서에 액세스할 수도 있습니다. (자세한 내용은 [시작하기](#시작하기) 참조)
 
@@ -54,7 +39,6 @@
 
 이 API를 사용하는 몇 가지 샘플 프로젝트입니다:
 
-- [간단한 지역 드롭다운](https://github.com/fityannugroho/idn-area-example)
 - [idn-area 지도](https://github.com/fityannugroho/idn-area-map)
 
 ## 기여
@@ -66,16 +50,19 @@
 다른 문제에 대해 각각 다른 채널을 가지고 있으니, 다음 조건에 따라 사용해주세요:
 
 ### 버그 보고
+
 버그를 보고하려면 [가이드](../CONTRIBUTING.md#submitting-an-issue)를 따라 새 이슈를 열어주세요.
 
 ### 새로운 기능 요청
+
 새로운 기능을 원한다면 [가이드](../CONTRIBUTING.md#submitting-an-issue)를 따라 새 이슈를 열어주세요.
 
 ### 질문하기
+
 질문이 있을 경우, [GitHub Discussions Q&A 카테고리](https://github.com/fityannugroho/idn-area/discussions/categories/q-a)에서 답변을 찾을 수 있습니다. 이미 관련된 토론이 없다면 새 토론을 열 수 있습니다.
 
 ## 이 프로젝트 지원하기
 
 이 프로젝트가 도움이 되었다면 ⭐️를 눌러주세요!
 
-이 프로젝트를 지원하려면 [GitHub Sponsor](https://github.com/sponsors/fityannugroho), [Trakteer](https://trakteer.id/fityannugroho/tip) 또는 [Saweria](https://saweria.co/fityannugroho)를 통해 기부할 수 있습니다.
+또한 기부로 이 프로젝트를 지원하는 것을 고려해 보십시오. 귀하의 기부는 이 프로젝트를 유지 및 개발하고 귀하에게 더 나은 지원을 제공하는 데 도움이 됩니다.

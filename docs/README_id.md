@@ -19,33 +19,19 @@ Dibuat dengan [NestJS framework](https://nestjs.com) dan ditulis dengan bahasa p
 >
 > Sejak [v3.0.0](https://github.com/fityannugroho/idn-area/releases/tag/v3.0.0), diperlukan **Node.js v18** atau versi yang lebih tinggi.
 
-<h2>Daftar Isi</h2>
-
-- [Memulai](#memulai)
-- [Data](#data)
-- [Dokumentasi](#dokumentasi)
-- [Demo](#demo)
-- [Kontribusi](#kontribusi)
-- [Melaporkan Masalah](#melaporkan-masalah)
-  - [Melaporkan Bug](#melaporkan-bug)
-  - [Meminta Fitur Baru](#meminta-fitur-baru)
-  - [Mengajukan Pertanyaan](#mengajukan-pertanyaan)
-- [Dukung Proyek Ini](#dukung-proyek-ini)
-
----
-
-##  Memulai
+## Memulai
 
 Tolong baca [panduan instalasi](installation.md) untuk memasang dan menjalankan aplikasi ini.
 
 ## Data
+
 Data yang kami gunakan menggunakan sumber yang resmi, dikelola di repositori [**idn-area-data**](https://github.com/fityannugroho/idn-area-data) dan didistribusikan sebagai sebuah [npm package](https://www.npmjs.com/package/idn-area-data).
 
 > [Data](https://github.com/fityannugroho/idn-area-data/tree/main/data) tersebut tersedia dibawah [Open Database License (ODbL)](https://github.com/fityannugroho/idn-area-data/blob/main/data/LICENSE.md).
 
 ## Dokumentasi
 
-Baca versi terbaru dokumentasi API di [halaman dokumentasi](https://idn-area.cyclic.app/docs). Dokumentasi ini dibuat secara otomatis menggunakan [`@nestjs/swagger`](https://docs.nestjs.com/openapi/introduction).
+Baca versi terbaru dokumentasi API di [halaman dokumentasi](https://idn-area.up.railway.app/docs). Dokumentasi ini dibuat secara otomatis menggunakan [`@nestjs/swagger`](https://docs.nestjs.com/openapi/introduction).
 
 > Anda juga dapat mengakses dokumentasinya di perangkat lokal Anda dengan menjalankan aplikasi ini (lihat [Memulai](#memulai)) dan buka http://localhost:3000/docs di browser Anda.
 
@@ -55,7 +41,6 @@ Anda dapat mencoba API ini dengan mengganti http://localhost:3000 dengan endpoin
 
 Berikut adalah beberapa proyek contoh yang menggunakan API ini:
 
-- [Simple area dropdown](https://github.com/fityannugroho/idn-area-example)
 - [idn-area Map](https://github.com/fityannugroho/idn-area-map)
 
 ## Kontribusi
@@ -67,16 +52,19 @@ Jika Anda ingin berkontribusi pada proyek ini, harap baca file [CONTRIBUTING.md]
 Kami memiliki berbagai kanal yang berbeda untuk setiap masalah, harap gunakan kanal dengan mengikuti syarat-syarat ini:
 
 ### Melaporkan Bug
+
 Untuk melaporkan bug, silahkan buka isu baru dengan mengikuti [panduan](../CONTRIBUTING.md#submitting-an-issue).
 
 ### Meminta Fitur Baru
+
 Jika Anda punya ide untuk fitur baru, silahkan buka isu baru dengan mengikuti [panduan](../CONTRIBUTING.md#submitting-an-issue).
 
 ### Mengajukan Pertanyaan
+
 Jika Anda punya pertanyaan, silahkan cari jawabanya di [Diskusi GitHub Kategori Tanya Jawab](https://github.com/fityannugroho/idn-area/discussions/categories/q-a). Jika Anda tidak menemukan diskusi yang relevan, Anda dapat membuka diskusi yang baru.
 
 ## Dukung Proyek Ini
 
 Berikan ⭐️ jika proyek ini membantu Anda!
 
-Anda dapat mendukung proyek ini dengan berdonasi melalui [GitHub Sponsor](https://github.com/sponsors/fityannugroho), [Trakteer](https://trakteer.id/fityannugroho/tip), atau [Saweria](https://saweria.co/fityannugroho).
+Harap pertimbangkan juga untuk mendukung proyek ini dengan donasi. Donasi Anda akan membantu kami mempertahankan dan mengembangkan proyek ini dan memberi Anda dukungan yang lebih baik.

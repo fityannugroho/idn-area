@@ -19,21 +19,6 @@ Built with [NestJS framework](https://nestjs.com) and writen in TypeScript. [Pri
 >
 > Since [v3.0.0](https://github.com/fityannugroho/idn-area/releases/tag/v3.0.0), **Node.js v18** or higher is required.
 
-<h2>Table of Content</h2>
-
-- [Getting Started](#getting-started)
-- [Data](#data)
-- [Documentation](#documentation)
-- [Live Demo](#live-demo)
-- [Contributing](#contributing)
-- [Problem Reporting](#problem-reporting)
-  - [Reporting a Bug](#reporting-a-bug)
-  - [Requesting a New Feature](#requesting-a-new-feature)
-  - [Asking a Question](#asking-a-question)
-- [Support This Project](#support-this-project)
-
----
-
 ## Getting Started
 
 Please read the [installation guide](docs/installation.md) to install and run this app.
@@ -46,7 +31,7 @@ The data we used is based on official sources, managed in [**idn-area-data**](ht
 
 ## Documentation
 
-Read the latest version of API documentation in the [documentation page](https://idn-area.cyclic.app/docs). This documentation is automatically generated using [`@nestjs/swagger`](https://docs.nestjs.com/openapi/introduction).
+Read the latest version of API documentation in the [documentation page](https://idn-area.up.railway.app/docs). This documentation is automatically generated using [`@nestjs/swagger`](https://docs.nestjs.com/openapi/introduction).
 
 > You also can access the documentation in your local machine by running the app (see [Getting Started](#getting-started)) and open http://localhost:3000/docs in your browser.
 
@@ -56,7 +41,6 @@ You can try the API by replacing the http://localhost:3000 with the endpoint pro
 
 These are some sample projects that using this API :
 
-- [Simple area dropdown](https://github.com/fityannugroho/idn-area-example)
 - [idn-area Map](https://github.com/fityannugroho/idn-area-map)
 
 ## Contributing
@@ -68,16 +52,19 @@ If you want to contribute to this project, please read the [CONTRIBUTING.md](CON
 We have different channels for each problem, please use them by following these conditions :
 
 ### Reporting a Bug
+
 To report a bug, please open a new issue following the [guide](CONTRIBUTING.md#submitting-an-issue).
 
 ### Requesting a New Feature
+
 If you have a new feature in mind, please open a new issue following the [guide](CONTRIBUTING.md#submitting-an-issue).
 
 ### Asking a Question
+
 If you have a question, you can search for answers in the [GitHub Discussions Q&A category](https://github.com/fityannugroho/idn-area/discussions/categories/q-a). If you don't find a relevant discussion already, you can open a new discussion.
 
 ## Support This Project
 
 Give a ⭐️ if this project helped you!
 
-You can support this project by donating via [GitHub Sponsor](https://github.com/sponsors/fityannugroho), [Trakteer](https://trakteer.id/fityannugroho/tip), or [Saweria](https://saweria.co/fityannugroho).
+Also please consider supporting this project with a **donation**. Your donation will help us maintain and develop this project and provide you with better support.

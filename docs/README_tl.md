@@ -19,21 +19,6 @@ Ginawa gamit ang [NestJS framework](https://nestjs.com) At isinulat sa TypeScrip
 >
 > Simula [v3.0.0](https://github.com/fityannugroho/idn-area/releases/tag/v3.0.0),kinakailangan ang **Node.js v18** o mas mataas na bersyon.
 
-<h2>Talaan ng Nilalaman</h2>
-
-- [Pagsisimula](#pagsisimula)
-- [Data](#data)
-- [Dokumentasyon](#dokumentasyon)
-- [Live na pagpapakita](#live-na-pagpapakita)
-- [Nagbibigay ng kontribusyon](#nagbibigay-ng-kontribusyon)
-- [Ulat ng Problema](#ulat-ng-problema)
-  - [Pag-uulat ng Isang Bug](#pag-uulat-ng-isang-bug)
-  - [Humihiling ng Bagong Tampok](#humihiling-ng-bagong-tampok)
-  - [Nagtatanong ng Tanong](#nagtatanong-ng-tanong)
-- [Suportahan ang Proyektong Ito](#suportahan-ang-proyektong-ito)
-
----
-
 ## Pagsisimula
 
 Pakibasa ang [gabay sa Pag-Install](installation.md) upang i-install at patakbuhin ang aplikasyong ito.
@@ -46,7 +31,7 @@ Ang datos na aming ginamit ay batay sa opisyal na pinagkukunan na kinakalagaan s
 
 ## Dokumentasyon
 
-Basahin ang pinakabagong bersyon ng dokumentasyon ng API sa [Pahina ng dokumentasyon](https://idn-area.cyclic.app/docs). Ang dokumentasyong ito ay awtomatikong nalilikha gamit ang [`@nestjs/swagger`](https://docs.nestjs.com/openapi/introduction).
+Basahin ang pinakabagong bersyon ng dokumentasyon ng API sa [Pahina ng dokumentasyon](https://idn-area.up.railway.app/docs). Ang dokumentasyong ito ay awtomatikong nalilikha gamit ang [`@nestjs/swagger`](https://docs.nestjs.com/openapi/introduction).
 
 > Puwede rin kayong mag-access sa dokumentasyon sa inyong lokal na makina sa pamamagitan ng pagsisimula ng aplikasyon (makita [Pagsisimula](#pagsisimula)) at buksan ang http://localhost:3000/docs sa iyong browser.
 
@@ -56,7 +41,6 @@ Maaari mong subukan ang API sa pamamagitan ng pagpapalit ng http://localhost:300
 
 Ito ay ilang halimbawang proyekto na gumagamit ng API na ito :
 
-- [Simpleng area dropdown](https://github.com/fityannugroho/idn-area-example)
 - [Mapa ng idn-area](https://github.com/fityannugroho/idn-area-map)
 
 ## Nagbibigay ng kontribusyon
@@ -68,16 +52,19 @@ Kung nais mong mag-ambag sa proyektong ito, mangyaring basahin ang [CONTRIBUTING
 May iba't-ibang mga channel para sa bawat problema, mangyaring gamitin ang mga ito sa pamamagitan ng pagsunod sa mga kondisyon na ito :
 
 ### Pag-uulat ng Isang Bug
+
 Upang mag-ulat ng bug, mangyaring buksan ang isang bagong isyu ayon sa [gabay](../CONTRIBUTING.md#submitting-an-issue).
 
 ### Humihiling ng Bagong Tampok
+
 Kung mayroon kang bagong tampok sa isip, mangyaring buksan ang isang bagong isyu ayon sa [gabay](../CONTRIBUTING.md#submitting-an-issue).
 
 ### Nagtatanong ng Tanong
+
 Kung mayroon kang tanong, maaari kang maghanap ng mga sagot sa [Kategorya ng GitHub Discussions Q&A](https://github.com/fityannugroho/idn-area/discussions/categories/q-a). Kung wala kang makitang kaugnay na pag-uusap na umiiral na, maari kang magbukas ng isang bagong pag-uusap.
 
 ## Suportahan ang Proyektong Ito
 
 Magbigay ng ⭐️ kung nakatulong sa iyo ang proyektong ito!
 
-Maari kang mag-suporta sa proyektong ito sa pamamagitan ng pag-donate sa pamamagitan ng [GitHub Sponsor](https://github.com/sponsors/fityannugroho), [Trakteer](https://trakteer.id/fityannugroho/tip), o [Saweria](https://saweria.co/fityannugroho).
+Mangyaring isaalang-alang din ang pagsuporta sa proyektong ito sa pamamagitan ng isang donasyon. Ang iyong donasyon ay makakatulong sa amin na mapanatili at bumuo ng proyektong ito at magbigay sa iyo ng mas mahusay na suporta.
