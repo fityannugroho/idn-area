@@ -55,7 +55,7 @@
     "@types/supertest": "^6.0.2",
     "@typescript-eslint/eslint-plugin": "^6.19.0",
     "@typescript-eslint/parser": "^6.19.0",
-    "@vitest/coverage-v8": "^0.34.6",
+    "@vitest/coverage-v8": "^1.2.0",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.1.2",
@@ -67,7 +67,7 @@
     "tsx": "^4.7.0",
     "typescript": "^5.3.3",
     "unplugin-swc": "^1.4.4",
-    "vitest": "^0.34.6"
+    "vitest": "^1.2.0"
   },
   "peerDependencies": {
     "vite": "^4.5.1"
