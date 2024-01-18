@@ -7,7 +7,7 @@ import {
   PartialType,
   PickType,
 } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumberString, Length } from 'class-validator';
+import { IsNotEmpty, IsNumberString, Length, MaxLength } from 'class-validator';
 import { PaginationQuery } from '@/common/dto/pagination.dto';
 
 export class Province {
@@ -17,9 +17,8 @@ export class Province {
   @ApiProperty({ description: 'The province code', example: '11' })
   code: string;
 
-  @IsNotEmpty()
   @IsNotSymbol()
-  @Length(3, 255)
+  @MaxLength(100)
   @ApiProperty({ description: 'The province name', example: 'ACEH' })
   name: string;
 }

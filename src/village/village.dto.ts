@@ -8,7 +8,7 @@ import {
   PartialType,
   PickType,
 } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumberString, Length } from 'class-validator';
+import { IsNotEmpty, IsNumberString, Length, MaxLength } from 'class-validator';
 
 export class Village {
   @IsNotEmpty()
@@ -17,9 +17,8 @@ export class Village {
   @ApiProperty({ description: 'The village code', example: '1101012001' })
   code: string;
 
-  @IsNotEmpty()
   @IsNotSymbol("'()-./")
-  @Length(3, 255)
+  @MaxLength(100)
   @ApiProperty({ description: 'The village name', example: 'Keude Bakongan' })
   name: string;
 

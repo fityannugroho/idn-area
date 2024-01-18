@@ -12,6 +12,7 @@ import {
   IsOptional,
   IsString,
   Length,
+  MaxLength,
   ValidateIf,
 } from 'class-validator';
 import { EqualsAny } from '../common/decorator/EqualsAny';
@@ -41,9 +42,8 @@ export class Island {
   @ApiProperty({ example: false })
   isPopulated: boolean;
 
-  @IsNotEmpty()
   @IsNotSymbol("'-/")
-  @Length(3, 255)
+  @MaxLength(100)
   @ApiProperty({
     description: 'The island name',
     example: 'Pulau Batukapal',

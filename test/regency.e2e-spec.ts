@@ -26,8 +26,8 @@ describe('Regency (e2e)', () => {
       });
     });
 
-    it('should return 400 if the `name` is empty, less than 3 chars, more than 255 chars, or contains any symbols', async () => {
-      const invalidNames = ['', 'ab', 'x'.repeat(256), 'b@ndung'];
+    it('should return 400 if the `name` is more than 100 chars, or contains any symbols', async () => {
+      const invalidNames = ['x'.repeat(101), 'b@ndung'];
 
       for (const name of invalidNames) {
         await tester.expectBadRequest(`${baseUrl}?name=${name}`);
