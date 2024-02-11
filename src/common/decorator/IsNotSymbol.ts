@@ -42,7 +42,7 @@ export class IsNotSymbolConstraint implements ValidatorConstraintInterface {
     const [allowedSymbols = ''] = constraints as [string, any];
 
     return allowedSymbols
-      ? `${property} must not contain any symbols except this: ${allowedSymbols.replace(/\\/g, '')}`
+      ? `${property} must not contain any symbols, except for the ${allowedSymbols.replace(/\\/g, '')} characters`
       : `${property} must not contain any symbols`;
   }
 }
