@@ -1,6 +1,7 @@
 import { Regency } from '@prisma/client';
 import { AppTester } from './helper/app-tester';
 import { regencyRegex } from './helper/data-regex';
+import { getEncodedSymbols } from './helper/utils';
 
 describe('Regency (e2e)', () => {
   const baseUrl = '/regencies';
@@ -27,7 +28,7 @@ describe('Regency (e2e)', () => {
     });
 
     it('should return 400 if the `name` is more than 100 chars, or contains any symbols', async () => {
-      const invalidNames = ['x'.repeat(101), 'b@ndung'];
+      const invalidNames = ['x'.repeat(101), ...getEncodedSymbols()];
 
       for (const name of invalidNames) {
         await tester.expectBadRequest(`${baseUrl}?name=${name}`);

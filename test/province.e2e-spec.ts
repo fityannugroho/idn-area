@@ -1,6 +1,7 @@
 import { Province } from '@prisma/client';
 import { AppTester } from './helper/app-tester';
 import { provinceRegex } from './helper/data-regex';
+import { getEncodedSymbols } from './helper/utils';
 
 describe('Province (e2e)', () => {
   const baseUrl = '/provinces';
@@ -35,7 +36,7 @@ describe('Province (e2e)', () => {
 
   describe(`GET ${baseUrl}?name={name}`, () => {
     it('should return 400 if the `name` is more than 100 chars, or contains any symbols', async () => {
-      const invalidNames = ['x'.repeat(101), 'j@wa'];
+      const invalidNames = ['x'.repeat(101), ...getEncodedSymbols()];
 
       for (const name of invalidNames) {
         await tester.expectBadRequest(`${baseUrl}?name=${name}`);
@@ -51,7 +52,7 @@ describe('Province (e2e)', () => {
     });
 
     it('should return array of provinces that match with the `name`', async () => {
-      const testName = 'jawa';
+      const testName = 'jawa barat';
       const provinces = await tester.expectData<Province[]>(
         `${baseUrl}?name=${testName}`,
       );

@@ -1,6 +1,7 @@
 import { Island } from '@prisma/client';
 import { AppTester } from './helper/app-tester';
 import { islandRegex } from './helper/data-regex';
+import { getEncodedSymbols } from './helper/utils';
 
 describe('Island (e2e)', () => {
   const baseUrl = '/islands';
@@ -31,8 +32,11 @@ describe('Island (e2e)', () => {
       });
     });
 
-    it('should return 400 if the `name` is more than 100 chars, or contains any symbols', async () => {
-      const invalidNames = ['x'.repeat(101), 's@bang'];
+    it("should return 400 if the `name` is more than 100 chars, or contains any symbols except '-/", async () => {
+      const invalidNames = [
+        'x'.repeat(101),
+        ...getEncodedSymbols({ exclude: "'-/" }),
+      ];
 
       for (const name of invalidNames) {
         await tester.expectBadRequest(`${baseUrl}?name=${name}`);
