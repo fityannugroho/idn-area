@@ -17,7 +17,7 @@ export class Village {
   @ApiProperty({ description: 'The village code', example: '1101012001' })
   code: string;
 
-  @IsNotSymbol("'()-./")
+  @IsNotSymbol('\'()\\-./"*\u2019')
   @MaxLength(100)
   @ApiProperty({ description: 'The village name', example: 'Keude Bakongan' })
   name: string;

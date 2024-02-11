@@ -42,7 +42,7 @@ export class Island {
   @ApiProperty({ example: false })
   isPopulated: boolean;
 
-  @IsNotSymbol("'-/")
+  @IsNotSymbol("'\\-/")
   @MaxLength(100)
   @ApiProperty({
     description: 'The island name',

@@ -27,10 +27,10 @@ describe('Village (e2e)', () => {
       });
     });
 
-    it("should return 400 if the `name` more than 100 chars, or contains any other symbols besides '()-./", async () => {
+    it('should return 400 if the `name` more than 100 chars, or contains any other symbols besides \'()-./"*', async () => {
       const invalidNames = [
         'x'.repeat(101),
-        ...getEncodedSymbols({ exclude: '()-./' }),
+        ...getEncodedSymbols({ exclude: '\'()-./"*' }),
       ];
 
       for (const name of invalidNames) {
