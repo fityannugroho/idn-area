@@ -8,7 +8,9 @@ import {
 
 /**
  * Checks if value does not contain any symbols. Whitespace is allowed.
- * @param allowedSymbols The allowed symbols in a string. For example: '!@#$%^'
+ * @param allowedSymbols The allowed symbols in a string.
+ * Each character is treated as a separate symbol.
+ * For example, `'-\/"` will allow the `-`, `\`,  `/`, and `"` characters.
  * @param validationOptions The validation options.
  */
 export function IsNotSymbol(
@@ -30,7 +32,11 @@ export function IsNotSymbol(
 export class IsNotSymbolConstraint implements ValidatorConstraintInterface {
   validate(value: any, args?: ValidationArguments): boolean {
     const [allowedSymbols = ''] = args.constraints as [string, any];
-    const symbolRegex = new RegExp(`[^\\w\\s${allowedSymbols}]`, 'g');
+    const safeAllowedSymbols = allowedSymbols
+      .split('')
+      .map((s) => `\\${s}`)
+      .join('');
+    const symbolRegex = new RegExp(`[^a-zA-Z0-9\\s${safeAllowedSymbols}]`, 'g');
 
     return typeof value === 'string' && !symbolRegex.test(value);
   }
@@ -40,7 +46,7 @@ export class IsNotSymbolConstraint implements ValidatorConstraintInterface {
     const [allowedSymbols = ''] = constraints as [string, any];
 
     return allowedSymbols
-      ? `${property} must not contain any symbols except this: ${allowedSymbols}`
+      ? `${property} must not contain any symbols, except for the ${allowedSymbols} characters`
       : `${property} must not contain any symbols`;
   }
 }
