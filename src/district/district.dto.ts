@@ -17,7 +17,7 @@ export class District {
   @ApiProperty({ description: 'The district code', example: '110101' })
   code: string;
 
-  @IsNotSymbol("'()\\-./")
+  @IsNotSymbol("'()-./")
   @MaxLength(100)
   @ApiProperty({ description: 'The district name', example: 'Bakongan' })
   name: string;
