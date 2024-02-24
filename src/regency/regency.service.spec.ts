@@ -24,10 +24,7 @@ describe('RegencyService', () => {
         RegencyService,
         {
           provide: PrismaService,
-          useValue: {
-            ...mockPrismaService('Regency', regencies),
-            province: mockPrismaService('Province', provinces).province,
-          },
+          useValue: mockPrismaService('Regency', regencies),
         },
       ],
     }).compile();
@@ -162,22 +159,19 @@ describe('RegencyService', () => {
 
       const findUniqueSpy = vitest
         .spyOn(prismaService.regency, 'findUnique')
-        .mockResolvedValue(expectedRegency);
-
-      const findUniqueProvinceSpy = vitest
-        .spyOn(prismaService.province, 'findUnique')
-        .mockResolvedValue(expectedProvince);
+        .mockReturnValue({
+          ...expectedRegency,
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-expect-error
+          province: expectedProvince,
+        });
 
       const result = await service.findByCode(expectedRegency.code);
 
       expect(findUniqueSpy).toHaveBeenCalledTimes(1);
       expect(findUniqueSpy).toHaveBeenCalledWith({
         where: { code: expectedRegency.code },
-      });
-
-      expect(findUniqueProvinceSpy).toHaveBeenCalledTimes(1);
-      expect(findUniqueProvinceSpy).toHaveBeenCalledWith({
-        where: { code: expectedRegency.provinceCode },
+        include: { province: true },
       });
 
       expect(result).toEqual({
@@ -199,6 +193,7 @@ describe('RegencyService', () => {
       expect(findUniqueSpy).toHaveBeenCalledTimes(1);
       expect(findUniqueSpy).toHaveBeenCalledWith({
         where: { code: testCode },
+        include: { province: true },
       });
       expect(result).toBeNull();
     });

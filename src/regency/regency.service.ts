@@ -44,25 +44,20 @@ export class RegencyService {
   }
 
   async findByCode(code: string): Promise<RegencyWithParent | null> {
-    const regency = await this.prisma.regency.findUnique({
-      where: {
-        code: code,
-      },
+    const res = await this.prisma.regency.findUnique({
+      where: { code },
+      include: { province: true },
     });
 
-    if (!regency) {
+    if (!res) {
       return null;
     }
 
+    const { province, ...regency } = res;
+
     return {
       ...regency,
-      parent: {
-        province: await this.prisma.province.findUnique({
-          where: {
-            code: regency.provinceCode,
-          },
-        }),
-      },
+      parent: { province },
     };
   }
 }
