@@ -9,6 +9,7 @@ import {
 } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumberString, Length, MaxLength } from 'class-validator';
 import { PaginationQuery } from '@/common/dto/pagination.dto';
+import { Province } from '@/province/province.dto';
 
 export class Regency {
   @IsNotEmpty()
@@ -49,3 +50,9 @@ export class RegencyFindQueries extends IntersectionType(
 export class RegencyFindByCodeParams extends PickType(Regency, [
   'code',
 ] as const) {}
+
+export class RegencyWithParent extends Regency {
+  parent: {
+    province: Province;
+  };
+}

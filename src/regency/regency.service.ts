@@ -4,7 +4,7 @@ import { PrismaService } from '@/prisma/prisma.service';
 import { SortService } from '@/sort/sort.service';
 import { Injectable } from '@nestjs/common';
 import { Regency } from '@prisma/client';
-import { RegencyFindQueries } from './regency.dto';
+import { RegencyWithParent, RegencyFindQueries } from './regency.dto';
 
 @Injectable()
 export class RegencyService {
@@ -43,11 +43,26 @@ export class RegencyService {
     });
   }
 
-  async findByCode(code: string): Promise<Regency | null> {
-    return this.prisma.regency.findUnique({
+  async findByCode(code: string): Promise<RegencyWithParent | null> {
+    const regency = await this.prisma.regency.findUnique({
       where: {
         code: code,
       },
     });
+
+    if (!regency) {
+      return null;
+    }
+
+    return {
+      ...regency,
+      parent: {
+        province: await this.prisma.province.findUnique({
+          where: {
+            code: regency.provinceCode,
+          },
+        }),
+      },
+    };
   }
 }

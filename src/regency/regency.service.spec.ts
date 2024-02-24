@@ -1,19 +1,21 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '@/prisma/prisma.service';
 import { RegencyService } from './regency.service';
-import { Regency } from '@prisma/client';
+import { Province, Regency } from '@prisma/client';
 import { getDBProviderFeatures } from '@common/utils/db';
 import { SortOrder } from '@/sort/sort.dto';
-import { getRegencies } from '@common/utils/data';
+import { getProvinces, getRegencies } from '@common/utils/data';
 import { mockPrismaService } from '@/prisma/__mocks__/prisma.service';
 
 describe('RegencyService', () => {
   let regencies: Regency[];
+  let provinces: Province[];
   let service: RegencyService;
   let prismaService: PrismaService;
 
   beforeAll(async () => {
     regencies = await getRegencies();
+    provinces = await getProvinces();
   });
 
   beforeEach(async () => {
@@ -22,7 +24,10 @@ describe('RegencyService', () => {
         RegencyService,
         {
           provide: PrismaService,
-          useValue: mockPrismaService('Regency', regencies),
+          useValue: {
+            ...mockPrismaService('Regency', regencies),
+            province: mockPrismaService('Province', provinces).province,
+          },
         },
       ],
     }).compile();
@@ -149,12 +154,19 @@ describe('RegencyService', () => {
   });
 
   describe('findByCode', () => {
-    it('should return a regency', async () => {
+    it('should return a regency with its province', async () => {
       const expectedRegency = regencies[0];
+      const expectedProvince = provinces.find(
+        (p) => p.code === expectedRegency.provinceCode,
+      );
 
       const findUniqueSpy = vitest
         .spyOn(prismaService.regency, 'findUnique')
         .mockResolvedValue(expectedRegency);
+
+      const findUniqueProvinceSpy = vitest
+        .spyOn(prismaService.province, 'findUnique')
+        .mockResolvedValue(expectedProvince);
 
       const result = await service.findByCode(expectedRegency.code);
 
@@ -162,7 +174,18 @@ describe('RegencyService', () => {
       expect(findUniqueSpy).toHaveBeenCalledWith({
         where: { code: expectedRegency.code },
       });
-      expect(result).toEqual(expectedRegency);
+
+      expect(findUniqueProvinceSpy).toHaveBeenCalledTimes(1);
+      expect(findUniqueProvinceSpy).toHaveBeenCalledWith({
+        where: { code: expectedRegency.provinceCode },
+      });
+
+      expect(result).toEqual({
+        ...expectedRegency,
+        parent: {
+          province: expectedProvince,
+        },
+      });
     });
 
     it('should return null when no regency is found', async () => {

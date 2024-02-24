@@ -17,6 +17,7 @@ import {
 import {
   Regency,
   RegencyFindByCodeParams,
+  RegencyWithParent,
   RegencyFindQueries,
 } from './regency.dto';
 import { RegencyService } from './regency.service';
@@ -48,7 +49,10 @@ export class RegencyController {
   }
 
   @ApiOperation({ description: 'Get a regency by its code.' })
-  @ApiDataResponse({ model: Regency, description: 'Returns a regency.' })
+  @ApiDataResponse({
+    model: RegencyWithParent,
+    description: 'Returns a regency.',
+  })
   @ApiBadRequestResponse({ description: 'If the `code` is invalid.' })
   @ApiNotFoundResponse({
     description: 'If no regency matches the `code`.',
@@ -56,7 +60,7 @@ export class RegencyController {
   @Get(':code')
   async findByCode(
     @Param() { code }: RegencyFindByCodeParams,
-  ): Promise<Regency> {
+  ): Promise<RegencyWithParent> {
     const regency = await this.regencyService.findByCode(code);
 
     if (regency === null) {

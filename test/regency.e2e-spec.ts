@@ -1,6 +1,6 @@
 import { Regency } from '@prisma/client';
 import { AppTester } from './helper/app-tester';
-import { regencyRegex } from './helper/data-regex';
+import { provinceRegex, regencyRegex } from './helper/data-regex';
 import { getEncodedSymbols } from './helper/utils';
 
 describe('Regency (e2e)', () => {
@@ -87,6 +87,12 @@ describe('Regency (e2e)', () => {
         code: testCode,
         name: expect.stringMatching(regencyRegex.name),
         provinceCode: testCode.slice(0, 2),
+        parent: expect.objectContaining({
+          province: expect.objectContaining({
+            code: testCode.slice(0, 2),
+            name: expect.stringMatching(provinceRegex.name),
+          }),
+        }),
       });
     });
   });
