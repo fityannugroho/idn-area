@@ -17,6 +17,7 @@ import {
   District,
   DistrictFindByCodeParams,
   DistrictFindQueries,
+  DistrictWithParent,
 } from './district.dto';
 import { DistrictService } from './district.service';
 import { ApiPaginatedResponse } from '@/common/decorator/api-paginated-response.decorator';
@@ -48,7 +49,10 @@ export class DistrictController {
   }
 
   @ApiOperation({ description: 'Get a district by its code.' })
-  @ApiDataResponse({ model: District, description: 'Returns a district.' })
+  @ApiDataResponse({
+    model: DistrictWithParent,
+    description: 'Returns a district.',
+  })
   @ApiBadRequestResponse({ description: 'If the `code` is invalid.' })
   @ApiNotFoundResponse({
     description: 'If no district matches the `code`.',
@@ -56,7 +60,7 @@ export class DistrictController {
   @Get(':code')
   async findByCode(
     @Param() { code }: DistrictFindByCodeParams,
-  ): Promise<District> {
+  ): Promise<DistrictWithParent> {
     const district = await this.districtService.findByCode(code);
 
     if (district === null) {

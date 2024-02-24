@@ -4,7 +4,7 @@ import { PrismaService } from '@/prisma/prisma.service';
 import { SortService } from '@/sort/sort.service';
 import { Injectable } from '@nestjs/common';
 import { District } from '@prisma/client';
-import { DistrictFindQueries } from './district.dto';
+import { DistrictFindQueries, DistrictWithParent } from './district.dto';
 
 @Injectable()
 export class DistrictService {
@@ -44,9 +44,26 @@ export class DistrictService {
     });
   }
 
-  async findByCode(code: string): Promise<District | null> {
-    return this.prisma.district.findUnique({
+  async findByCode(code: string): Promise<DistrictWithParent | null> {
+    const res = await this.prisma.district.findUnique({
       where: { code },
+      include: { regency: true },
     });
+
+    if (!res) {
+      return null;
+    }
+
+    const { regency, ...district } = res;
+
+    return {
+      ...district,
+      parent: {
+        regency,
+        province: await this.prisma.province.findUnique({
+          where: { code: regency.provinceCode },
+        }),
+      },
+    };
   }
 }
