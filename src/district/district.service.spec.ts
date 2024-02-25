@@ -26,10 +26,7 @@ describe('DistrictService', () => {
         DistrictService,
         {
           provide: PrismaService,
-          useValue: {
-            ...mockPrismaService('District', districts),
-            province: mockPrismaService('Province', provinces).province,
-          },
+          useValue: mockPrismaService('District', districts),
         },
       ],
     }).compile();
@@ -166,10 +163,6 @@ describe('DistrictService', () => {
       const result = await service.findByCode(testCode);
 
       expect(findUniqueSpy).toHaveBeenCalledTimes(1);
-      expect(findUniqueSpy).toHaveBeenCalledWith({
-        where: { code: testCode },
-        include: { regency: true },
-      });
       expect(result).toBeNull();
     });
 
@@ -189,21 +182,15 @@ describe('DistrictService', () => {
           ...expectedDistrict,
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-expect-error
-          regency: expectedRegency,
+          regency: {
+            ...expectedRegency,
+            province: expectedProvince,
+          },
         });
-
-      vitest
-        .spyOn(prismaService.province, 'findUnique')
-        .mockResolvedValue(expectedProvince);
 
       const result = await service.findByCode(testCode);
 
       expect(findUniqueSpy).toHaveBeenCalledTimes(1);
-      expect(findUniqueSpy).toHaveBeenCalledWith({
-        where: { code: testCode },
-        include: { regency: true },
-      });
-
       expect(result).toEqual({
         ...expectedDistrict,
         parent: {

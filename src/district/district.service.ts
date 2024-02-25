@@ -47,23 +47,27 @@ export class DistrictService {
   async findByCode(code: string): Promise<DistrictWithParent | null> {
     const res = await this.prisma.district.findUnique({
       where: { code },
-      include: { regency: true },
+      include: {
+        regency: {
+          include: {
+            province: true,
+          },
+        },
+      },
     });
 
     if (!res) {
       return null;
     }
 
-    const { regency, ...district } = res;
+    const {
+      regency: { province, ...regency },
+      ...district
+    } = res;
 
     return {
       ...district,
-      parent: {
-        regency,
-        province: await this.prisma.province.findUnique({
-          where: { code: regency.provinceCode },
-        }),
-      },
+      parent: { regency, province },
     };
   }
 }
