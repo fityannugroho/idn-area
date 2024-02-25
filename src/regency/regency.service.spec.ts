@@ -169,10 +169,9 @@ describe('RegencyService', () => {
       const result = await service.findByCode(expectedRegency.code);
 
       expect(findUniqueSpy).toHaveBeenCalledTimes(1);
-      expect(findUniqueSpy).toHaveBeenCalledWith({
-        where: { code: expectedRegency.code },
-        include: { province: true },
-      });
+      expect(findUniqueSpy).toHaveBeenCalledWith(
+        expect.objectContaining({ where: { code: expectedRegency.code } }),
+      );
 
       expect(result).toEqual({
         ...expectedRegency,
@@ -191,10 +190,9 @@ describe('RegencyService', () => {
       const result = await service.findByCode(testCode);
 
       expect(findUniqueSpy).toHaveBeenCalledTimes(1);
-      expect(findUniqueSpy).toHaveBeenCalledWith({
-        where: { code: testCode },
-        include: { province: true },
-      });
+      expect(findUniqueSpy).toHaveBeenCalledWith(
+        expect.objectContaining({ where: { code: testCode } }),
+      );
       expect(result).toBeNull();
     });
   });

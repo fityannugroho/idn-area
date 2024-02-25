@@ -171,6 +171,9 @@ describe('VillageService', () => {
       const result = await service.findByCode(testCode);
 
       expect(findUniqueSpy).toHaveBeenCalledTimes(1);
+      expect(findUniqueSpy).toHaveBeenCalledWith(
+        expect.objectContaining({ where: { code: testCode } }),
+      );
       expect(result).toBeNull();
     });
 
@@ -205,6 +208,9 @@ describe('VillageService', () => {
       const result = await service.findByCode(testCode);
 
       expect(findUniqueSpy).toHaveBeenCalledTimes(1);
+      expect(findUniqueSpy).toHaveBeenCalledWith(
+        expect.objectContaining({ where: { code: testCode } }),
+      );
       expect(result).toEqual({
         ...expectedVillage,
         parent: {
