@@ -4,7 +4,7 @@ import { PrismaService } from '@/prisma/prisma.service';
 import { SortService } from '@/sort/sort.service';
 import { Injectable } from '@nestjs/common';
 import { Village } from '@prisma/client';
-import { VillageFindQueries } from './village.dto';
+import { VillageFindQueries, VillageWithParent } from './village.dto';
 
 @Injectable()
 export class VillageService {
@@ -43,9 +43,37 @@ export class VillageService {
     });
   }
 
-  async findByCode(code: string): Promise<Village | null> {
-    return this.prisma.village.findUnique({
+  async findByCode(code: string): Promise<VillageWithParent | null> {
+    const res = await this.prisma.village.findUnique({
       where: { code },
+      include: {
+        district: {
+          include: {
+            regency: {
+              include: {
+                province: true,
+              },
+            },
+          },
+        },
+      },
     });
+
+    if (!res) {
+      return null;
+    }
+
+    const {
+      district: {
+        regency: { province, ...regency },
+        ...district
+      },
+      ...village
+    } = res;
+
+    return {
+      ...village,
+      parent: { district, regency, province },
+    };
   }
 }
