@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { isDBProvider } from '../../../common/utils/db/provider';
 import {
   TransformInterceptor,
   TransformedResponse,
@@ -28,14 +27,6 @@ export class PaginateInterceptor<T> extends TransformInterceptor<
   PaginatedResponse<T>
 > {
   protected transformValue({ data, meta }: PaginatedReturn<T>) {
-    // Remove the `id` property from the data if the database provider is MongoDB.
-    if (isDBProvider('mongodb')) {
-      data = (data as any[]).map(
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        ({ id, ...item }) => ({ id: undefined, ...item }) as T,
-      );
-    }
-
     return { data, meta: { pagination: meta } };
   }
 }
