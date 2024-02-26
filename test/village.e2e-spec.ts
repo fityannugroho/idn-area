@@ -6,7 +6,7 @@ import {
   regencyRegex,
   villageRegex,
 } from './helper/data-regex';
-import { getEncodedSymbols } from './helper/utils';
+import { expectIdFromMongo, getEncodedSymbols } from './helper/utils';
 
 describe('Village (e2e)', () => {
   const baseUrl = '/villages';
@@ -24,11 +24,13 @@ describe('Village (e2e)', () => {
       const villages = await tester.expectData<Village[]>(baseUrl);
 
       villages.forEach((village) => {
-        expect(village).toEqual({
-          code: expect.stringMatching(villageRegex.code),
-          name: expect.stringMatching(villageRegex.name),
-          districtCode: village.code.slice(0, 6),
-        });
+        expect(village).toEqual(
+          expectIdFromMongo({
+            code: expect.stringMatching(villageRegex.code),
+            name: expect.stringMatching(villageRegex.name),
+            districtCode: village.code.slice(0, 6),
+          }),
+        );
       });
     });
 
@@ -65,11 +67,13 @@ describe('Village (e2e)', () => {
       );
 
       villages.forEach((village) => {
-        expect(village).toEqual({
-          code: expect.stringMatching(villageRegex.code),
-          name: expect.stringMatching(new RegExp(testName, 'i')),
-          districtCode: village.code.slice(0, 6),
-        });
+        expect(village).toEqual(
+          expectIdFromMongo({
+            code: expect.stringMatching(villageRegex.code),
+            name: expect.stringMatching(new RegExp(testName, 'i')),
+            districtCode: village.code.slice(0, 6),
+          }),
+        );
       });
     });
 
@@ -80,11 +84,13 @@ describe('Village (e2e)', () => {
       );
 
       villages.forEach((village) => {
-        expect(village).toEqual({
-          code: expect.stringMatching(villageRegex.code),
-          name: expect.stringMatching(villageRegex.name),
-          districtCode,
-        });
+        expect(village).toEqual(
+          expectIdFromMongo({
+            code: expect.stringMatching(villageRegex.code),
+            name: expect.stringMatching(villageRegex.name),
+            districtCode,
+          }),
+        );
       });
     });
   });
@@ -106,27 +112,29 @@ describe('Village (e2e)', () => {
         `${baseUrl}/${testCode}`,
       );
 
-      expect(village).toEqual({
-        code: testCode,
-        name: expect.stringMatching(villageRegex.name),
-        districtCode: testCode.slice(0, 6),
-        parent: {
-          district: {
-            code: testCode.slice(0, 6),
-            name: expect.stringMatching(districtRegex.name),
-            regencyCode: testCode.slice(0, 4),
+      expect(village).toEqual(
+        expectIdFromMongo({
+          code: testCode,
+          name: expect.stringMatching(villageRegex.name),
+          districtCode: testCode.slice(0, 6),
+          parent: {
+            district: expectIdFromMongo({
+              code: testCode.slice(0, 6),
+              name: expect.stringMatching(districtRegex.name),
+              regencyCode: testCode.slice(0, 4),
+            }),
+            regency: expectIdFromMongo({
+              code: testCode.slice(0, 4),
+              name: expect.stringMatching(regencyRegex.name),
+              provinceCode: testCode.slice(0, 2),
+            }),
+            province: expectIdFromMongo({
+              code: testCode.slice(0, 2),
+              name: expect.stringMatching(provinceRegex.name),
+            }),
           },
-          regency: {
-            code: testCode.slice(0, 4),
-            name: expect.stringMatching(regencyRegex.name),
-            provinceCode: testCode.slice(0, 2),
-          },
-          province: {
-            code: testCode.slice(0, 2),
-            name: expect.stringMatching(provinceRegex.name),
-          },
-        },
-      });
+        }),
+      );
     });
   });
 

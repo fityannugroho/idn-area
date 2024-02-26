@@ -7,7 +7,6 @@ import {
 import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { isDBProvider } from '../../../common/utils/db/provider';
 
 export type WrappedData<
   Data,
@@ -41,22 +40,7 @@ export class TransformInterceptor<T, R extends TransformedResponse<T>>
   constructor(private reflector: Reflector) {}
 
   protected transformValue(val: any): WrappedData<T> {
-    const res: WrappedData<T> = isDataWrapped<T>(val) ? val : { data: val };
-
-    // Remove the `id` property from the data if the database provider is MongoDB.
-    if (isDBProvider('mongodb')) {
-      if (Array.isArray(res.data)) {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        res.data = res.data.map(({ id, ...item }) => ({
-          id: undefined,
-          ...item,
-        })) as T;
-      } else {
-        delete (res.data as { id: string }).id;
-      }
-    }
-
-    return res;
+    return isDataWrapped<T>(val) ? val : { data: val };
   }
 
   intercept(context: ExecutionContext, next: CallHandler<T>): Observable<R> {
