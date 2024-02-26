@@ -5,7 +5,7 @@ import {
   provinceRegex,
   regencyRegex,
 } from './helper/data-regex';
-import { getEncodedSymbols } from './helper/utils';
+import { expectIdFromMongo, getEncodedSymbols } from './helper/utils';
 
 describe('District (e2e)', () => {
   const baseUrl = '/districts';
@@ -23,11 +23,13 @@ describe('District (e2e)', () => {
       const districts = await tester.expectData<District[]>(baseUrl);
 
       districts.forEach((district) => {
-        expect(district).toEqual({
-          code: expect.stringMatching(districtRegex.code),
-          name: expect.stringMatching(districtRegex.name),
-          regencyCode: district.code.slice(0, 4),
-        });
+        expect(district).toEqual(
+          expectIdFromMongo({
+            code: expect.stringMatching(districtRegex.code),
+            name: expect.stringMatching(districtRegex.name),
+            regencyCode: district.code.slice(0, 4),
+          }),
+        );
       });
     });
 
@@ -64,11 +66,13 @@ describe('District (e2e)', () => {
       );
 
       districts.forEach((district) => {
-        expect(district).toEqual({
-          code: expect.stringMatching(districtRegex.code),
-          name: expect.stringMatching(new RegExp(testName, 'i')),
-          regencyCode: district.code.slice(0, 4),
-        });
+        expect(district).toEqual(
+          expectIdFromMongo({
+            code: expect.stringMatching(districtRegex.code),
+            name: expect.stringMatching(new RegExp(testName, 'i')),
+            regencyCode: district.code.slice(0, 4),
+          }),
+        );
       });
     });
 
@@ -79,11 +83,13 @@ describe('District (e2e)', () => {
       );
 
       districts.forEach((district) => {
-        expect(district).toEqual({
-          code: expect.stringMatching(districtRegex.code),
-          name: expect.stringMatching(districtRegex.name),
-          regencyCode,
-        });
+        expect(district).toEqual(
+          expectIdFromMongo({
+            code: expect.stringMatching(districtRegex.code),
+            name: expect.stringMatching(districtRegex.name),
+            regencyCode,
+          }),
+        );
       });
     });
   });
@@ -105,22 +111,24 @@ describe('District (e2e)', () => {
         `${baseUrl}/${testCode}`,
       );
 
-      expect(district).toEqual({
-        code: testCode,
-        name: expect.stringMatching(districtRegex.name),
-        regencyCode: testCode.slice(0, 4),
-        parent: {
-          regency: {
-            code: testCode.slice(0, 4),
-            name: expect.stringMatching(regencyRegex.name),
-            provinceCode: testCode.slice(0, 2),
+      expect(district).toEqual(
+        expectIdFromMongo({
+          code: testCode,
+          name: expect.stringMatching(districtRegex.name),
+          regencyCode: testCode.slice(0, 4),
+          parent: {
+            regency: expectIdFromMongo({
+              code: testCode.slice(0, 4),
+              name: expect.stringMatching(regencyRegex.name),
+              provinceCode: testCode.slice(0, 2),
+            }),
+            province: expectIdFromMongo({
+              code: testCode.slice(0, 2),
+              name: expect.stringMatching(provinceRegex.name),
+            }),
           },
-          province: {
-            code: testCode.slice(0, 2),
-            name: expect.stringMatching(provinceRegex.name),
-          },
-        },
-      });
+        }),
+      );
     });
   });
 
