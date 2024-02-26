@@ -1,7 +1,11 @@
 import { PaginatedReturn } from '@/common/interceptor/paginate.interceptor';
 import { convertCoordinate } from '@common/utils/coordinate';
 import { getDBProviderFeatures } from '@common/utils/db';
-import { Island as IslandDTO, IslandFindQueries } from '@/island/island.dto';
+import {
+  Island as IslandDTO,
+  IslandFindQueries,
+  IslandWithParent,
+} from '@/island/island.dto';
 import { PrismaService } from '@/prisma/prisma.service';
 import { SortService } from '@/sort/sort.service';
 import { Injectable } from '@nestjs/common';
@@ -54,11 +58,43 @@ export class IslandService {
     });
   }
 
-  async findByCode(code: string): Promise<Island | null> {
-    return this.prisma.island.findUnique({
-      where: {
-        code: code,
+  async findByCode(code: string): Promise<IslandWithParent | null> {
+    const res = await this.prisma.island.findUnique({
+      where: { code },
+      include: {
+        regency: {
+          include: {
+            province: true,
+          },
+        },
       },
     });
+
+    if (!res) {
+      return null;
+    }
+
+    const { regency: regencyWithProvince, ...island } = res;
+
+    if (!regencyWithProvince) {
+      return {
+        ...this.addDecimalCoordinate(island),
+        parent: {
+          regency: null,
+          province: await this.prisma.province.findUnique({
+            where: {
+              code: code.slice(0, 2),
+            },
+          }),
+        },
+      };
+    }
+
+    const { province, ...regency } = regencyWithProvince;
+
+    return {
+      ...this.addDecimalCoordinate(island),
+      parent: { regency, province },
+    };
   }
 }

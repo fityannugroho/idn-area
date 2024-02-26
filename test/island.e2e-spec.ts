@@ -1,6 +1,6 @@
 import { Island } from '@prisma/client';
 import { AppTester } from './helper/app-tester';
-import { islandRegex } from './helper/data-regex';
+import { islandRegex, regencyRegex } from './helper/data-regex';
 import { getEncodedSymbols } from './helper/utils';
 
 describe('Island (e2e)', () => {
@@ -142,6 +142,19 @@ describe('Island (e2e)', () => {
         longitude: expect.any(Number),
         name: expect.stringMatching(islandRegex.name),
         regencyCode: island.regencyCode ? island.code.slice(0, 4) : null,
+        parent: {
+          regency: island.regencyCode
+            ? {
+                code: island.regencyCode,
+                name: expect.stringMatching(regencyRegex.name),
+                provinceCode: island.code.slice(0, 2),
+              }
+            : null,
+          province: {
+            code: island.code.slice(0, 2),
+            name: expect.stringMatching(islandRegex.name),
+          },
+        },
       });
     });
   });
