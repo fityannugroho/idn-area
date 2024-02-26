@@ -61,7 +61,7 @@
     "@types/express": "^4.17.21",
     "@types/node": "^20.11.17",
     "@types/supertest": "^6.0.2",
-    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
     "@typescript-eslint/parser": "^6.21.0",
     "@vitest/coverage-v8": "^0.34.6",
     "eslint": "^8.57.0",
