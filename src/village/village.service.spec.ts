@@ -2,20 +2,30 @@ import { getDBProviderFeatures } from '@common/utils/db';
 import { PrismaService } from '@/prisma/prisma.service';
 import { SortOrder } from '@/sort/sort.dto';
 import { Test } from '@nestjs/testing';
-import { Village } from '@prisma/client';
+import { District, Province, Regency, Village } from '@prisma/client';
 import { VillageService } from './village.service';
 import { mockPrismaService } from '@/prisma/__mocks__/prisma.service';
-
-const villages: readonly Village[] = [
-  { code: '1101012001', name: 'Desa 1', districtCode: '110101' },
-  { code: '1101012002', name: 'Desa 2', districtCode: '110101' },
-  { code: '1212121001', name: 'Kampung Karet', districtCode: '121212' },
-  { code: '1212121002', name: 'Kampung Berkah', districtCode: '121212' },
-] as const;
+import {
+  getDistricts,
+  getProvinces,
+  getRegencies,
+  getVillages,
+} from '@common/utils/data';
 
 describe('VillageService', () => {
+  let villages: Village[];
+  let districts: District[];
+  let regencies: Regency[];
+  let provinces: Province[];
   let service: VillageService;
   let prismaService: PrismaService;
+
+  beforeAll(async () => {
+    villages = await getVillages();
+    districts = await getDistricts();
+    regencies = await getRegencies();
+    provinces = await getProvinces();
+  });
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -161,27 +171,54 @@ describe('VillageService', () => {
       const result = await service.findByCode(testCode);
 
       expect(findUniqueSpy).toHaveBeenCalledTimes(1);
-      expect(findUniqueSpy).toHaveBeenCalledWith({
-        where: { code: testCode },
-      });
+      expect(findUniqueSpy).toHaveBeenCalledWith(
+        expect.objectContaining({ where: { code: testCode } }),
+      );
       expect(result).toBeNull();
     });
 
     it('should return the village with the provided code', async () => {
       const testCode = '1101012001';
       const expectedVillage = villages.find((v) => v.code === testCode);
+      const expectedDistrict = districts.find(
+        (d) => d.code === expectedVillage?.districtCode,
+      );
+      const expectedRegency = regencies.find(
+        (r) => r.code === expectedDistrict?.regencyCode,
+      );
+      const expectedProvince = provinces.find(
+        (p) => p.code === expectedRegency?.provinceCode,
+      );
 
       const findUniqueSpy = vitest
         .spyOn(prismaService.village, 'findUnique')
-        .mockResolvedValue(expectedVillage);
+        .mockResolvedValue({
+          ...expectedVillage,
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-expect-error
+          district: {
+            ...expectedDistrict,
+            regency: {
+              ...expectedRegency,
+              province: expectedProvince,
+            },
+          },
+        });
 
       const result = await service.findByCode(testCode);
 
       expect(findUniqueSpy).toHaveBeenCalledTimes(1);
-      expect(findUniqueSpy).toHaveBeenCalledWith({
-        where: { code: testCode },
+      expect(findUniqueSpy).toHaveBeenCalledWith(
+        expect.objectContaining({ where: { code: testCode } }),
+      );
+      expect(result).toEqual({
+        ...expectedVillage,
+        parent: {
+          district: expectedDistrict,
+          regency: expectedRegency,
+          province: expectedProvince,
+        },
       });
-      expect(result).toEqual(expectedVillage);
     });
   });
 });

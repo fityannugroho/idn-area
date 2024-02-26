@@ -17,6 +17,7 @@ import {
   Village,
   VillageFindByCodeParams,
   VillageFindQueries,
+  VillageWithParent,
 } from './village.dto';
 import { VillageService } from './village.service';
 import { ApiPaginatedResponse } from '@/common/decorator/api-paginated-response.decorator';
@@ -48,7 +49,10 @@ export class VillageController {
   }
 
   @ApiOperation({ description: 'Get a village by its code.' })
-  @ApiDataResponse({ model: Village, description: 'Returns a village.' })
+  @ApiDataResponse({
+    model: VillageWithParent,
+    description: 'Returns a village.',
+  })
   @ApiBadRequestResponse({ description: 'If the `code` is invalid.' })
   @ApiNotFoundResponse({
     description: 'If no village matches the `code`.',
@@ -56,7 +60,7 @@ export class VillageController {
   @Get(':code')
   async findByCode(
     @Param() { code }: VillageFindByCodeParams,
-  ): Promise<Village> {
+  ): Promise<VillageWithParent> {
     const village = await this.villageService.findByCode(code);
 
     if (village === null) {

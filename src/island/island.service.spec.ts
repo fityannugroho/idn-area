@@ -1,10 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { IslandService } from './island.service';
 import { PrismaService } from '@/prisma/prisma.service';
-import { Island } from '@prisma/client';
+import { Island, Province, Regency } from '@prisma/client';
 import { getDBProviderFeatures } from '@common/utils/db';
 import { SortOrder } from '@/sort/sort.dto';
 import { mockPrismaService } from '@/prisma/__mocks__/prisma.service';
+import { getProvinces, getRegencies } from '@common/utils/data';
 
 const islands: readonly Island[] = [
   {
@@ -60,6 +61,13 @@ const islands: readonly Island[] = [
 describe('IslandService', () => {
   let service: IslandService;
   let prismaService: PrismaService;
+  let provinces: Province[];
+  let regencies: Regency[];
+
+  beforeAll(async () => {
+    provinces = await getProvinces();
+    regencies = await getRegencies();
+  });
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -67,7 +75,10 @@ describe('IslandService', () => {
         IslandService,
         {
           provide: PrismaService,
-          useValue: mockPrismaService('Island', islands),
+          useValue: {
+            ...mockPrismaService('Island', islands),
+            province: mockPrismaService('Province', provinces).province,
+          },
         },
       ],
     }).compile();
@@ -213,18 +224,79 @@ describe('IslandService', () => {
     it('should return an island', async () => {
       const testCode = '110140001';
       const expectedIsland = islands.find((i) => i.code === testCode);
+      const expectedRegency = regencies.find(
+        (r) => r.code === expectedIsland.regencyCode,
+      );
+      const expectedProvince = provinces.find(
+        (p) => p.code === expectedRegency.provinceCode,
+      );
 
       const findUniqueSpy = vitest
         .spyOn(prismaService.island, 'findUnique')
-        .mockResolvedValue(expectedIsland);
+        .mockResolvedValue({
+          ...expectedIsland,
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-expect-error
+          regency: { ...expectedRegency, province: expectedProvince },
+        });
 
       const result = await service.findByCode(testCode);
 
       expect(findUniqueSpy).toHaveBeenCalledTimes(1);
-      expect(findUniqueSpy).toHaveBeenCalledWith({
-        where: { code: testCode },
+      expect(findUniqueSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { code: testCode },
+        }),
+      );
+      expect(result).toEqual({
+        ...service.addDecimalCoordinate(expectedIsland),
+        parent: {
+          regency: expectedRegency,
+          province: expectedProvince,
+        },
       });
-      expect(result).toEqual(expectedIsland);
+    });
+
+    it('should return an island without regency', async () => {
+      const testCode = '120040001';
+      const expectedIsland = islands.find((i) => i.code === testCode);
+      const expectedProvince = provinces.find(
+        (p) => p.code === testCode.slice(0, 2),
+      );
+
+      const findUniqueIslandSpy = vitest
+        .spyOn(prismaService.island, 'findUnique')
+        .mockResolvedValue({
+          ...expectedIsland,
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-expect-error
+          regency: null,
+        });
+
+      const findUniqueProvinceSpy = vitest
+        .spyOn(prismaService.province, 'findUnique')
+        .mockResolvedValue(expectedProvince);
+
+      const result = await service.findByCode(testCode);
+
+      expect(findUniqueIslandSpy).toHaveBeenCalledTimes(1);
+      expect(findUniqueIslandSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { code: testCode },
+        }),
+      );
+      expect(findUniqueProvinceSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { code: testCode.slice(0, 2) },
+        }),
+      );
+      expect(result).toEqual({
+        ...service.addDecimalCoordinate(expectedIsland),
+        parent: {
+          regency: null,
+          province: expectedProvince,
+        },
+      });
     });
 
     it('should return null if the island is not found', async () => {
@@ -237,9 +309,11 @@ describe('IslandService', () => {
       const result = await service.findByCode(testCode);
 
       expect(findUniqueSpy).toHaveBeenCalledTimes(1);
-      expect(findUniqueSpy).toHaveBeenCalledWith({
-        where: { code: testCode },
-      });
+      expect(findUniqueSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { code: testCode },
+        }),
+      );
       expect(result).toBeNull();
     });
   });

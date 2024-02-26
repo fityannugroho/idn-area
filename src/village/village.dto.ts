@@ -1,6 +1,9 @@
 import { EqualsAny } from '@/common/decorator/EqualsAny';
 import { IsNotSymbol } from '@/common/decorator/IsNotSymbol';
 import { PaginationQuery } from '@/common/dto/pagination.dto';
+import { District } from '@/district/district.dto';
+import { Province } from '@/province/province.dto';
+import { Regency } from '@/regency/regency.dto';
 import { SortQuery } from '@/sort/sort.dto';
 import {
   ApiProperty,
@@ -46,3 +49,11 @@ export class VillageFindQueries extends IntersectionType(
 export class VillageFindByCodeParams extends PickType(Village, [
   'code',
 ] as const) {}
+
+export class VillageWithParent extends Village {
+  parent: {
+    district: District;
+    regency: Regency;
+    province: Province;
+  };
+}

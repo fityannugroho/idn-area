@@ -18,6 +18,8 @@ import {
 import { EqualsAny } from '../common/decorator/EqualsAny';
 import { IsNotSymbol } from '../common/decorator/IsNotSymbol';
 import { PaginationQuery } from '@/common/dto/pagination.dto';
+import { Regency } from '@/regency/regency.dto';
+import { Province } from '@/province/province.dto';
 
 export class Island {
   @IsNotEmpty()
@@ -59,7 +61,7 @@ export class Island {
       Providing an empty string will filter islands that are not part of any regency.`,
     example: '1101',
   })
-  regencyCode?: string;
+  regencyCode?: string | null;
 
   @ApiProperty({ example: 3.317622222222222 })
   latitude?: number;
@@ -82,3 +84,10 @@ export class IslandFindQueries extends IntersectionType(
 export class IslandFindByCodeParams extends PickType(Island, [
   'code',
 ] as const) {}
+
+export class IslandWithParent extends Island {
+  parent: {
+    regency?: Regency | null;
+    province: Province;
+  };
+}

@@ -17,6 +17,7 @@ import {
   Island,
   IslandFindByCodeParams,
   IslandFindQueries,
+  IslandWithParent,
 } from './island.dto';
 import { IslandService } from './island.service';
 import { ApiPaginatedResponse } from '@/common/decorator/api-paginated-response.decorator';
@@ -55,19 +56,24 @@ export class IslandController {
   }
 
   @ApiOperation({ description: 'Get an island by its code.' })
-  @ApiDataResponse({ model: Island, description: 'Returns an island.' })
+  @ApiDataResponse({
+    model: IslandWithParent,
+    description: 'Returns an island.',
+  })
   @ApiBadRequestResponse({ description: 'If the `code` is invalid.' })
   @ApiNotFoundResponse({
     description: 'If no island matches the `code`.',
   })
   @Get(':code')
-  async findByCode(@Param() { code }: IslandFindByCodeParams): Promise<Island> {
+  async findByCode(
+    @Param() { code }: IslandFindByCodeParams,
+  ): Promise<IslandWithParent> {
     const island = await this.islandService.findByCode(code);
 
     if (island === null) {
       throw new NotFoundException(`Island with code ${code} not found.`);
     }
 
-    return this.islandService.addDecimalCoordinate(island);
+    return island;
   }
 }

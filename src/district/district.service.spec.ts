@@ -1,19 +1,23 @@
-import { getDistricts } from '@common/utils/data';
+import { getDistricts, getProvinces, getRegencies } from '@common/utils/data';
 import { getDBProviderFeatures } from '@common/utils/db';
 import { SortOrder } from '@/sort/sort.dto';
 import { Test, TestingModule } from '@nestjs/testing';
-import { District } from '@prisma/client';
+import { District, Province, Regency } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { DistrictService } from './district.service';
 import { mockPrismaService } from '@/prisma/__mocks__/prisma.service';
 
 describe('DistrictService', () => {
   let districts: District[];
+  let regencies: Regency[];
+  let provinces: Province[];
   let service: DistrictService;
   let prismaService: PrismaService;
 
   beforeAll(async () => {
     districts = await getDistricts();
+    regencies = await getRegencies();
+    provinces = await getProvinces();
   });
 
   beforeEach(async () => {
@@ -159,31 +163,47 @@ describe('DistrictService', () => {
       const result = await service.findByCode(testCode);
 
       expect(findUniqueSpy).toHaveBeenCalledTimes(1);
-      expect(findUniqueSpy).toHaveBeenCalledWith({
-        where: {
-          code: testCode,
-        },
-      });
+      expect(findUniqueSpy).toHaveBeenCalledWith(
+        expect.objectContaining({ where: { code: testCode } }),
+      );
       expect(result).toBeNull();
     });
 
     it('should return a district', async () => {
       const testCode = '110101';
       const expectedDistrict = districts.find((d) => d.code === testCode);
+      const expectedRegency = regencies.find(
+        (r) => r.code === expectedDistrict.regencyCode,
+      );
+      const expectedProvince = provinces.find(
+        (p) => p.code === expectedRegency.provinceCode,
+      );
 
       const findUniqueSpy = vitest
         .spyOn(prismaService.district, 'findUnique')
-        .mockResolvedValue(expectedDistrict);
+        .mockResolvedValue({
+          ...expectedDistrict,
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-expect-error
+          regency: {
+            ...expectedRegency,
+            province: expectedProvince,
+          },
+        });
 
       const result = await service.findByCode(testCode);
 
       expect(findUniqueSpy).toHaveBeenCalledTimes(1);
-      expect(findUniqueSpy).toHaveBeenCalledWith({
-        where: {
-          code: testCode,
+      expect(findUniqueSpy).toHaveBeenCalledWith(
+        expect.objectContaining({ where: { code: testCode } }),
+      );
+      expect(result).toEqual({
+        ...expectedDistrict,
+        parent: {
+          regency: expectedRegency,
+          province: expectedProvince,
         },
       });
-      expect(result).toEqual(expectedDistrict);
     });
   });
 });

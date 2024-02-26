@@ -1,6 +1,11 @@
 import { Village } from '@prisma/client';
 import { AppTester } from './helper/app-tester';
-import { villageRegex } from './helper/data-regex';
+import {
+  districtRegex,
+  provinceRegex,
+  regencyRegex,
+  villageRegex,
+} from './helper/data-regex';
 import { getEncodedSymbols } from './helper/utils';
 
 describe('Village (e2e)', () => {
@@ -105,6 +110,22 @@ describe('Village (e2e)', () => {
         code: testCode,
         name: expect.stringMatching(villageRegex.name),
         districtCode: testCode.slice(0, 6),
+        parent: {
+          district: {
+            code: testCode.slice(0, 6),
+            name: expect.stringMatching(districtRegex.name),
+            regencyCode: testCode.slice(0, 4),
+          },
+          regency: {
+            code: testCode.slice(0, 4),
+            name: expect.stringMatching(regencyRegex.name),
+            provinceCode: testCode.slice(0, 2),
+          },
+          province: {
+            code: testCode.slice(0, 2),
+            name: expect.stringMatching(provinceRegex.name),
+          },
+        },
       });
     });
   });
