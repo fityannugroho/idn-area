@@ -31,7 +31,7 @@ jobs:
           - db: mysql
             db-image: mysql:8
             db-port: 3306
-            db-username: testuser
+            db-username: root
             db-options: >-
               --health-cmd="mysqladmin ping --silent"
               --health-interval=10s
@@ -45,10 +45,8 @@ jobs:
           POSTGRES_USER: ${{ matrix.db-username }}
           POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
           POSTGRES_DB: testdb
-          MYSQL_ROOT_PASSWORD: rO0t_${{ secrets.DB_PASSWORD }}
+          MYSQL_ROOT_PASSWORD: ${{ secrets.DB_PASSWORD }}
           MYSQL_DATABASE: testdb
-          MYSQL_USER: ${{ matrix.db-username }}
-          MYSQL_PASSWORD: ${{ secrets.DB_PASSWORD }}
         ports:
           - ${{ matrix.db-port }}:${{ matrix.db-port }}
         options: >-
