@@ -1,0 +1,59 @@
+datasource db {
+  provider          = "sqlite"
+  url               = env("DB_URL")
+  shadowDatabaseUrl = env("SHADOW_DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model District {
+  code        String    @id
+  name        String
+  regencyCode String    @map("regency_code")
+  regency     Regency   @relation(fields: [regencyCode], references: [code])
+  villages    Village[]
+
+  @@map("districts")
+}
+
+model Island {
+  code             String   @id
+  coordinate       String
+  isOutermostSmall Boolean  @map("is_outermost_small")
+  isPopulated      Boolean  @map("is_populated")
+  name             String
+  regencyCode      String?  @map("regency_code")
+  regency          Regency? @relation(fields: [regencyCode], references: [code])
+
+  @@map("islands")
+}
+
+model Province {
+  code      String    @id
+  name      String
+  regencies Regency[]
+
+  @@map("provinces")
+}
+
+model Regency {
+  code         String     @id
+  name         String
+  provinceCode String     @map("province_code")
+  islands      Island[]
+  districts    District[]
+  province     Province   @relation(fields: [provinceCode], references: [code])
+
+  @@map("regencies")
+}
+
+model Village {
+  code         String   @id
+  districtCode String   @map("district_code")
+  name         String
+  district     District @relation(fields: [districtCode], references: [code])
+
+  @@map("villages")
+}
