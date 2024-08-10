@@ -58,7 +58,7 @@ jobs:
 
     env:
       DB_PROVIDER: ${{ matrix.db }}
-      DB_URL: ${{ format('{0}://{1}:{2}@db:{3}/{4}', matrix.db, matrix.db-username, secrets.DB_PASSWORD, matrix.db-port, 'testdb') }}
+      DB_URL: ${{ matrix.db }}://${{ matrix.db-username }}:${{ secrets.DB_PASSWORD }}@localhost:${{ matrix.db-port }}/testdb
 
     steps:
       - name: Checkout code
