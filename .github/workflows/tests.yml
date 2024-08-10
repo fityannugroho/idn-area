@@ -29,7 +29,7 @@ jobs:
           - db: mysql
             db-image: mysql:8
             db-port: 3306
-            db-username: root
+            db-username: testuser
             db-options: >-
               --health-cmd="mysqladmin ping --silent"
               --health-interval=10s
