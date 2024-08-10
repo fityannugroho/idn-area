@@ -12,6 +12,8 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
+      # Don't cancel all the jobs if one of them fails
+      fail-fast: false
       matrix:
         node-version: [18, 20]
         db: [postgresql, mysql]
@@ -53,7 +55,7 @@ jobs:
 
     env:
       DB_PROVIDER: ${{ matrix.db }}
-      DB_URL: ${{ format('{0}://{1}:{2}/{3}', matrix.db, matrix.db-username, secrets.DB_PASSWORD, matrix.db-port, 'testdb') }}
+      DB_URL: ${{ format('{0}://{1}:{2}@db:{3}/{4}', matrix.db, matrix.db-username, secrets.DB_PASSWORD, matrix.db-port, 'testdb') }}
 
     steps:
       - name: Checkout code
