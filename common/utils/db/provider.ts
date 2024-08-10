@@ -4,6 +4,7 @@ export const dbProvider = {
   mongodb: 'mongodb',
   postgresql: 'postgresql',
   mysql: 'mysql',
+  sqlite: 'sqlite',
 } as const;
 
 export type DBProvider = keyof typeof dbProvider;
@@ -39,6 +40,7 @@ export const dbProviderConfig: DBProviderConfig = {
     },
   },
   mysql: {},
+  sqlite: {},
 } as const;
 
 /**
