@@ -1,29 +1,41 @@
-name: "Test the PR"
+name: Test the PR
 on:
   pull_request:
     branches:
       - main
+
 jobs:
-  run_test:
-    name: "Run tests"
+  build-and-test:
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node-version: [18.x, 20.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases
+        node-version: [18, 20] # See supported Node.js release schedule at https://nodejs.org/en/about/releases
+        db: [postgresql, mysql, mongodb]
+
+    env:
+      DB_PROVIDER: ${{ matrix.db }}
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Install modules
-      run: npm ci
-    - name: Check code formatting
-      run: npm run lint
-    - name: Generate Prisma Client
-      run: npm run prisma:gen
-      env:
-        DB_PROVIDER: ${{ vars.DB_PROVIDER || 'mongodb' }}
-    - name: Build
-      run: npm run build
-    - name: Run unit tests
-      run: npm run test
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install modules
+        run: npm ci
+
+      - name: Check code formatting
+        run: npm run lint
+
+      - name: Generate Prisma Client
+        run: npm run prisma:gen
+
+      - name: Build
+        run: npm run build
+
+      - name: Run unit tests
+        run: npm run test
