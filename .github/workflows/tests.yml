@@ -1,35 +1,94 @@
-name: "Tests the App"
-env:
-  DB_PROVIDER: ${{ vars.DB_PROVIDER }}
-  DB_URL: ${{ secrets.DB_URL }}
+name: Tests the App
+
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
+
 jobs:
-  run_test:
-    name: "Run tests"
+  build-and-test:
+    name: Build and test with Node.js ${{ matrix.node-version }} and ${{ matrix.db }}
     runs-on: ubuntu-latest
 
     strategy:
-      max-parallel: 1
       matrix:
-        node-version: [18.x, 20.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases
+        node-version: [18, 20]
+        db: [postgresql, mysql]
+        include:
+          - db: postgresql
+            db-image: postgres:14
+            db-port: 5432
+            db-username: postgres
+            db-options: >-
+              --health-cmd="pg_isready -U postgres"
+              --health-interval=10s
+              --health-timeout=5s
+              --health-retries=5
+
+          - db: mysql
+            db-image: mysql:8
+            db-port: 3306
+            db-username: root
+            db-options: >-
+              --health-cmd="mysqladmin ping --silent"
+              --health-interval=10s
+              --health-timeout=5s
+              --health-retries=5
+
+    services:
+      db:
+        image: ${{ matrix.db-image }}
+        env:
+          POSTGRES_USER: ${{ matrix.db-username }}
+          POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          POSTGRES_DB: testdb
+          MYSQL_ROOT_PASSWORD: rO0t_${{ secrets.DB_PASSWORD }}
+          MYSQL_DATABASE: testdb
+          MYSQL_USER: ${{ matrix.db-username }}
+          MYSQL_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        ports:
+          - ${{ matrix.db-port }}:${{ matrix.db-port }}
+        options: ${{ matrix.db-options }}
+
+    env:
+      DB_PROVIDER: ${{ matrix.db }}
+      DB_URL: ${{ format('{0}://{1}:{2}/{3}', matrix.db, matrix.db-username, secrets.DB_PASSWORD, matrix.db-port, 'testdb') }}
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Install modules
-      run: npm ci
-    - name: Check code formatting
-      run: npm run lint
-    - name: Migrate the database
-      run: npm run db:migrate
-    - name: Seed the data
-      run: npm run db:seed
-    - name: Build
-      run: npm run build
-    - name: Run unit tests
-      run: npm run test
-    - name: Run e2e tests
-      run: npm run test:e2e
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Cache Node.js modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}-${{ matrix.node-version }}
+          restore-keys: |
+            ${{ runner.os }}-node-${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linting
+        run: npm run lint
+
+      - name: Run database migrations
+        run: npm run db:migrate
+
+      - name: Run database seed
+        run: npm run db:seed
+
+      - name: Build the app
+        run: npm run build
+
+      - name: Run unit tests
+        run: npm run test
+
+      - name: Run e2e tests
+        run: npm run test:e2e
