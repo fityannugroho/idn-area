@@ -8,6 +8,7 @@ on:
 
 jobs:
   build-and-test:
+    name: Build and test with Node.js ${{ matrix.node-version }} and ${{ matrix.db }}
     runs-on: ubuntu-latest
 
     strategy:
