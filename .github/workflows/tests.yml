@@ -51,7 +51,10 @@ jobs:
           MYSQL_PASSWORD: ${{ secrets.DB_PASSWORD }}
         ports:
           - ${{ matrix.db-port }}:${{ matrix.db-port }}
-        options: ${{ matrix.db-options }}
+        options: >-
+          --name db
+          --hostname db
+          ${{ matrix.db-options }}
 
     env:
       DB_PROVIDER: ${{ matrix.db }}
