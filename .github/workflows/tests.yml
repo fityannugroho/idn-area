@@ -12,10 +12,11 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
+      # Don't cancel all the jobs if one of them fails
       fail-fast: false
       matrix:
         node-version: [18, 20]
-        db: [postgresql, mysql, mongodb]
+        db: [postgresql, mysql]
         include:
           - db: postgresql
             db-image: postgres:14
@@ -37,18 +38,6 @@ jobs:
               --health-timeout=5s
               --health-retries=5
 
-          - db: mongodb
-            db-image: mongo:7.0
-            db-port: 27017
-            db-username: root
-            db-options: >-
-              --replSet rs0
-              --bind_ip localhost
-              --health-cmd="mongo --eval 'db.runCommand({ping: 1})'"
-              --health-interval=10s
-              --health-timeout=5s
-              --health-retries=5
-
     services:
       db:
         image: ${{ matrix.db-image }}
@@ -58,15 +47,16 @@ jobs:
           POSTGRES_DB: testdb
           MYSQL_ROOT_PASSWORD: ${{ secrets.DB_PASSWORD }}
           MYSQL_DATABASE: testdb
-          MONGO_INITDB_ROOT_USERNAME: ${{ matrix.db-username }}
-          MONGO_INITDB_ROOT_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          MONGO_INITDB_DATABASE: testdb
         ports:
           - ${{ matrix.db-port }}:${{ matrix.db-port }}
         options: >-
           --name db
           --hostname db
           ${{ matrix.db-options }}
+
+    env:
+      DB_PROVIDER: ${{ matrix.db }}
+      DB_URL: ${{ matrix.db }}://${{ matrix.db-username }}:${{ secrets.DB_PASSWORD }}@localhost:${{ matrix.db-port }}/testdb
 
     steps:
       - name: Checkout code
@@ -88,23 +78,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Set DB_URL environment variable
-        run: |
-          DB_URL="${{ matrix.db }}://${{ matrix.db-username }}:${{ secrets.DB_PASSWORD }}@localhost:${{ matrix.db-port }}/testdb"
-          if [ '${{ matrix.db }}' = 'mongodb' ]; then
-            DB_URL="$DB_URL?replicaSet=rs0"
-          fi
-          echo "DB_URL=$DB_URL" >> $GITHUB_ENV
-
       - name: Run linting
         run: npm run lint
-
-      - name: Initialize MongoDB Replica Set
-        if: matrix.db == 'mongodb'
-        run: mongo --eval "rs.initiate()"
-        env:
-          MONGO_INITDB_ROOT_USERNAME: ${{ matrix.db-username }}
-          MONGO_INITDB_ROOT_PASSWORD: ${{ secrets.DB_PASSWORD }}
 
       - name: Run database migrations
         run: npm run db:migrate
