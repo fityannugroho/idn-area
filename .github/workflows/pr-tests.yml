@@ -1,8 +1,9 @@
 name: Test the PR
 on:
-  pull_request:
-    branches:
-      - main
+  # TODO: Re-enable this later
+  # pull_request:
+  #   branches:
+  #     - main
   workflow_dispatch:
 
 jobs:
