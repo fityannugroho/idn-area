@@ -13,7 +13,7 @@
 
 - [Node.js](https://nodejs.org/en) (version 18 or higher)
 - [npm](https://www.npmjs.com)
-- Database provider you want to use. We currently support MongoDB, PostgreSQL, and MySQL. See supported databases version [here](https://www.prisma.io/docs/reference/database-reference/supported-databases).
+- Database provider you want to use. We currently support MongoDB, PostgreSQL, MySQL, and SQLite.
 
 ## Installation Steps
 
@@ -39,7 +39,7 @@
      >
      > Set the `APP_PAGINATION_MAX_PAGE_SIZE` value wisely, as it will determine the amount of resource usage (the size of queries to the database).
 
-   - Set the `DB_PROVIDER` with the data source provider you want to use. Current supported providers: 'mongodb', 'postgresql', and 'mysql'. See the details [here](https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#fields).
+   - Set the `DB_PROVIDER` with the data source [`provider`](https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#fields) you want to use. Current supported providers: **'mongodb'**, **'postgresql'**, **'mysql'**, and **'sqlite'**.
 
    - Set the `DB_HOST`, `DB_PORT`, `DB_USERNAME`, `DB_PASSWORD`, `DB_USERNAME`, and `DB_PASSWORD`. See the [connection string](https://pris.ly/d/connection-strings) documentation.
 
