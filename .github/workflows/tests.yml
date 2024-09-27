@@ -1,6 +1,10 @@
 name: Tests the App
 
 on:
+  # TODO: Remove pull request trigger later
+  pull_request:
+    branches:
+      - main
   push:
     branches:
       - main
@@ -12,11 +16,10 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
-      # Don't cancel all the jobs if one of them fails
       fail-fast: false
       matrix:
         node-version: [18, 20]
-        db: [postgresql, mysql]
+        db: [postgresql, mysql, mongodb]
         include:
           - db: postgresql
             db-image: postgres:14
@@ -38,6 +41,18 @@ jobs:
               --health-timeout=5s
               --health-retries=5
 
+          - db: mongodb
+            db-image: mongodb/mongodb-community-server:latest
+            db-port: 27017
+            db-username: root
+            db-options: >-
+              --replSet rs0
+              --bind_ip localhost
+              --health-cmd="mongo --eval 'db.runCommand({ping: 1})'"
+              --health-interval=10s
+              --health-timeout=5s
+              --health-retries=5
+
     services:
       db:
         image: ${{ matrix.db-image }}
@@ -47,6 +62,9 @@ jobs:
           POSTGRES_DB: testdb
           MYSQL_ROOT_PASSWORD: ${{ secrets.DB_PASSWORD }}
           MYSQL_DATABASE: testdb
+          MONGO_INITDB_ROOT_USERNAME: ${{ matrix.db-username }}
+          MONGO_INITDB_ROOT_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          MONGO_INITDB_DATABASE: testdb
         ports:
           - ${{ matrix.db-port }}:${{ matrix.db-port }}
         options: >-
@@ -56,7 +74,7 @@ jobs:
 
     env:
       DB_PROVIDER: ${{ matrix.db }}
-      DB_URL: ${{ matrix.db }}://${{ matrix.db-username }}:${{ secrets.DB_PASSWORD }}@localhost:${{ matrix.db-port }}/testdb
+      DB_URL: ${{ matrix.db }}://${{ matrix.db-username }}:${{ secrets.DB_PASSWORD }}@localhost:${{ matrix.db-port }}/testdb${{ matrix.db == 'mongodb' && '?replicaSet=rs0' || '' }}
 
     steps:
       - name: Checkout code
