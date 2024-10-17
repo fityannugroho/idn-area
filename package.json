@@ -69,7 +69,7 @@
     "eslint-plugin-prettier": "^5.2.1",
     "idn-area-data": "^3.1.1",
     "prettier": "^3.3.3",
-    "prisma": "^5.20.0",
+    "prisma": "^5.21.0",
     "source-map-support": "^0.5.21",
     "supertest": "^7.0.0",
     "tsx": "^4.19.1",
