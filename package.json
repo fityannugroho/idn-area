@@ -9,14 +9,7 @@
     "type": "git",
     "url": "https://github.com/fityannugroho/idn-area"
   },
-  "keywords": [
-    "idn-area",
-    "indonesia",
-    "wilayah",
-    "area",
-    "data",
-    "api"
-  ],
+  "keywords": ["idn-area", "indonesia", "wilayah", "area", "data", "api"],
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
@@ -27,8 +20,8 @@
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/src/main",
-    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\"",
-    "lint:fix": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
     "test": "vitest run --no-threads",
     "test:watch": "vitest --no-threads",
     "test:cov": "vitest run --coverage",
