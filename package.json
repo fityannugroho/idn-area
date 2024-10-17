@@ -9,14 +9,7 @@
     "type": "git",
     "url": "https://github.com/fityannugroho/idn-area"
   },
-  "keywords": [
-    "idn-area",
-    "indonesia",
-    "wilayah",
-    "area",
-    "data",
-    "api"
-  ],
+  "keywords": ["idn-area", "indonesia", "wilayah", "area", "data", "api"],
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
@@ -27,8 +20,8 @@
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/src/main",
-    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\"",
-    "lint:fix": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
     "test": "vitest run --no-threads",
     "test:watch": "vitest --no-threads",
     "test:cov": "vitest run --coverage",
@@ -54,6 +47,7 @@
     "rxjs": "^7.8.1"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.9.3",
     "@nestjs/cli": "^10.4.5",
     "@nestjs/schematics": "^10.2.0",
     "@nestjs/testing": "^10.4.5",
@@ -61,14 +55,8 @@
     "@types/express": "^4.17.21",
     "@types/node": "^22.7.6",
     "@types/supertest": "^6.0.2",
-    "@typescript-eslint/eslint-plugin": "^6.21.0",
-    "@typescript-eslint/parser": "^6.21.0",
     "@vitest/coverage-v8": "^0.34.6",
-    "eslint": "^8.57.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-prettier": "^5.2.1",
     "idn-area-data": "^3.1.1",
-    "prettier": "^3.3.3",
     "prisma": "^5.21.0",
     "source-map-support": "^0.5.21",
     "supertest": "^7.0.0",
