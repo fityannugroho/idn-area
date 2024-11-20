@@ -10,6 +10,11 @@
     "transform": {
       "legacyDecorator": true,
       "decoratorMetadata": true
+    },
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"],
+      "@common/*": ["common/*"]
     }
   },
   "minify": false
