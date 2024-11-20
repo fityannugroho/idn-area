@@ -12,7 +12,7 @@
 ## Prerequisite
 
 - [Node.js](https://nodejs.org/en) (version 18 or higher)
-- [npm](https://www.npmjs.com)
+- [pnpm](https://pnpm.io)
 - Database provider you want to use. We currently support MongoDB, PostgreSQL, MySQL, and SQLite.
 
 ## Installation Steps
@@ -23,7 +23,7 @@
 
 1. Install the dependencies
 
-   Use `npm install` command, to install all the dependencies.
+   Use `pnpm install` command, to install all the dependencies.
 
 1. Configure the environment variables
 
@@ -47,18 +47,18 @@
 
 1. Generate the database
 
-   Run **`npm run db:migrate`** command to generate the database.
+   Run **`pnpm run db:migrate`** command to generate the database.
 
    > You can use `npx prisma migrate deploy` command to run migration in **non-development environments** and if you are using any database providers **other than MongoDB**.
    > See the details [here](https://www.prisma.io/docs/reference/api-reference/command-reference#migrate-deploy).
 
 1. Seed the data
 
-   Run **`npm run db:seed`** command to seed the data.
+   Run **`pnpm run db:seed`** command to seed the data.
 
 1. Run the app
 
-   Use `npm run start` command, to run the app.
+   Use `pnpm run start` command, to run the app.
 
 ### Installation with Docker
 
@@ -82,11 +82,11 @@ To run the test, you can use the following command:
 
 ```shell
 # Run unit tests
-npm run test
+pnpm run test
 
 # Run e2e test
-npm run test:e2e
+pnpm run test:e2e
 
 # Run coverage test
-npm run test:cov
+pnpm run test:cov
 ```
