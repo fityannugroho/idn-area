@@ -11,7 +11,6 @@ import {
   ApiNotFoundResponse,
   ApiOperation,
   ApiQuery,
-  ApiTags,
 } from '@nestjs/swagger';
 import {
   District,
@@ -23,7 +22,6 @@ import { DistrictService } from './district.service';
 import { ApiPaginatedResponse } from '@/common/decorator/api-paginated-response.decorator';
 import { PaginatedReturn } from '@/common/interceptor/paginate.interceptor';
 
-@ApiTags('District')
 @Controller('districts')
 export class DistrictController {
   constructor(private readonly districtService: DistrictService) {}

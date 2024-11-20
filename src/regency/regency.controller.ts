@@ -12,7 +12,6 @@ import {
   ApiNotFoundResponse,
   ApiOperation,
   ApiQuery,
-  ApiTags,
 } from '@nestjs/swagger';
 import {
   Regency,
@@ -23,7 +22,6 @@ import {
 import { RegencyService } from './regency.service';
 import { PaginatedReturn } from '@/common/interceptor/paginate.interceptor';
 
-@ApiTags('Regency')
 @Controller('regencies')
 export class RegencyController {
   constructor(private readonly regencyService: RegencyService) {}

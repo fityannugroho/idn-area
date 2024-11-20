@@ -11,7 +11,6 @@ import {
   ApiNotFoundResponse,
   ApiOperation,
   ApiQuery,
-  ApiTags,
 } from '@nestjs/swagger';
 import {
   Village,
@@ -23,7 +22,6 @@ import { VillageService } from './village.service';
 import { ApiPaginatedResponse } from '@/common/decorator/api-paginated-response.decorator';
 import { PaginatedReturn } from '@/common/interceptor/paginate.interceptor';
 
-@ApiTags('Village')
 @Controller('villages')
 export class VillageController {
   constructor(private readonly villageService: VillageService) {}
