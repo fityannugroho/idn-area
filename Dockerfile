@@ -39,9 +39,6 @@ COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/tsconfig.* ./
 COPY --from=builder /app/src/common ./src/common
 
-# Run database migration and seeding
-RUN npm run db:migrate && npm run db:seed
-
 # Expose the port that your NestJS app will listen on
 EXPOSE 3000
 
