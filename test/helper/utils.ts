@@ -1,4 +1,4 @@
-import { isDBProvider } from '@common/utils/db/provider';
+import { isDBProvider } from '@/common/utils/db/provider';
 
 /**
  * All symbol characters.

@@ -1,5 +1,5 @@
-import { getDistricts, getProvinces, getRegencies } from '@common/utils/data';
-import { getDBProviderFeatures } from '@common/utils/db';
+import { getDistricts, getProvinces, getRegencies } from '@/common/utils/data';
+import { getDBProviderFeatures } from '@/common/utils/db';
 import { SortOrder } from '@/sort/sort.dto';
 import { Test, TestingModule } from '@nestjs/testing';
 import { District, Province, Regency } from '@prisma/client';

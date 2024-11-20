@@ -2,10 +2,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { IslandService } from './island.service';
 import { PrismaService } from '@/prisma/prisma.service';
 import { Island, Province, Regency } from '@prisma/client';
-import { getDBProviderFeatures } from '@common/utils/db';
+import { getDBProviderFeatures } from '@/common/utils/db';
 import { SortOrder } from '@/sort/sort.dto';
 import { mockPrismaService } from '@/prisma/__mocks__/prisma.service';
-import { getProvinces, getRegencies } from '@common/utils/data';
+import { getProvinces, getRegencies } from '@/common/utils/data';
 
 const islands: readonly Island[] = [
   {
