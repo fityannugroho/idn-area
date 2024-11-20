@@ -1,7 +1,6 @@
 import { Controller, Get, HttpStatus } from '@nestjs/common';
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 
-@ApiTags('Home')
 @Controller()
 export class AppController {
   @Get()
