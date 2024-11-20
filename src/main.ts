@@ -34,7 +34,7 @@ async function bootstrap() {
   // Create the API documentation.
   const doc = SwaggerModule.createDocument(app, docConfig);
   // Set the endpoint for API documentation.
-  const docPath = 'docs';
+  const docPath = '/';
   // Setup the API documentation.
   SwaggerModule.setup(docPath, app, doc);
 

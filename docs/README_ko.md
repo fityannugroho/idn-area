@@ -31,9 +31,9 @@
 
 ## 문서
 
-최신 API 문서를 [문서 페이지](https://idn-area.up.railway.app/docs)에서 확인하세요. 이 문서는 자동으로 [`@nestjs/swagger`](https://docs.nestjs.com/openapi/introduction)를 사용하여 생성됩니다.
+최신 API 문서를 [문서 페이지](https://idn-area.up.railway.app)에서 확인하세요. 이 문서는 자동으로 [`@nestjs/swagger`](https://docs.nestjs.com/openapi/introduction)를 사용하여 생성됩니다.
 
-> 또한 앱을 실행하고 브라우저에서 http://localhost:3000/docs를 열어 로컬 머신에서 문서에 액세스할 수도 있습니다. (자세한 내용은 [시작하기](#시작하기) 참조)
+> 또한 앱을 실행하고 브라우저에서 http://localhost:3000 를 열어 로컬 머신에서 문서에 액세스할 수도 있습니다. (자세한 내용은 [시작하기](#시작하기) 참조)
 
 ## 라이브 데모
 
