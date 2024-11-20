@@ -62,10 +62,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
 
       - name: Cache Node.js modules
         uses: actions/cache@v4
@@ -76,22 +82,22 @@ jobs:
             ${{ runner.os }}-node-${{ matrix.node-version }}
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install
 
       - name: Run linting
-        run: npm run lint
+        run: pnpm run lint
 
       - name: Run database migrations
-        run: npm run db:migrate
+        run: pnpm run db:migrate
 
       - name: Run database seed
-        run: npm run db:seed
+        run: pnpm run db:seed
 
       - name: Build the app
-        run: npm run build
+        run: pnpm run build
 
       - name: Run unit tests
-        run: npm run test
+        run: pnpm run test
 
       - name: Run e2e tests
-        run: npm run test:e2e
+        run: pnpm run test:e2e

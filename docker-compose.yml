@@ -11,7 +11,7 @@ services:
     env_file:
       - .env
     # Run migrations after the app is ready
-    command: sh -c "npm run db:migrate && npm run db:seed && npm run start:prod"
+    command: sh -c "pnpm run db:migrate && pnpm run db:seed && pnpm run start:prod"
 
   db:
     image: postgres:14

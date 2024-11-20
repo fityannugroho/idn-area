@@ -22,22 +22,28 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
 
       - name: Install modules
-        run: npm ci
+        run: pnpm install
 
       - name: Check code formatting
-        run: npm run lint
+        run: pnpm run lint
 
       - name: Generate Prisma Client
-        run: npm run prisma:gen
+        run: pnpm run prisma:gen
 
       - name: Build
-        run: npm run build
+        run: pnpm run build
 
       - name: Run unit tests
-        run: npm run test
+        run: pnpm run test
