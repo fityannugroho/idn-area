@@ -22,11 +22,11 @@
     "start:prod": "node dist/src/main",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
-    "test": "vitest run --no-threads",
-    "test:watch": "vitest --no-threads",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "test:cov": "vitest run --coverage",
-    "test:debug": "vitest --inspect-brk --inspect --logHeapUsage --threads=false",
-    "test:e2e": "vitest run --config ./vitest.config.e2e.ts"
+    "test:debug": "vitest --inspect-brk --inspect --logHeapUsage",
+    "test:e2e": "vitest run --config ./vitest.config.e2e.mts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
@@ -55,7 +55,7 @@
     "@types/express": "^4.17.21",
     "@types/node": "^22.9.1",
     "@types/supertest": "^6.0.2",
-    "@vitest/coverage-v8": "^0.34.6",
+    "@vitest/coverage-v8": "^2.1.5",
     "idn-area-data": "^3.1.1",
     "prisma": "^5.22.0",
     "source-map-support": "^0.5.21",
@@ -63,10 +63,7 @@
     "tsx": "^4.19.2",
     "typescript": "^5.6.3",
     "unplugin-swc": "^1.5.1",
-    "vitest": "^0.34.6"
-  },
-  "peerDependencies": {
-    "vite": "^4.5.1"
+    "vitest": "^2.1.5"
   },
   "engines": {
     "node": ">=18.0.0"
