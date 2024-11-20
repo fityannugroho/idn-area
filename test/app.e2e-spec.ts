@@ -8,15 +8,9 @@ describe('AppController (e2e)', () => {
     await tester.bootApp();
   });
 
-  it('/ (GET)', async () => {
-    const res = await tester.expectOk('/');
-
-    expect(res.json()).toEqual(
-      expect.objectContaining({
-        message: expect.any(String),
-        version: process.env.npm_package_version,
-      }),
-    );
+  it('/health (GET)', async () => {
+    const res = await tester.expectOk('/health');
+    expect(res.json()).toEqual({ statusCode: 200, message: 'OK' });
   });
 
   afterAll(async () => {
