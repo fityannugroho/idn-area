@@ -4,24 +4,21 @@ FROM node:18 AS builder
 ARG DB_PROVIDER
 ARG DB_URL
 
-# Set the working directory inside the container
+# Install pnpm and set the working directory inside the container
+RUN npm install -g pnpm && mkdir -p /app
 WORKDIR /app
 
-# Copy package.json and package-lock.json to the working directory
-COPY package*.json ./
-COPY prisma ./prisma/
+# Copy package.json, pnpm-lock.yaml, and prisma directory to the working directory
+COPY package.json pnpm-lock.yaml prisma ./
 
 # Install the app dependencies
-RUN npm install
+RUN pnpm install
 
 # Copy the rest of the application code
 COPY . .
 
-# Run the prisma generator
-RUN npm run prisma:gen
-
-# Build the application
-RUN npm run build
+# Run the prisma generator and build the application
+RUN pnpm run prisma:gen && pnpm run build
 
 # Stage 2: A minimal Docker image with node and compiled app
 FROM node:18
@@ -29,15 +26,18 @@ FROM node:18
 ARG DB_PROVIDER
 ARG DB_URL
 
-# Set the working directory inside the container
+# Install pnpm and set the working directory inside the container
+RUN npm install -g pnpm && mkdir -p /app
 WORKDIR /app
 
+# Copy the necessary files from the builder stage
 COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/package.json ./
+COPY --from=builder /app/pnpm-lock.yaml ./
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/tsconfig.* ./
-COPY --from=builder /app/common ./common
+COPY --from=builder /app/src/common ./src/common
 
 # Run database migration and seeding
 RUN npm run db:migrate && npm run db:seed
@@ -46,4 +46,4 @@ RUN npm run db:migrate && npm run db:seed
 EXPOSE 3000
 
 # Start the application in production mode
-CMD ["npm", "run", "start:prod"]
+CMD ["pnpm", "run", "start:prod"]

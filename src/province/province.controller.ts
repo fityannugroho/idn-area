@@ -11,7 +11,6 @@ import {
   ApiNotFoundResponse,
   ApiOperation,
   ApiQuery,
-  ApiTags,
 } from '@nestjs/swagger';
 import {
   Province,
@@ -22,7 +21,6 @@ import { ProvinceService } from './province.service';
 import { PaginatedReturn } from '@/common/interceptor/paginate.interceptor';
 import { ApiPaginatedResponse } from '@/common/decorator/api-paginated-response.decorator';
 
-@ApiTags('Province')
 @Controller('provinces')
 export class ProvinceController {
   constructor(private readonly provinceService: ProvinceService) {}

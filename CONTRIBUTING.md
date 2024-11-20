@@ -21,7 +21,7 @@
 To ensure consistency throughout the source code, keep these rules in mind as you are working:
 
 - All features or bug fixes must be tested by one or more specs (unit-tests).
-- We follow [Google's JavaScript Style Guide](https://google.github.io/styleguide/jsguide.html), but wrap all code at 100 characters. An automated formatter is available (`npm run lint:fix`).
+- We follow [Google's JavaScript Style Guide](https://google.github.io/styleguide/jsguide.html), but wrap all code at 100 characters. An automated formatter is available (`pnpm run lint:fix`).
 
 ## Commit Message Guidelines
 

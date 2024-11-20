@@ -31,9 +31,9 @@ Data yang kami gunakan menggunakan sumber yang resmi, dikelola di repositori [**
 
 ## Dokumentasi
 
-Baca versi terbaru dokumentasi API di [halaman dokumentasi](https://idn-area.up.railway.app/docs). Dokumentasi ini dibuat secara otomatis menggunakan [`@nestjs/swagger`](https://docs.nestjs.com/openapi/introduction).
+Baca versi terbaru dokumentasi API di [halaman dokumentasi](https://idn-area.up.railway.app). Dokumentasi ini dibuat secara otomatis menggunakan [`@nestjs/swagger`](https://docs.nestjs.com/openapi/introduction).
 
-> Anda juga dapat mengakses dokumentasinya di perangkat lokal Anda dengan menjalankan aplikasi ini (lihat [Memulai](#memulai)) dan buka http://localhost:3000/docs di browser Anda.
+> Anda juga dapat mengakses dokumentasinya di perangkat lokal Anda dengan menjalankan aplikasi ini (lihat [Memulai](#memulai)) dan buka http://localhost:3000 di browser Anda.
 
 ## Demo
 

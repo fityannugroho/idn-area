@@ -31,9 +31,9 @@ Ang datos na aming ginamit ay batay sa opisyal na pinagkukunan na kinakalagaan s
 
 ## Dokumentasyon
 
-Basahin ang pinakabagong bersyon ng dokumentasyon ng API sa [Pahina ng dokumentasyon](https://idn-area.up.railway.app/docs). Ang dokumentasyong ito ay awtomatikong nalilikha gamit ang [`@nestjs/swagger`](https://docs.nestjs.com/openapi/introduction).
+Basahin ang pinakabagong bersyon ng dokumentasyon ng API sa [Pahina ng dokumentasyon](https://idn-area.up.railway.app). Ang dokumentasyong ito ay awtomatikong nalilikha gamit ang [`@nestjs/swagger`](https://docs.nestjs.com/openapi/introduction).
 
-> Puwede rin kayong mag-access sa dokumentasyon sa inyong lokal na makina sa pamamagitan ng pagsisimula ng aplikasyon (makita [Pagsisimula](#pagsisimula)) at buksan ang http://localhost:3000/docs sa iyong browser.
+> Puwede rin kayong mag-access sa dokumentasyon sa inyong lokal na makina sa pamamagitan ng pagsisimula ng aplikasyon (makita [Pagsisimula](#pagsisimula)) at buksan ang http://localhost:3000 sa iyong browser.
 
 ## Live na pagpapakita
 

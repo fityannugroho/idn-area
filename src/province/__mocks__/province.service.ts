@@ -1,4 +1,4 @@
-import { sortArray } from '@common/utils/array';
+import { sortArray } from '@/common/utils/array';
 import { Province } from '@prisma/client';
 import { ProvinceFindQueries } from '../province.dto';
 

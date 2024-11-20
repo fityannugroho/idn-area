@@ -11,7 +11,6 @@ import {
   ApiNotFoundResponse,
   ApiOperation,
   ApiQuery,
-  ApiTags,
 } from '@nestjs/swagger';
 import {
   Island,
@@ -23,14 +22,11 @@ import { IslandService } from './island.service';
 import { ApiPaginatedResponse } from '@/common/decorator/api-paginated-response.decorator';
 import { PaginatedReturn } from '@/common/interceptor/paginate.interceptor';
 
-@ApiTags('Island')
 @Controller('islands')
 export class IslandController {
   constructor(private readonly islandService: IslandService) {}
 
-  @ApiOperation({
-    description: 'Get the islands.',
-  })
+  @ApiOperation({ description: 'Get the islands.' })
   @ApiQuery({
     name: 'sortBy',
     description: 'Sort islands by its code, name, or coordinate.',

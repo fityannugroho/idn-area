@@ -33,9 +33,9 @@ The data we used is based on official sources, managed in [**idn-area-data**](ht
 
 ## Documentation
 
-Read the latest version of API documentation in the [documentation page](https://idn-area.up.railway.app/docs). This documentation is automatically generated using [`@nestjs/swagger`](https://docs.nestjs.com/openapi/introduction).
+Read the latest version of API documentation in the [documentation page](https://idn-area.up.railway.app). This documentation is automatically generated using [`@nestjs/swagger`](https://docs.nestjs.com/openapi/introduction).
 
-> You also can access the documentation in your local machine by running the app (see [Getting Started](#getting-started)) and open http://localhost:3000/docs in your browser.
+> You also can access the documentation in your local machine by running the app (see [Getting Started](#getting-started)) and open http://localhost:3000 in your browser.
 
 ## Live Demo
 
