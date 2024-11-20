@@ -47,3 +47,28 @@ jobs:
 
       - name: Run unit tests
         run: pnpm run test
+
+  build-and-test-docker:
+    name: Build and test Docker image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build the Docker image
+        run: docker buildx build --platform linux/amd64,linux/arm64 -t idn-area:${{ github.sha }} .
+
+      - name: Run Docker compose
+        run: docker-compose -f /mnt/data/docker-compose.yml up -d
+
+      - name: Run e2e tests with Docker
+        run: |
+          docker-compose -f /mnt/data/docker-compose.yml exec app \
+          pnpm run test:e2e
+
+      - name: Tear down Docker compose
+        run: docker-compose -f /mnt/data/docker-compose.yml down
