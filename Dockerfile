@@ -1,15 +1,12 @@
 # Use an official Node.js runtime as the base image
 FROM node:18 AS builder
 
-# Install pnpm
-RUN npm install -g pnpm
-
-# Set the working directory inside the container
+# Install pnpm and set the working directory inside the container
+RUN npm install -g pnpm && mkdir -p /app
 WORKDIR /app
 
-# Copy package.json and pnpm-lock.yaml to the working directory
-COPY package.json pnpm-lock.yaml ./
-COPY prisma ./prisma/
+# Copy package.json, pnpm-lock.yaml, and prisma directory to the working directory
+COPY package.json pnpm-lock.yaml prisma ./
 
 # Install the app dependencies
 RUN pnpm install
@@ -17,28 +14,24 @@ RUN pnpm install
 # Copy the rest of the application code
 COPY . .
 
-# Run the prisma generator
-RUN pnpm run prisma:gen
-
-# Build the application
-RUN pnpm run build
+# Run the prisma generator and build the application
+RUN pnpm run prisma:gen && pnpm run build
 
 # Stage 2: A minimal Docker image with node and compiled app
 FROM node:18
 
-# Install pnpm
-RUN npm install -g pnpm
-
-# Set the working directory inside the container
+# Install pnpm and set the working directory inside the container
+RUN npm install -g pnpm && mkdir -p /app
 WORKDIR /app
 
+# Copy the necessary files from the builder stage
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./
 COPY --from=builder /app/pnpm-lock.yaml ./
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/tsconfig.* ./
-COPY --from=builder /app/common ./common
+COPY --from=builder /app/src/common ./src/common
 
 # Expose the port that your NestJS app will listen on
 EXPOSE 3000

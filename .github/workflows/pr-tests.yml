@@ -47,3 +47,5 @@ jobs:
 
       - name: Run unit tests
         run: pnpm run test
+
+  # TODO: test the docker image
