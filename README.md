@@ -25,6 +25,8 @@ Built with [NestJS framework](https://nestjs.com) and writen in TypeScript. [Pri
 
 Please read the [installation guide](docs/installation.md) to install and run this app.
 
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.app/template/9Tcyq9?referralCode=ho_K6W)
+
 ## Data
 
 The data we used is based on official sources, managed in [**idn-area-data**](https://github.com/fityannugroho/idn-area-data) repository and distributed as a [npm package](https://www.npmjs.com/package/idn-area-data).
