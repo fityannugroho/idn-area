@@ -6,6 +6,7 @@ datasource db {
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["strictUndefinedChecks"]
 }
 
 model District {
@@ -47,6 +48,14 @@ model Regency {
   province     Province   @relation(fields: [provinceCode], references: [code])
 
   @@map("regencies")
+}
+
+model SeederLogs {
+  id          Int      @id @default(autoincrement())
+  dataVersion String   @map("data_version") @db.VarChar(255)
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@map("seeder_logs")
 }
 
 model Village {
