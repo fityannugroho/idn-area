@@ -12,7 +12,6 @@
   "keywords": ["idn-area", "indonesia", "wilayah", "area", "data", "api"],
   "scripts": {
     "build": "nest build",
-    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "prisma:gen": "tsx prisma/generate.ts",
     "db:migrate": "tsx prisma/migrate.ts",
     "db:seed": "prisma db seed",
