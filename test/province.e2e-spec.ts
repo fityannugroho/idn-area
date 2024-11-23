@@ -25,14 +25,14 @@ describe('Province (e2e)', () => {
     it('should return all provinces', async () => {
       const provinces = await tester.expectData<Province[]>(baseUrl);
 
-      provinces.forEach((province) => {
+      for (const province of provinces) {
         expect(province).toEqual(
           expectIdFromMongo({
             code: expect.stringMatching(provinceRegex.code),
             name: expect.stringMatching(provinceRegex.name),
           }),
         );
-      });
+      }
     });
   });
 
@@ -59,14 +59,14 @@ describe('Province (e2e)', () => {
         `${baseUrl}?name=${testName}`,
       );
 
-      provinces.forEach((province) => {
+      for (const province of provinces) {
         expect(province).toEqual(
           expectIdFromMongo({
             code: expect.stringMatching(provinceRegex.code),
             name: expect.stringMatching(new RegExp(testName, 'i')),
           }),
         );
-      });
+      }
     });
   });
 

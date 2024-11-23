@@ -4,7 +4,7 @@ import { PrismaService } from '@/prisma/prisma.service';
 import { SortService } from '@/sort/sort.service';
 import { Injectable } from '@nestjs/common';
 import { Regency } from '@prisma/client';
-import { RegencyWithParent, RegencyFindQueries } from './regency.dto';
+import { RegencyFindQueries, RegencyWithParent } from './regency.dto';
 
 @Injectable()
 export class RegencyService {

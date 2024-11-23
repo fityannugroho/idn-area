@@ -27,9 +27,9 @@ const calculate = (
   pole: string,
 ) => {
   return (
-    (parseFloat(degrees) +
-      parseFloat(minutes) / 60 +
-      parseFloat(seconds) / 3600) *
+    (Number.parseFloat(degrees) +
+      Number.parseFloat(minutes) / 60 +
+      Number.parseFloat(seconds) / 3600) *
     (['N', 'E'].includes(pole) ? 1 : -1)
   );
 };
@@ -44,11 +44,15 @@ export const convertCoordinate = (coordinate: string): number[] => {
     throw new Error('Invalid coordinate format');
   }
 
-  const [a, b, c, d, e, f] = coordinate.match(/[0-9,\.]+/g);
-  const [y, x] = coordinate.match(/(N|S|E|W)/g);
+  const degrees = coordinate.match(/[0-9,\.]+/g);
+  const polars = coordinate.match(/(N|S|E|W)/g);
 
-  const latitude = calculate(a, b, c, y);
-  const longitude = calculate(d, e, f, x);
+  if (!degrees || !polars) {
+    throw new Error('Invalid coordinate format');
+  }
 
-  return [latitude, longitude];
+  const [a, b, c, d, e, f] = degrees;
+  const [y, x] = polars;
+
+  return [calculate(a, b, c, y), calculate(d, e, f, x)]; // [latitude, longitude]
 };

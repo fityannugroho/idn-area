@@ -1,3 +1,4 @@
+import { appConfig } from '@/common/config/app';
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import {
@@ -5,7 +6,6 @@ import {
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { appConfig } from '@/common/config/app';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -18,7 +18,7 @@ async function bootstrap() {
   // Init API documentation with Swagger.
   const docConfig = new DocumentBuilder()
     .setTitle('Indonesia Area API')
-    .setVersion(process.env.npm_package_version)
+    .setVersion(process.env.npm_package_version as string)
     .setDescription(
       'API that provides information about Indonesia administrative area.',
     )

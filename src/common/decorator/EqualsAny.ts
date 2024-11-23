@@ -1,9 +1,9 @@
 import {
-  registerDecorator,
   ValidationArguments,
   ValidationOptions,
   ValidatorConstraint,
   ValidatorConstraintInterface,
+  registerDecorator,
 } from 'class-validator';
 
 /**
@@ -15,7 +15,7 @@ export function EqualsAny(
   validValues: string[],
   validationOptions?: ValidationOptions,
 ) {
-  return function (object: object, propertyName: string) {
+  return (object: object, propertyName: string) => {
     registerDecorator({
       target: object.constructor,
       propertyName: propertyName,
@@ -29,14 +29,14 @@ export function EqualsAny(
 @ValidatorConstraint({ name: 'equalsAny' })
 export class EqualsAnyConstraint implements ValidatorConstraintInterface {
   validate(value: any, args?: ValidationArguments): boolean {
-    const [validValues] = args.constraints as [string[], any];
+    const [validValues] = (args?.constraints ?? []) as [string[], any];
     return typeof value === 'string' && validValues.includes(value);
   }
 
   defaultMessage(validationArguments?: ValidationArguments): string {
-    const { constraints, property } = validationArguments;
+    const { constraints, property } = validationArguments ?? {};
     return `${property} must equals one of these: ${(
-      constraints[0] as string[]
+      (constraints?.[0] as string[] | undefined) ?? []
     ).join(', ')}.`;
   }
 }

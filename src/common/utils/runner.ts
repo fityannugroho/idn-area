@@ -1,4 +1,4 @@
-import { exec } from 'child_process';
+import { exec } from 'node:child_process';
 
 const run = (command: string) =>
   new Promise<{ stdout: string; stderr: string }>((resolve, reject) => {

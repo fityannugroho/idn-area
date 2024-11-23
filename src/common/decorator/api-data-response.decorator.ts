@@ -72,9 +72,7 @@ export const ApiDataResponse = <Model extends Type<any>>(
             type: 'object',
             nullable: options.multiple ? undefined : true,
             properties: {
-              total: options.multiple
-                ? { type: 'number', example: 1 }
-                : undefined,
+              total: options.multiple ? { type: 'number', example: 1 } : {},
             },
           },
         },

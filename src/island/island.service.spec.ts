@@ -1,11 +1,11 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { IslandService } from './island.service';
-import { PrismaService } from '@/prisma/prisma.service';
-import { Island, Province, Regency } from '@prisma/client';
-import { getDBProviderFeatures } from '@/common/utils/db';
-import { SortOrder } from '@/sort/sort.dto';
-import { mockPrismaService } from '@/prisma/__mocks__/prisma.service';
 import { getProvinces, getRegencies } from '@/common/utils/data';
+import { getDBProviderFeatures } from '@/common/utils/db';
+import { mockPrismaService } from '@/prisma/__mocks__/prisma.service';
+import { PrismaService } from '@/prisma/prisma.service';
+import { SortOrder } from '@/sort/sort.dto';
+import { Test, TestingModule } from '@nestjs/testing';
+import { Island, Province, Regency } from '@prisma/client';
+import { IslandService } from './island.service';
 
 const islands: readonly Island[] = [
   {
@@ -223,12 +223,12 @@ describe('IslandService', () => {
   describe('findByCode', () => {
     it('should return an island', async () => {
       const testCode = '110140001';
-      const expectedIsland = islands.find((i) => i.code === testCode);
+      const expectedIsland = islands.find((i) => i.code === testCode) as Island;
       const expectedRegency = regencies.find(
-        (r) => r.code === expectedIsland.regencyCode,
+        (r) => r.code === expectedIsland?.regencyCode,
       );
       const expectedProvince = provinces.find(
-        (p) => p.code === expectedRegency.provinceCode,
+        (p) => p.code === expectedRegency?.provinceCode,
       );
 
       const findUniqueSpy = vitest
@@ -259,10 +259,10 @@ describe('IslandService', () => {
 
     it('should return an island without regency', async () => {
       const testCode = '120040001';
-      const expectedIsland = islands.find((i) => i.code === testCode);
+      const expectedIsland = islands.find((i) => i.code === testCode) as Island;
       const expectedProvince = provinces.find(
         (p) => p.code === testCode.slice(0, 2),
-      );
+      ) as Province;
 
       const findUniqueIslandSpy = vitest
         .spyOn(prismaService.island, 'findUnique')

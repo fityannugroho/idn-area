@@ -1,0 +1,6 @@
+-- CreateTable
+CREATE TABLE "seeder_logs" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "data_version" TEXT NOT NULL,
+    "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);

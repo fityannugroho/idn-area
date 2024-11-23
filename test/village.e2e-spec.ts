@@ -23,7 +23,7 @@ describe('Village (e2e)', () => {
     it('should return villages', async () => {
       const villages = await tester.expectData<Village[]>(baseUrl);
 
-      villages.forEach((village) => {
+      for (const village of villages) {
         expect(village).toEqual(
           expectIdFromMongo({
             code: expect.stringMatching(villageRegex.code),
@@ -31,7 +31,7 @@ describe('Village (e2e)', () => {
             districtCode: village.code.slice(0, 6),
           }),
         );
-      });
+      }
     });
 
     it('should return 400 if the `name` more than 100 chars, or contains any other symbols besides \'()-./"*', async () => {
@@ -66,7 +66,7 @@ describe('Village (e2e)', () => {
         `${baseUrl}?name=${testName}`,
       );
 
-      villages.forEach((village) => {
+      for (const village of villages) {
         expect(village).toEqual(
           expectIdFromMongo({
             code: expect.stringMatching(villageRegex.code),
@@ -74,7 +74,7 @@ describe('Village (e2e)', () => {
             districtCode: village.code.slice(0, 6),
           }),
         );
-      });
+      }
     });
 
     it('should return all villages match with the `districtCode`', async () => {
@@ -83,7 +83,7 @@ describe('Village (e2e)', () => {
         `${baseUrl}?districtCode=${districtCode}`,
       );
 
-      villages.forEach((village) => {
+      for (const village of villages) {
         expect(village).toEqual(
           expectIdFromMongo({
             code: expect.stringMatching(villageRegex.code),
@@ -91,7 +91,7 @@ describe('Village (e2e)', () => {
             districtCode,
           }),
         );
-      });
+      }
     });
   });
 

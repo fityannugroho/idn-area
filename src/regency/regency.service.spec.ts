@@ -1,11 +1,11 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaService } from '@/prisma/prisma.service';
-import { RegencyService } from './regency.service';
-import { Province, Regency } from '@prisma/client';
-import { getDBProviderFeatures } from '@/common/utils/db';
-import { SortOrder } from '@/sort/sort.dto';
 import { getProvinces, getRegencies } from '@/common/utils/data';
+import { getDBProviderFeatures } from '@/common/utils/db';
 import { mockPrismaService } from '@/prisma/__mocks__/prisma.service';
+import { PrismaService } from '@/prisma/prisma.service';
+import { SortOrder } from '@/sort/sort.dto';
+import { Test, TestingModule } from '@nestjs/testing';
+import { Province, Regency } from '@prisma/client';
+import { RegencyService } from './regency.service';
 
 describe('RegencyService', () => {
   let regencies: Regency[];

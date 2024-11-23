@@ -18,7 +18,7 @@ describe('Island (e2e)', () => {
     it('should return islands', async () => {
       const islands = await tester.expectData<Island[]>(baseUrl);
 
-      islands.forEach((island) => {
+      for (const island of islands) {
         expect(island).toEqual(
           expectIdFromMongo({
             code: expect.stringMatching(islandRegex.code),
@@ -31,7 +31,7 @@ describe('Island (e2e)', () => {
             regencyCode: island.regencyCode ? island.code.slice(0, 4) : null,
           }),
         );
-      });
+      }
     });
 
     it("should return 400 if the `name` is more than 100 chars, or contains any symbols except '-/", async () => {
@@ -66,7 +66,7 @@ describe('Island (e2e)', () => {
         `${baseUrl}?name=${testName}`,
       );
 
-      islands.forEach((island) => {
+      for (const island of islands) {
         expect(island).toEqual(
           expectIdFromMongo({
             code: expect.stringMatching(islandRegex.code),
@@ -79,7 +79,7 @@ describe('Island (e2e)', () => {
             regencyCode: island.regencyCode ? island.code.slice(0, 4) : null,
           }),
         );
-      });
+      }
     });
 
     it('should return all islands match with the `regencyCode`', async () => {
@@ -88,7 +88,7 @@ describe('Island (e2e)', () => {
         `${baseUrl}?regencyCode=${testRegencyCode}`,
       );
 
-      islands.forEach((island) => {
+      for (const island of islands) {
         expect(island).toEqual(
           expectIdFromMongo({
             code: expect.stringMatching(islandRegex.code),
@@ -101,7 +101,7 @@ describe('Island (e2e)', () => {
             regencyCode: testRegencyCode,
           }),
         );
-      });
+      }
     });
 
     it('should return all islands that does not belong to any regency', async () => {
@@ -109,7 +109,7 @@ describe('Island (e2e)', () => {
         `${baseUrl}?regencyCode`,
       );
 
-      islands.forEach((island) => {
+      for (const island of islands) {
         expect(island).toEqual(
           expectIdFromMongo({
             code: expect.stringMatching(islandRegex.code),
@@ -122,7 +122,7 @@ describe('Island (e2e)', () => {
             regencyCode: null,
           }),
         );
-      });
+      }
     });
   });
 

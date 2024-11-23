@@ -2,12 +2,21 @@
 
 <h2>Table of Content</h2>
 
+- [Easy Deployment](#easy-deployment)
 - [Prerequisite](#prerequisite)
 - [Installation Steps](#installation-steps)
   - [Installation with Docker](#installation-with-docker)
 - [Run the Test](#run-the-test)
 
 ---
+
+## Easy Deployment
+
+You can deploy this app to the cloud with a **single click** using [Railway](https://railway.app). This will set up a new project, create a new PostgreSQL database, and deploy the app.
+
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.app/template/9Tcyq9?referralCode=ho_K6W)
+
+> After deployment is complete, you need to configure the [Public Networking](https://docs.railway.com/reference/public-networking) to **make your API accessible from the internet**.
 
 ## Prerequisite
 
