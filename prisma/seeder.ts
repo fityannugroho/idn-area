@@ -67,6 +67,12 @@ export class Seeder {
   async generateLog(): Promise<void> {
     const packageVersion = await getInstalledPackageVersion('idn-area-data');
 
+    if (!packageVersion) {
+      throw new Error(
+        'idn-area-data package is not installed. Make sure to run `pnpm install` first.',
+      );
+    }
+
     await this.prisma.seederLogs.create({
       data: { dataVersion: packageVersion },
     });
