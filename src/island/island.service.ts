@@ -81,11 +81,11 @@ export class IslandService {
         ...this.addDecimalCoordinate(island),
         parent: {
           regency: null,
-          province: await this.prisma.province.findUnique({
+          province: (await this.prisma.province.findUnique({
             where: {
               code: code.slice(0, 2),
             },
-          }),
+          })) as NonNullable<IslandWithParent['parent']['province']>,
         },
       };
     }

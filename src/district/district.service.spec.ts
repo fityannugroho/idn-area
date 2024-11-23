@@ -173,10 +173,10 @@ describe('DistrictService', () => {
       const testCode = '110101';
       const expectedDistrict = districts.find((d) => d.code === testCode);
       const expectedRegency = regencies.find(
-        (r) => r.code === expectedDistrict.regencyCode,
+        (r) => r.code === expectedDistrict?.regencyCode,
       );
       const expectedProvince = provinces.find(
-        (p) => p.code === expectedRegency.provinceCode,
+        (p) => p.code === expectedRegency?.provinceCode,
       );
 
       const findUniqueSpy = vitest

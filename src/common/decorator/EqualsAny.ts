@@ -29,14 +29,14 @@ export function EqualsAny(
 @ValidatorConstraint({ name: 'equalsAny' })
 export class EqualsAnyConstraint implements ValidatorConstraintInterface {
   validate(value: any, args?: ValidationArguments): boolean {
-    const [validValues] = args.constraints as [string[], any];
+    const [validValues] = (args?.constraints ?? []) as [string[], any];
     return typeof value === 'string' && validValues.includes(value);
   }
 
   defaultMessage(validationArguments?: ValidationArguments): string {
-    const { constraints, property } = validationArguments;
+    const { constraints, property } = validationArguments ?? {};
     return `${property} must equals one of these: ${(
-      constraints[0] as string[]
+      (constraints?.[0] as string[] | undefined) ?? []
     ).join(', ')}.`;
   }
 }

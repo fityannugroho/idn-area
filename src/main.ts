@@ -18,7 +18,7 @@ async function bootstrap() {
   // Init API documentation with Swagger.
   const docConfig = new DocumentBuilder()
     .setTitle('Indonesia Area API')
-    .setVersion(process.env.npm_package_version)
+    .setVersion(process.env.npm_package_version as string)
     .setDescription(
       'API that provides information about Indonesia administrative area.',
     )

@@ -36,5 +36,9 @@ export const validateDBConfig = (...vars: (keyof typeof dbConfig)[]) => {
  * Get the database provider features, based on the current config.
  */
 export const getDBProviderFeatures = (): DBProviderFeatures | undefined => {
+  if (!dbConfig.provider) {
+    return undefined;
+  }
+
   return dbProviderConfig[dbConfig.provider]?.features;
 };

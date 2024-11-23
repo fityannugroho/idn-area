@@ -31,7 +31,7 @@ export function IsNotSymbol(
 @ValidatorConstraint({ name: 'isNotSymbol' })
 export class IsNotSymbolConstraint implements ValidatorConstraintInterface {
   validate(value: any, args?: ValidationArguments): boolean {
-    const [allowedSymbols = ''] = args.constraints as [string, any];
+    const [allowedSymbols = ''] = (args?.constraints ?? []) as [string, any];
     const safeAllowedSymbols = allowedSymbols
       .split('')
       .map((s) => `\\${s}`)
@@ -42,7 +42,7 @@ export class IsNotSymbolConstraint implements ValidatorConstraintInterface {
   }
 
   defaultMessage(validationArguments?: ValidationArguments): string {
-    const { constraints, property } = validationArguments;
+    const { constraints, property } = validationArguments ?? {};
     const [allowedSymbols = ''] = constraints as [string, any];
 
     return allowedSymbols

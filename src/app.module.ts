@@ -22,8 +22,8 @@ import { VillageModule } from './village/village.module';
       inject: [ConfigService],
       useFactory: (config: ConfigService) => [
         {
-          ttl: seconds(config.get('APP_THROTTLE_TTL')),
-          limit: config.get('APP_THROTTLE_LIMIT'),
+          ttl: seconds(config.get('APP_THROTTLE_TTL') as number),
+          limit: config.get('APP_THROTTLE_LIMIT') as number,
           skipIf: () => config.get('APP_ENABLE_THROTTLE') !== 'true',
         },
       ],

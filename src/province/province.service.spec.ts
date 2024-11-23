@@ -130,7 +130,8 @@ describe('ProvinceService', () => {
   describe('findByCode', () => {
     it('should return a province when given a valid code', async () => {
       const testCode = '11';
-      const expectedProvince = provinces.find((p) => p.code === testCode);
+      const expectedProvince =
+        provinces.find((p) => p.code === testCode) ?? null;
 
       const findUniqueSpy = vitest
         .spyOn(prismaService.province, 'findUnique')
