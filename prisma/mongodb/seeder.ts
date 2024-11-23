@@ -1,11 +1,6 @@
-import { PrismaClient } from '@prisma/client';
 import { Area, Seeder } from '../seeder';
 
 export class MongodbSeeder extends Seeder {
-  constructor(prisma: PrismaClient) {
-    super(prisma);
-  }
-
   async deleteAreas(area: Area): Promise<number> {
     const mongoCollectionMap = {
       province: 'provinces',

@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.3/schema.json",
+  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
   "vcs": {
     "enabled": false,
     "clientKind": "git",
@@ -21,40 +21,28 @@
     "bracketSpacing": true
   },
   "organizeImports": {
-    "enabled": false
+    "enabled": true
   },
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": false,
-      "complexity": {
-        "noBannedTypes": "error",
-        "noUselessTypeConstraint": "error"
-      },
+      "recommended": true,
       "correctness": {
-        "noPrecisionLoss": "error",
         "noUnusedVariables": "error",
-        "useArrayLiterals": "off"
+        "useArrayLiterals": "error"
       },
       "style": {
-        "noInferrableTypes": "error",
         "noNamespace": "error",
-        "useAsConstAssertion": "error",
-        "useBlockStatements": "off",
+        "useBlockStatements": "error",
         "useConsistentArrayType": "error",
         "useForOf": "error",
-        "useShorthandFunctionType": "error"
+        "useImportType": "off"
       },
       "suspicious": {
         "noEmptyBlockStatements": "error",
-        "noExplicitAny": "off",
-        "noExtraNonNullAssertion": "error",
-        "noMisleadingInstantiator": "error",
-        "noUnsafeDeclarationMerging": "error",
-        "useNamespaceKeyword": "error"
+        "noExplicitAny": "off"
       }
-    },
-    "ignore": ["**/node_modules", "**/dist", "**/.eslintrc.js"]
+    }
   },
   "javascript": {
     "formatter": {
@@ -71,39 +59,5 @@
     "parser": {
       "unsafeParameterDecoratorsEnabled": true
     }
-  },
-  "overrides": [
-    {
-      "include": ["*.ts", "*.tsx", "*.mts", "*.cts"],
-      "linter": {
-        "rules": {
-          "correctness": {
-            "noConstAssign": "off",
-            "noGlobalObjectCalls": "off",
-            "noInvalidConstructorSuper": "off",
-            "noNewSymbol": "off",
-            "noSetterReturn": "off",
-            "noUndeclaredVariables": "off",
-            "noUnreachable": "off",
-            "noUnreachableSuper": "off"
-          },
-          "style": {
-            "noArguments": "error",
-            "noVar": "error",
-            "useConst": "error"
-          },
-          "suspicious": {
-            "noDuplicateClassMembers": "off",
-            "noDuplicateObjectKeys": "off",
-            "noDuplicateParameters": "off",
-            "noFunctionAssign": "off",
-            "noImportAssign": "off",
-            "noRedeclare": "off",
-            "noUnsafeNegation": "off",
-            "useGetterReturn": "off"
-          }
-        }
-      }
-    }
-  ]
+  }
 }

@@ -1,4 +1,4 @@
-import { Province, District, Island, Regency, Village } from '@prisma/client';
+import { District, Island, Province, Regency, Village } from '@prisma/client';
 
 type DataRegex<T extends Record<string | number | symbol, unknown>> = Partial<
   Record<keyof T, RegExp>

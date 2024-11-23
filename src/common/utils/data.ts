@@ -77,8 +77,8 @@ export function getIslands() {
       values: {
         code: removeDots,
         regency_code: (value) => (value === '' ? null : removeDots(value)),
-        is_outermost_small: (value) => !!parseInt(value, 10),
-        is_populated: (value) => !!parseInt(value, 10),
+        is_outermost_small: (value) => !!Number.parseInt(value, 10),
+        is_populated: (value) => !!Number.parseInt(value, 10),
       },
     },
   });

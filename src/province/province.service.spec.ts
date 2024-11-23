@@ -1,11 +1,11 @@
 import { getProvinces } from '@/common/utils/data';
 import { getDBProviderFeatures } from '@/common/utils/db';
+import { mockPrismaService } from '@/prisma/__mocks__/prisma.service';
 import { PrismaService } from '@/prisma/prisma.service';
 import { SortOrder } from '@/sort/sort.dto';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Province } from '@prisma/client';
 import { ProvinceService } from './province.service';
-import { mockPrismaService } from '@/prisma/__mocks__/prisma.service';
 
 describe('ProvinceService', () => {
   let provinces: readonly Province[];

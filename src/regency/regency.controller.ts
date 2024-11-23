@@ -1,5 +1,6 @@
 import { ApiDataResponse } from '@/common/decorator/api-data-response.decorator';
 import { ApiPaginatedResponse } from '@/common/decorator/api-paginated-response.decorator';
+import { PaginatedReturn } from '@/common/interceptor/paginate.interceptor';
 import {
   Controller,
   Get,
@@ -16,11 +17,10 @@ import {
 import {
   Regency,
   RegencyFindByCodeParams,
-  RegencyWithParent,
   RegencyFindQueries,
+  RegencyWithParent,
 } from './regency.dto';
 import { RegencyService } from './regency.service';
-import { PaginatedReturn } from '@/common/interceptor/paginate.interceptor';
 
 @Controller('regencies')
 export class RegencyController {

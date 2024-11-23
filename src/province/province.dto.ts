@@ -1,5 +1,6 @@
 import { EqualsAny } from '@/common/decorator/EqualsAny';
 import { IsNotSymbol } from '@/common/decorator/IsNotSymbol';
+import { PaginationQuery } from '@/common/dto/pagination.dto';
 import { SortQuery } from '@/sort/sort.dto';
 import {
   ApiProperty,
@@ -8,7 +9,6 @@ import {
   PickType,
 } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumberString, Length, MaxLength } from 'class-validator';
-import { PaginationQuery } from '@/common/dto/pagination.dto';
 
 export class Province {
   @IsNotEmpty()
