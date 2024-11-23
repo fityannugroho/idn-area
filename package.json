@@ -1,6 +1,6 @@
 {
   "name": "idn-area",
-  "version": "5.0.0",
+  "version": "5.1.0",
   "description": "API that provides information about Indonesia administrative area.",
   "author": "fityannugroho <fityannugroho@gmail.com> (https://github.com/fityannugroho)",
   "funding": "https://github.com/sponsors/fityannugroho",
@@ -9,7 +9,14 @@
     "type": "git",
     "url": "https://github.com/fityannugroho/idn-area"
   },
-  "keywords": ["idn-area", "indonesia", "wilayah", "area", "data", "api"],
+  "keywords": [
+    "idn-area",
+    "indonesia",
+    "wilayah",
+    "area",
+    "data",
+    "api"
+  ],
   "scripts": {
     "build": "nest build",
     "prisma:gen": "tsx prisma/generate.ts",
