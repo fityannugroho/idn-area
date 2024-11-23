@@ -42,8 +42,7 @@
         "noEmptyBlockStatements": "error",
         "noExplicitAny": "off"
       }
-    },
-    "ignore": ["**/node_modules", "**/dist", "**/.eslintrc.js"]
+    }
   },
   "javascript": {
     "formatter": {
