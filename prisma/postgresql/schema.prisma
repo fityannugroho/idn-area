@@ -49,6 +49,14 @@ model Regency {
   @@map("regencies")
 }
 
+model SeederLogs {
+  id          Int      @id @default(autoincrement())
+  dataVersion String   @map("data_version") @db.VarChar(255)
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@map("seeder_logs")
+}
+
 model Village {
   code         String   @id @db.VarChar(10)
   districtCode String   @map("district_code") @db.VarChar(6)

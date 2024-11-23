@@ -17,32 +17,29 @@ async function main() {
     seeder = new MongodbSeeder(prisma);
   }
 
-  const hasDataChanges = timify(
-    seeder.hasDataChanges.bind(seeder),
-    'check-data-changes',
-  );
-
   // Skip the seeder if if there are no data changes.
   console.log('Checking for data changes...\n');
-  if (!(await hasDataChanges())) {
+  if (!(await seeder.hasDataChanges())) {
     console.log('There are no data changes. Seeder is skipped.');
     return;
   }
   console.log('Data changes found!');
 
   console.log('Deleting all data...');
-  await timify(seeder.deleteVillages.bind(seeder), 'delete-villages')();
-  await timify(seeder.deleteIslands.bind(seeder), 'delete-islands')();
-  await timify(seeder.deleteDistricts.bind(seeder), 'delete-districts')();
-  await timify(seeder.deleteRegencies.bind(seeder), 'delete-regencies')();
-  await timify(seeder.deleteProvinces.bind(seeder), 'delete-provinces')();
+  await timify(() => seeder.deleteAreas('village'), 'delete-villages')();
+  await timify(() => seeder.deleteAreas('district'), 'delete-districts')();
+  await timify(() => seeder.deleteAreas('island'), 'delete-islands')();
+  await timify(() => seeder.deleteAreas('regency'), 'delete-regencies')();
+  await timify(() => seeder.deleteAreas('province'), 'delete-provinces')();
 
   console.log('Inserting all data...');
-  await timify(seeder.insertProvinces.bind(seeder), 'insert-provinces')();
-  await timify(seeder.insertRegencies.bind(seeder), 'insert-regencies')();
-  await timify(seeder.insertDistricts.bind(seeder), 'insert-districts')();
-  await timify(seeder.insertIslands.bind(seeder), 'insert-islands')();
-  await timify(seeder.insertVillages.bind(seeder), 'insert-villages')();
+  await timify(() => seeder.insertAreas('province'), 'insert-provinces')();
+  await timify(() => seeder.insertAreas('regency'), 'insert-regencies')();
+  await timify(() => seeder.insertAreas('island'), 'insert-islands')();
+  await timify(() => seeder.insertAreas('district'), 'insert-districts')();
+  await timify(() => seeder.insertAreas('village'), 'insert-villages')();
+
+  await seeder.generateLog();
 }
 
 main()
