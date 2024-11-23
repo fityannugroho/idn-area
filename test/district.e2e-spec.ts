@@ -22,7 +22,7 @@ describe('District (e2e)', () => {
     it('should return districts', async () => {
       const districts = await tester.expectData<District[]>(baseUrl);
 
-      districts.forEach((district) => {
+      for (const district of districts) {
         expect(district).toEqual(
           expectIdFromMongo({
             code: expect.stringMatching(districtRegex.code),
@@ -30,7 +30,7 @@ describe('District (e2e)', () => {
             regencyCode: district.code.slice(0, 4),
           }),
         );
-      });
+      }
     });
 
     it("should return 400 if the `name` is more than 100 chars, or contains any other symbols besides '()-./", async () => {
@@ -65,7 +65,7 @@ describe('District (e2e)', () => {
         `${baseUrl}?name=${testName}`,
       );
 
-      districts.forEach((district) => {
+      for (const district of districts) {
         expect(district).toEqual(
           expectIdFromMongo({
             code: expect.stringMatching(districtRegex.code),
@@ -73,7 +73,7 @@ describe('District (e2e)', () => {
             regencyCode: district.code.slice(0, 4),
           }),
         );
-      });
+      }
     });
 
     it('should return all districts match with the `regencyCode`', async () => {
@@ -82,7 +82,7 @@ describe('District (e2e)', () => {
         `${baseUrl}?regencyCode=${regencyCode}`,
       );
 
-      districts.forEach((district) => {
+      for (const district of districts) {
         expect(district).toEqual(
           expectIdFromMongo({
             code: expect.stringMatching(districtRegex.code),
@@ -90,7 +90,7 @@ describe('District (e2e)', () => {
             regencyCode,
           }),
         );
-      });
+      }
     });
   });
 

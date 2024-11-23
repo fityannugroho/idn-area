@@ -18,7 +18,7 @@ describe('Regency (e2e)', () => {
     it('should return regencies', async () => {
       const regencies = await tester.expectData<Regency[]>(baseUrl);
 
-      regencies.forEach((regency) => {
+      for (const regency of regencies) {
         expect(regency).toEqual(
           expectIdFromMongo({
             code: expect.stringMatching(regencyRegex.code),
@@ -26,7 +26,7 @@ describe('Regency (e2e)', () => {
             provinceCode: expect.stringMatching(regencyRegex.provinceCode),
           }),
         );
-      });
+      }
     });
 
     it('should return 400 if the `name` is more than 100 chars, or contains any symbols', async () => {
@@ -58,7 +58,7 @@ describe('Regency (e2e)', () => {
         `${baseUrl}?name=${testName}`,
       );
 
-      regencies.forEach((regency) => {
+      for (const regency of regencies) {
         expect(regency).toEqual(
           expectIdFromMongo({
             code: expect.stringMatching(regencyRegex.code),
@@ -66,7 +66,7 @@ describe('Regency (e2e)', () => {
             provinceCode: expect.stringMatching(regencyRegex.provinceCode),
           }),
         );
-      });
+      }
     });
   });
 

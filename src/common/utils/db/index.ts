@@ -12,19 +12,20 @@ import { DBProviderFeatures, dbProviderConfig } from './provider';
  * @throws If there are any invalid config value.
  */
 export const validateDBConfig = (...vars: (keyof typeof dbConfig)[]) => {
-  if (vars.length === 0) {
-    vars = Object.keys(dbConfig) as (keyof typeof dbConfig)[];
-  }
+  const configVars =
+    vars.length === 0
+      ? (Object.keys(dbConfig) as (keyof typeof dbConfig)[])
+      : vars;
 
   if (!dbConfig.provider) {
     throw new DatabaseConfigError('`DB_PROVIDER` is not defined.');
   }
 
   if (!dbProviderConfig[dbConfig.provider]) {
-    throw new DatabaseConfigError(`\`DB_PROVIDER\` is not supported.`);
+    throw new DatabaseConfigError('`DB_PROVIDER` is not supported.');
   }
 
-  if (vars.includes('url')) {
+  if (configVars.includes('url')) {
     if (!dbConfig.url) {
       throw new DatabaseConfigError('`DB_URL` is not defined.');
     }

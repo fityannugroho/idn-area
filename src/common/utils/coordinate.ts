@@ -27,9 +27,9 @@ const calculate = (
   pole: string,
 ) => {
   return (
-    (parseFloat(degrees) +
-      parseFloat(minutes) / 60 +
-      parseFloat(seconds) / 3600) *
+    (Number.parseFloat(degrees) +
+      Number.parseFloat(minutes) / 60 +
+      Number.parseFloat(seconds) / 3600) *
     (['N', 'E'].includes(pole) ? 1 : -1)
   );
 };

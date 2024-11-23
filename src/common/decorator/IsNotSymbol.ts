@@ -17,7 +17,7 @@ export function IsNotSymbol(
   allowedSymbols?: string,
   validationOptions?: ValidationOptions,
 ) {
-  return function (object: object, propertyName: string) {
+  return (object: object, propertyName: string) => {
     registerDecorator({
       target: object.constructor,
       propertyName: propertyName,
