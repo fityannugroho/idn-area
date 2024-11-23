@@ -8,7 +8,7 @@ import {
 import { getInstalledPackageVersion } from '@/common/utils/package';
 import { PrismaClient } from '@prisma/client';
 
-type Area = 'province' | 'regency' | 'district' | 'village' | 'island';
+export type Area = 'province' | 'regency' | 'district' | 'village' | 'island';
 
 export class Seeder {
   constructor(protected readonly prisma: PrismaClient) {
