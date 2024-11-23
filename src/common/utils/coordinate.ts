@@ -44,14 +44,14 @@ export const convertCoordinate = (coordinate: string): number[] => {
     throw new Error('Invalid coordinate format');
   }
 
-  const degress = coordinate.match(/[0-9,\.]+/g);
+  const degrees = coordinate.match(/[0-9,\.]+/g);
   const polars = coordinate.match(/(N|S|E|W)/g);
 
-  if (!degress || !polars) {
+  if (!degrees || !polars) {
     throw new Error('Invalid coordinate format');
   }
 
-  const [a, b, c, d, e, f] = degress;
+  const [a, b, c, d, e, f] = degrees;
   const [y, x] = polars;
 
   return [calculate(a, b, c, y), calculate(d, e, f, x)]; // [latitude, longitude]
