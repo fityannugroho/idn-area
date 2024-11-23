@@ -1,11 +1,11 @@
 import { getDistricts, getProvinces, getRegencies } from '@/common/utils/data';
 import { getDBProviderFeatures } from '@/common/utils/db';
+import { mockPrismaService } from '@/prisma/__mocks__/prisma.service';
 import { SortOrder } from '@/sort/sort.dto';
 import { Test, TestingModule } from '@nestjs/testing';
 import { District, Province, Regency } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { DistrictService } from './district.service';
-import { mockPrismaService } from '@/prisma/__mocks__/prisma.service';
 
 describe('DistrictService', () => {
   let districts: District[];

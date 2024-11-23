@@ -1,6 +1,6 @@
-import { describe, it, expect, vi } from 'vitest';
-import { getInstalledPackageVersion } from '../package';
 import { exec } from 'node:child_process';
+import { describe, expect, it, vi } from 'vitest';
+import { getInstalledPackageVersion } from '../package';
 
 vi.mock('node:child_process', () => ({
   exec: vi.fn(),
