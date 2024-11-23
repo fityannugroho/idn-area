@@ -49,7 +49,6 @@ model Regency {
   @@map("regencies")
 }
 
-
 model SeederLogs {
   id          Int      @id @default(autoincrement())
   dataVersion String   @map("data_version")
@@ -57,7 +56,6 @@ model SeederLogs {
 
   @@map("seeder_logs")
 }
-
 
 model Village {
   code         String   @id
