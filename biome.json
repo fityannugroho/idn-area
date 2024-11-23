@@ -29,11 +29,11 @@
       "recommended": true,
       "correctness": {
         "noUnusedVariables": "error",
-        "useArrayLiterals": "off"
+        "useArrayLiterals": "error"
       },
       "style": {
         "noNamespace": "error",
-        "useBlockStatements": "off",
+        "useBlockStatements": "error",
         "useConsistentArrayType": "error",
         "useForOf": "error",
         "useImportType": "off"
