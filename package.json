@@ -9,14 +9,7 @@
     "type": "git",
     "url": "https://github.com/fityannugroho/idn-area"
   },
-  "keywords": [
-    "idn-area",
-    "indonesia",
-    "wilayah",
-    "area",
-    "data",
-    "api"
-  ],
+  "keywords": ["idn-area", "indonesia", "wilayah", "area", "data", "api"],
   "scripts": {
     "build": "nest build",
     "prisma:gen": "tsx prisma/generate.ts",
