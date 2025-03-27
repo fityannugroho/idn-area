@@ -1,7 +1,7 @@
 import { Island } from '@prisma/client';
 import { AppTester } from './helper/app-tester';
 import { islandRegex, regencyRegex } from './helper/data-regex';
-import { expectIdFromMongo, getEncodedSymbols } from './helper/utils';
+import { getEncodedSymbols } from './helper/utils';
 
 describe('Island (e2e)', () => {
   const baseUrl = '/islands';
@@ -19,18 +19,16 @@ describe('Island (e2e)', () => {
       const islands = await tester.expectData<Island[]>(baseUrl);
 
       for (const island of islands) {
-        expect(island).toEqual(
-          expectIdFromMongo({
-            code: expect.stringMatching(islandRegex.code),
-            coordinate: expect.stringMatching(islandRegex.coordinate),
-            isOutermostSmall: expect.any(Boolean),
-            isPopulated: expect.any(Boolean),
-            latitude: expect.any(Number),
-            longitude: expect.any(Number),
-            name: expect.stringMatching(islandRegex.name),
-            regencyCode: island.regencyCode ? island.code.slice(0, 4) : null,
-          }),
-        );
+        expect(island).toEqual({
+          code: expect.stringMatching(islandRegex.code),
+          coordinate: expect.stringMatching(islandRegex.coordinate),
+          isOutermostSmall: expect.any(Boolean),
+          isPopulated: expect.any(Boolean),
+          latitude: expect.any(Number),
+          longitude: expect.any(Number),
+          name: expect.stringMatching(islandRegex.name),
+          regencyCode: island.regencyCode ? island.code.slice(0, 4) : null,
+        });
       }
     });
 
@@ -67,18 +65,16 @@ describe('Island (e2e)', () => {
       );
 
       for (const island of islands) {
-        expect(island).toEqual(
-          expectIdFromMongo({
-            code: expect.stringMatching(islandRegex.code),
-            coordinate: expect.stringMatching(islandRegex.coordinate),
-            isOutermostSmall: expect.any(Boolean),
-            isPopulated: expect.any(Boolean),
-            latitude: expect.any(Number),
-            longitude: expect.any(Number),
-            name: expect.stringMatching(new RegExp(testName, 'i')),
-            regencyCode: island.regencyCode ? island.code.slice(0, 4) : null,
-          }),
-        );
+        expect(island).toEqual({
+          code: expect.stringMatching(islandRegex.code),
+          coordinate: expect.stringMatching(islandRegex.coordinate),
+          isOutermostSmall: expect.any(Boolean),
+          isPopulated: expect.any(Boolean),
+          latitude: expect.any(Number),
+          longitude: expect.any(Number),
+          name: expect.stringMatching(new RegExp(testName, 'i')),
+          regencyCode: island.regencyCode ? island.code.slice(0, 4) : null,
+        });
       }
     });
 
@@ -89,18 +85,16 @@ describe('Island (e2e)', () => {
       );
 
       for (const island of islands) {
-        expect(island).toEqual(
-          expectIdFromMongo({
-            code: expect.stringMatching(islandRegex.code),
-            coordinate: expect.stringMatching(islandRegex.coordinate),
-            isOutermostSmall: expect.any(Boolean),
-            isPopulated: expect.any(Boolean),
-            latitude: expect.any(Number),
-            longitude: expect.any(Number),
-            name: expect.stringMatching(islandRegex.name),
-            regencyCode: testRegencyCode,
-          }),
-        );
+        expect(island).toEqual({
+          code: expect.stringMatching(islandRegex.code),
+          coordinate: expect.stringMatching(islandRegex.coordinate),
+          isOutermostSmall: expect.any(Boolean),
+          isPopulated: expect.any(Boolean),
+          latitude: expect.any(Number),
+          longitude: expect.any(Number),
+          name: expect.stringMatching(islandRegex.name),
+          regencyCode: testRegencyCode,
+        });
       }
     });
 
@@ -110,18 +104,16 @@ describe('Island (e2e)', () => {
       );
 
       for (const island of islands) {
-        expect(island).toEqual(
-          expectIdFromMongo({
-            code: expect.stringMatching(islandRegex.code),
-            coordinate: expect.stringMatching(islandRegex.coordinate),
-            isOutermostSmall: expect.any(Boolean),
-            isPopulated: expect.any(Boolean),
-            latitude: expect.any(Number),
-            longitude: expect.any(Number),
-            name: expect.stringMatching(islandRegex.name),
-            regencyCode: null,
-          }),
-        );
+        expect(island).toEqual({
+          code: expect.stringMatching(islandRegex.code),
+          coordinate: expect.stringMatching(islandRegex.coordinate),
+          isOutermostSmall: expect.any(Boolean),
+          isPopulated: expect.any(Boolean),
+          latitude: expect.any(Number),
+          longitude: expect.any(Number),
+          name: expect.stringMatching(islandRegex.name),
+          regencyCode: null,
+        });
       }
     });
   });
@@ -141,31 +133,29 @@ describe('Island (e2e)', () => {
     it('should return the island with the `code`', async () => {
       const island = await tester.expectData<Island>(`${baseUrl}/${testCode}`);
 
-      expect(island).toEqual(
-        expectIdFromMongo({
-          code: testCode,
-          coordinate: expect.stringMatching(islandRegex.coordinate),
-          isOutermostSmall: expect.any(Boolean),
-          isPopulated: expect.any(Boolean),
-          latitude: expect.any(Number),
-          longitude: expect.any(Number),
-          name: expect.stringMatching(islandRegex.name),
-          regencyCode: island.regencyCode ? island.code.slice(0, 4) : null,
-          parent: {
-            regency: island.regencyCode
-              ? expectIdFromMongo({
-                  code: island.regencyCode,
-                  name: expect.stringMatching(regencyRegex.name),
-                  provinceCode: island.code.slice(0, 2),
-                })
-              : null,
-            province: expectIdFromMongo({
-              code: island.code.slice(0, 2),
-              name: expect.stringMatching(islandRegex.name),
-            }),
+      expect(island).toEqual({
+        code: testCode,
+        coordinate: expect.stringMatching(islandRegex.coordinate),
+        isOutermostSmall: expect.any(Boolean),
+        isPopulated: expect.any(Boolean),
+        latitude: expect.any(Number),
+        longitude: expect.any(Number),
+        name: expect.stringMatching(islandRegex.name),
+        regencyCode: island.regencyCode ? island.code.slice(0, 4) : null,
+        parent: {
+          regency: island.regencyCode
+            ? {
+                code: island.regencyCode,
+                name: expect.stringMatching(regencyRegex.name),
+                provinceCode: island.code.slice(0, 2),
+              }
+            : null,
+          province: {
+            code: island.code.slice(0, 2),
+            name: expect.stringMatching(islandRegex.name),
           },
-        }),
-      );
+        },
+      });
     });
   });
 

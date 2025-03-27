@@ -10,15 +10,6 @@ updates:
     schedule:
       interval: 'daily'
     ignore:
-      # Ignore all patch updates
+      # Only update the patch versions for all dependencies
       - dependency-name: '*'
-        update-types: ['version-update:semver-patch']
-      # Ignore specific dependencies for major  updates
-      - dependency-name: 'vite'
-        update-types: ['version-update:semver-major']
-      - dependency-name: 'vitest'
-        update-types: ['version-update:semver-major']
-      - dependency-name: '@vitest/coverage-v8'
-        update-types: ['version-update:semver-major']
-      - dependency-name: '@typescript-eslint/*'
-        update-types: ['version-update:semver-major']
+        update-types: ['version-update:semver-major', 'version-update:semver-minor']

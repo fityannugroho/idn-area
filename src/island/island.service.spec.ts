@@ -235,7 +235,6 @@ describe('IslandService', () => {
         .spyOn(prismaService.island, 'findUnique')
         .mockResolvedValue({
           ...expectedIsland,
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-expect-error
           regency: { ...expectedRegency, province: expectedProvince },
         });
@@ -268,7 +267,6 @@ describe('IslandService', () => {
         .spyOn(prismaService.island, 'findUnique')
         .mockResolvedValue({
           ...expectedIsland,
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-expect-error
           regency: null,
         });

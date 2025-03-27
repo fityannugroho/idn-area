@@ -1,7 +1,7 @@
 import { Province } from '@prisma/client';
 import { AppTester } from './helper/app-tester';
 import { provinceRegex } from './helper/data-regex';
-import { expectIdFromMongo, getEncodedSymbols } from './helper/utils';
+import { getEncodedSymbols } from './helper/utils';
 
 describe('Province (e2e)', () => {
   const baseUrl = '/provinces';
@@ -26,12 +26,10 @@ describe('Province (e2e)', () => {
       const provinces = await tester.expectData<Province[]>(baseUrl);
 
       for (const province of provinces) {
-        expect(province).toEqual(
-          expectIdFromMongo({
-            code: expect.stringMatching(provinceRegex.code),
-            name: expect.stringMatching(provinceRegex.name),
-          }),
-        );
+        expect(province).toEqual({
+          code: expect.stringMatching(provinceRegex.code),
+          name: expect.stringMatching(provinceRegex.name),
+        });
       }
     });
   });
@@ -60,12 +58,10 @@ describe('Province (e2e)', () => {
       );
 
       for (const province of provinces) {
-        expect(province).toEqual(
-          expectIdFromMongo({
-            code: expect.stringMatching(provinceRegex.code),
-            name: expect.stringMatching(new RegExp(testName, 'i')),
-          }),
-        );
+        expect(province).toEqual({
+          code: expect.stringMatching(provinceRegex.code),
+          name: expect.stringMatching(new RegExp(testName, 'i')),
+        });
       }
     });
   });
@@ -87,12 +83,10 @@ describe('Province (e2e)', () => {
         `${baseUrl}/${testCode}`,
       );
 
-      expect(province).toEqual(
-        expectIdFromMongo({
-          code: testCode,
-          name: expect.stringMatching(provinceRegex.name),
-        }),
-      );
+      expect(province).toEqual({
+        code: testCode,
+        name: expect.stringMatching(provinceRegex.name),
+      });
     });
   });
 

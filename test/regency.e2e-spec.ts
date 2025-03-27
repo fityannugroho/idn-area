@@ -1,7 +1,7 @@
 import { Regency } from '@prisma/client';
 import { AppTester } from './helper/app-tester';
 import { provinceRegex, regencyRegex } from './helper/data-regex';
-import { expectIdFromMongo, getEncodedSymbols } from './helper/utils';
+import { getEncodedSymbols } from './helper/utils';
 
 describe('Regency (e2e)', () => {
   const baseUrl = '/regencies';
@@ -19,13 +19,11 @@ describe('Regency (e2e)', () => {
       const regencies = await tester.expectData<Regency[]>(baseUrl);
 
       for (const regency of regencies) {
-        expect(regency).toEqual(
-          expectIdFromMongo({
-            code: expect.stringMatching(regencyRegex.code),
-            name: expect.stringMatching(regencyRegex.name),
-            provinceCode: expect.stringMatching(regencyRegex.provinceCode),
-          }),
-        );
+        expect(regency).toEqual({
+          code: expect.stringMatching(regencyRegex.code),
+          name: expect.stringMatching(regencyRegex.name),
+          provinceCode: expect.stringMatching(regencyRegex.provinceCode),
+        });
       }
     });
 
@@ -59,13 +57,11 @@ describe('Regency (e2e)', () => {
       );
 
       for (const regency of regencies) {
-        expect(regency).toEqual(
-          expectIdFromMongo({
-            code: expect.stringMatching(regencyRegex.code),
-            name: expect.stringMatching(new RegExp(testName, 'i')),
-            provinceCode: expect.stringMatching(regencyRegex.provinceCode),
-          }),
-        );
+        expect(regency).toEqual({
+          code: expect.stringMatching(regencyRegex.code),
+          name: expect.stringMatching(new RegExp(testName, 'i')),
+          provinceCode: expect.stringMatching(regencyRegex.provinceCode),
+        });
       }
     });
   });
@@ -87,19 +83,17 @@ describe('Regency (e2e)', () => {
         `${baseUrl}/${testCode}`,
       );
 
-      expect(regency).toEqual(
-        expectIdFromMongo({
-          code: testCode,
-          name: expect.stringMatching(regencyRegex.name),
-          provinceCode: testCode.slice(0, 2),
-          parent: {
-            province: expectIdFromMongo({
-              code: testCode.slice(0, 2),
-              name: expect.stringMatching(provinceRegex.name),
-            }),
+      expect(regency).toEqual({
+        code: testCode,
+        name: expect.stringMatching(regencyRegex.name),
+        provinceCode: testCode.slice(0, 2),
+        parent: {
+          province: {
+            code: testCode.slice(0, 2),
+            name: expect.stringMatching(provinceRegex.name),
           },
-        }),
-      );
+        },
+      });
     });
   });
 
