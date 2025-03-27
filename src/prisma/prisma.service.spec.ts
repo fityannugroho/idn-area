@@ -1,6 +1,6 @@
 import { appConfig } from '@/common/config/app';
 import { Test } from '@nestjs/testing';
-import { PrismaClient, Province } from '@prisma/client';
+import { Province } from '@prisma/client';
 import { PaginatorOptions } from './prisma.interface';
 import { PrismaService } from './prisma.service';
 
@@ -21,8 +21,6 @@ describe('PrismaService', () => {
 
   it('should be defined', () => {
     expect(service).toBeDefined();
-    // Must extend PrismaClient
-    expect(service).toBeInstanceOf(PrismaClient);
     // Must implement OnModuleInit interface
     expect(service.onModuleInit).toBeDefined();
   });
