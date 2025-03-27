@@ -183,7 +183,6 @@ describe('DistrictService', () => {
         .spyOn(prismaService.district, 'findUnique')
         .mockResolvedValue({
           ...expectedDistrict,
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-expect-error
           regency: {
             ...expectedRegency,

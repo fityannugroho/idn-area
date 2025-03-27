@@ -161,7 +161,6 @@ describe('RegencyService', () => {
         .spyOn(prismaService.regency, 'findUnique')
         .mockReturnValue({
           ...expectedRegency,
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-expect-error
           province: expectedProvince,
         });
