@@ -8,8 +8,7 @@ datasource db {
 }
 
 model District {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
-  code        String    @unique
+  code        String    @id @map("_id")
   name        String
   regencyCode String    @map("regency_code")
   regency     Regency   @relation(fields: [regencyCode], references: [code])
@@ -19,8 +18,7 @@ model District {
 }
 
 model Island {
-  id               String   @id @default(auto()) @map("_id") @db.ObjectId
-  code             String   @unique
+  code             String   @id @map("_id")
   coordinate       String
   isOutermostSmall Boolean  @map("is_outermost_small")
   isPopulated      Boolean  @map("is_populated")
@@ -32,8 +30,7 @@ model Island {
 }
 
 model Province {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  code      String    @unique
+  code      String @id @map("_id")
   name      String
   regencies Regency[]
 
@@ -41,8 +38,7 @@ model Province {
 }
 
 model Regency {
-  id           String     @id @default(auto()) @map("_id") @db.ObjectId
-  code         String     @unique
+  code         String     @id @map("_id")
   name         String
   provinceCode String     @map("province_code")
   islands      Island[]
@@ -61,8 +57,7 @@ model SeederLogs {
 }
 
 model Village {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  code         String   @unique
+  code         String   @id @map("_id")
   districtCode String   @map("district_code")
   name         String
   district     District @relation(fields: [districtCode], references: [code])
