@@ -1,6 +1,6 @@
 import { appConfig } from '@/common/config/app';
 import { Test } from '@nestjs/testing';
-import { PrismaClient, Province } from '@prisma/client';
+import { Province } from '@prisma/client';
 import { PaginatorOptions } from './prisma.interface';
 import { PrismaService } from './prisma.service';
 
