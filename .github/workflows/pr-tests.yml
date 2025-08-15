@@ -49,39 +49,96 @@ jobs:
         run: pnpm run test
 
   docker-image-smoke:
-    name: Docker image smoke test (sqlite)
+    name: Docker image smoke test (${{ matrix.db }})
     runs-on: ubuntu-latest
-    env:
-      DB_PROVIDER: sqlite
-      DB_URL: file:./dev.db
+    strategy:
+      fail-fast: false
+      matrix:
+        db: [postgresql, mongodb, sqlite]
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
 
-      - name: Build docker image (sqlite provider, no secrets needed)
-        run: |
-          docker build --build-arg DB_PROVIDER=sqlite -t idn-area:${{ github.sha }} .
+      - name: Setup network (non-sqlite)
+        if: matrix.db != 'sqlite'
+        run: docker network create integration
 
-      - name: Prepare schema (migrate + seed)
+      - name: Start PostgreSQL
+        if: matrix.db == 'postgresql'
         run: |
-          docker run --rm \
-            -e DB_PROVIDER=sqlite \
-            -e DB_URL="file:./dev.db" \
+          PW=$(openssl rand -hex 16)
+          echo "POSTGRES_PASSWORD=$PW" >> $GITHUB_ENV
+          docker run -d --name db --network integration \
+            -e POSTGRES_USER=test \
+            -e POSTGRES_PASSWORD=$PW \
+            -e POSTGRES_DB=test \
+            postgres:14
+          for i in {1..30}; do \
+            docker run --rm --network integration postgres:14 pg_isready -h db -U test && break; \
+            sleep 2; \
+          done
+
+      - name: Start MongoDB
+        if: matrix.db == 'mongodb'
+        run: |
+          MPW=$(openssl rand -hex 16)
+          echo "MONGO_ROOT_PASSWORD=$MPW" >> $GITHUB_ENV
+          docker run -d --name db --network integration \
+            -e MONGO_INITDB_ROOT_USERNAME=root \
+            -e MONGO_INITDB_ROOT_PASSWORD=$MPW \
+            -p 27017:27017 \
+            mongo:7
+          # Wait for readiness
+          for i in {1..40}; do \
+            docker run --rm --network integration mongo:7 mongosh "mongodb://root:$MPW@db:27017/admin" --eval "db.runCommand({ ping: 1 })" && break; \
+            sleep 2; \
+          done
+
+      - name: Set DB environment variables
+        run: |
+          if [ "${{ matrix.db }}" = "postgresql" ]; then
+            echo "DB_PROVIDER=postgresql" >> $GITHUB_ENV
+            echo "DB_URL=postgresql://test:$POSTGRES_PASSWORD@db:5432/test" >> $GITHUB_ENV
+          elif [ "${{ matrix.db }}" = "mongodb" ]; then
+            echo "DB_PROVIDER=mongodb" >> $GITHUB_ENV
+            echo "DB_URL=mongodb://root:$MONGO_ROOT_PASSWORD@db:27017/test?authSource=admin" >> $GITHUB_ENV
+          else
+            echo "DB_PROVIDER=sqlite" >> $GITHUB_ENV
+            echo "DB_URL=file:./dev.db" >> $GITHUB_ENV
+          fi
+
+      - name: Build docker image
+        run: docker build --build-arg DB_PROVIDER=$DB_PROVIDER -t idn-area:${{ github.sha }} .
+
+      - name: Run migration & seed
+        run: |
+          if [ "${{ matrix.db }}" = "sqlite" ]; then
+            NET_ARGS=""
+          else
+            NET_ARGS="--network integration"
+          fi
+          docker run --rm $NET_ARGS \
+            -e DB_PROVIDER=$DB_PROVIDER \
+            -e DB_URL="$DB_URL" \
             idn-area:${{ github.sha }} pnpm run db:migrate
-          # Seeding is optional in smoke test; run and ignore if skipped
-          docker run --rm \
-            -e DB_PROVIDER=sqlite \
-            -e DB_URL="file:./dev.db" \
+          docker run --rm $NET_ARGS \
+            -e DB_PROVIDER=$DB_PROVIDER \
+            -e DB_URL="$DB_URL" \
             idn-area:${{ github.sha }} pnpm run db:seed || true
 
-      - name: Start container
+      - name: Start app container
         run: |
-          docker run -d --name app \
-            -e DB_PROVIDER=sqlite \
-            -e DB_URL="file:./dev.db" \
+          if [ "${{ matrix.db }}" = "sqlite" ]; then
+            NET_ARGS=""
+          else
+            NET_ARGS="--network integration"
+          fi
+          docker run -d --name app $NET_ARGS \
+            -e DB_PROVIDER=$DB_PROVIDER \
+            -e DB_URL="$DB_URL" \
             -p 3000:3000 \
             idn-area:${{ github.sha }}
-          for i in {1..30}; do
+          for i in {1..40}; do
             if curl -fsS http://localhost:3000/health > /dev/null; then echo "App is up"; break; fi; sleep 2; done
 
       - name: Smoke test /health endpoint
@@ -93,10 +150,13 @@ jobs:
         if: failure()
         run: |
           docker logs app || true
-          docker ps -a
+          docker ps -a || true
+          docker logs db || true
 
       - name: Cleanup
         if: always()
         run: |
           docker rm -f app || true
+          docker rm -f db || true
+          docker network rm integration || true
           docker images | grep idn-area | awk '{print $3}' | xargs -r docker rmi -f
