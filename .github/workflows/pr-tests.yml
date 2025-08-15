@@ -81,27 +81,23 @@ jobs:
       - name: Start MongoDB
         if: matrix.db == 'mongodb'
         run: |
-          MPW=$(openssl rand -hex 16)
-          echo "MONGO_ROOT_PASSWORD=$MPW" >> $GITHUB_ENV
-          # Start MongoDB with replica set (required by Prisma for certain ops like createMany/transactions)
+          # Start MongoDB single-node replica set WITHOUT auth (sufficient for tests)
           docker run -d --name db --network integration \
-            -e MONGO_INITDB_ROOT_USERNAME=root \
-            -e MONGO_INITDB_ROOT_PASSWORD=$MPW \
             -p 27017:27017 \
             mongo:7 --replSet rs0 --bind_ip_all
 
           # Wait for mongod to accept connections
           for i in {1..40}; do \
-            docker run --rm --network integration mongo:7 mongosh "mongodb://root:$MPW@db:27017/admin" --quiet --eval "db.runCommand({ ping: 1 }).ok" 2>/dev/null | grep 1 && break; \
+            docker run --rm --network integration mongo:7 mongosh "mongodb://db:27017/admin" --quiet --eval "db.runCommand({ ping: 1 }).ok" 2>/dev/null | grep 1 && break; \
             sleep 2; \
           done
 
           # Initiate replica set (ignore error if already initiated)
-          docker run --rm --network integration mongo:7 mongosh "mongodb://root:$MPW@db:27017/admin" --quiet --eval 'try { rs.initiate({_id:"rs0", members:[{_id:0, host:"db:27017"}]}); } catch(e) { print(e); }'
+          docker run --rm --network integration mongo:7 mongosh "mongodb://db:27017/admin" --quiet --eval 'try { rs.initiate({_id:"rs0", members:[{_id:0, host:"db:27017"}]}); } catch(e) { print(e); }'
 
           # Wait for PRIMARY state
           for i in {1..40}; do \
-            state=$(docker run --rm --network integration mongo:7 mongosh "mongodb://root:$MPW@db:27017/admin" --quiet --eval 'rs.status().members && rs.status().members[0].stateStr'); \
+            state=$(docker run --rm --network integration mongo:7 mongosh "mongodb://db:27017/admin" --quiet --eval 'try { rs.status().members && rs.status().members[0].stateStr } catch(e) { "" }'); \
             if [ "$state" = "PRIMARY" ]; then echo "Replica set PRIMARY"; break; fi; \
             sleep 2; \
           done
@@ -113,7 +109,7 @@ jobs:
             echo "DB_URL=postgresql://test:$POSTGRES_PASSWORD@db:5432/test" >> $GITHUB_ENV
           elif [ "${{ matrix.db }}" = "mongodb" ]; then
             echo "DB_PROVIDER=mongodb" >> $GITHUB_ENV
-            echo "DB_URL=mongodb://root:$MONGO_ROOT_PASSWORD@db:27017/test?authSource=admin" >> $GITHUB_ENV
+            echo "DB_URL=mongodb://db:27017/test?replicaSet=rs0" >> $GITHUB_ENV
           else
             echo "DB_PROVIDER=sqlite" >> $GITHUB_ENV
             echo "DB_URL=file:/data/dev.db" >> $GITHUB_ENV
