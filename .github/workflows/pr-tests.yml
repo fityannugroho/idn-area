@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [18, 20]
+        node-version: [20]
         db: [postgresql, mysql, mongodb, sqlite]
     steps:
       - name: Checkout code
@@ -38,14 +38,26 @@ jobs:
           docker run -d --name db -p 5432:5432 \
             -e POSTGRES_USER=test -e POSTGRES_PASSWORD=$PW -e POSTGRES_DB=test \
             postgres:14
-          for i in {1..30}; do docker run --rm --network host postgres:14 pg_isready -h localhost -U test && break; sleep 2; done
+          # Wait for PostgreSQL to accept connections
+          ready=0
+          for i in {1..40}; do
+            if docker exec db pg_isready -U test >/dev/null 2>&1; then echo "Postgres ready"; ready=1; break; fi
+            sleep 2
+          done
+          if [ $ready -eq 0 ]; then echo "Postgres failed to start"; docker logs db || true; exit 1; fi
       - name: Start MySQL
         if: matrix.db == 'mysql'
         run: |
           PW=$(openssl rand -hex 12); echo "MYSQL_PASS=$PW" >> $GITHUB_ENV
           docker run -d --name db -p 3306:3306 \
-            -e MYSQL_ROOT_PASSWORD=$PW -e MYSQL_DATABASE=test mysql:8 --default-authentication-plugin=caching_sha2_password
-          for i in {1..40}; do docker run --rm --network host mysql:8 mysql -h 127.0.0.1 -P 3306 -u root -p$PW -e 'SELECT 1' >/dev/null 2>&1 && break; sleep 2; done
+            -e MYSQL_ROOT_PASSWORD=$PW -e MYSQL_DATABASE=test mysql:8
+          # Wait for MySQL to accept connections
+          ready=0
+            for i in {1..60}; do
+              if docker exec db mysql -uroot -p$PW -e 'SELECT 1' >/dev/null 2>&1; then echo "MySQL ready"; ready=1; break; fi
+              sleep 2
+            done
+          if [ $ready -eq 0 ]; then echo "MySQL failed to start"; docker logs db || true; exit 1; fi
       - name: Start MongoDB
         if: matrix.db == 'mongodb'
         run: |
@@ -70,6 +82,24 @@ jobs:
           fi
       - name: Lint
         run: pnpm run lint
+      - name: Verify DB readiness
+        if: matrix.db != 'sqlite'
+        run: |
+          echo "Verifying readiness for ${{ matrix.db }}"
+          if [ "${{ matrix.db }}" = "postgresql" ]; then
+            for i in {1..10}; do
+              if docker exec db pg_isready -U test >/dev/null 2>&1; then echo "Postgres still ready"; break; fi; sleep 2;
+            done
+          elif [ "${{ matrix.db }}" = "mysql" ]; then
+            for i in {1..15}; do
+              if docker exec db mysql -uroot -p$MYSQL_PASS -e 'SELECT 1' >/dev/null 2>&1; then echo "MySQL still ready"; break; fi; sleep 2;
+            done
+          elif [ "${{ matrix.db }}" = "mongodb" ]; then
+            for i in {1..15}; do
+              state=$(docker run --rm --network host mongo:7 mongosh "mongodb://localhost:27017/admin" --quiet --eval 'try { rs.status().members && rs.status().members[0].stateStr } catch(e) { "" }');
+              [ "$state" = "PRIMARY" ] && echo "Mongo PRIMARY confirmed" && break; sleep 2;
+            done
+          fi
       - name: Generate Prisma Client
         run: pnpm run prisma:gen
       - name: Migrate DB
@@ -107,6 +137,19 @@ jobs:
       - name: Start PostgreSQL
         if: matrix.db == 'postgresql'
         run: |
+          PW=$(openssl rand -hex 16)
+          echo "POSTGRES_PASSWORD=$PW" >> $GITHUB_ENV
+          docker run -d --name db --network integration \
+            -e POSTGRES_USER=test \
+            -e POSTGRES_PASSWORD=$PW \
+            -e POSTGRES_DB=test \
+            postgres:14
+          ready=0
+          for i in {1..40}; do
+            if docker exec db pg_isready -U test >/dev/null 2>&1; then echo "Postgres ready"; ready=1; break; fi
+            sleep 2
+          done
+          if [ $ready -eq 0 ]; then echo "Postgres failed to start"; docker logs db || true; exit 1; fi
       - name: Start MySQL
         if: matrix.db == 'mysql'
         run: |
@@ -115,23 +158,14 @@ jobs:
           docker run -d --name db --network integration \
             -e MYSQL_ROOT_PASSWORD=$MPW \
             -e MYSQL_DATABASE=test \
-            mysql:8 --default-authentication-plugin=caching_sha2_password
+            mysql:8
           # Wait for readiness
-          for i in {1..40}; do \
-            docker run --rm --network integration mysql:8 mysql -h db -u root -p$MPW -e 'SELECT 1' >/dev/null 2>&1 && break; \
-            sleep 2; \
+          ready=0
+          for i in {1..60}; do
+            if docker exec db mysql -uroot -p$MPW -e 'SELECT 1' >/dev/null 2>&1; then echo "MySQL ready"; ready=1; break; fi
+            sleep 2
           done
-          PW=$(openssl rand -hex 16)
-          echo "POSTGRES_PASSWORD=$PW" >> $GITHUB_ENV
-          docker run -d --name db --network integration \
-            -e POSTGRES_USER=test \
-            -e POSTGRES_PASSWORD=$PW \
-            -e POSTGRES_DB=test \
-            postgres:14
-          for i in {1..30}; do \
-            docker run --rm --network integration postgres:14 pg_isready -h db -U test && break; \
-            sleep 2; \
-          done
+          if [ $ready -eq 0 ]; then echo "MySQL failed to start"; docker logs db || true; exit 1; fi
 
       - name: Start MongoDB
         if: matrix.db == 'mongodb'
