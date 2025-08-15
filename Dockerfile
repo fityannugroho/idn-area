@@ -1,5 +1,9 @@
 # Use an official Node.js runtime as the base image
-FROM node:18 AS builder
+FROM node:20 AS builder
+
+# Accept the database provider at build time so Prisma Client can be generated
+ARG DB_PROVIDER
+ENV DB_PROVIDER=$DB_PROVIDER
 
 # Install pnpm and set the working directory inside the container
 RUN npm install -g pnpm && mkdir -p /app
@@ -18,7 +22,11 @@ COPY . .
 RUN pnpm run prisma:gen && pnpm run build
 
 # Stage 2: A minimal Docker image with node and compiled app
-FROM node:18
+FROM node:20
+
+# Propagate DB_PROVIDER for runtime (optional; can still be overridden at run)
+ARG DB_PROVIDER
+ENV DB_PROVIDER=$DB_PROVIDER
 
 # Install pnpm and set the working directory inside the container
 RUN npm install -g pnpm && mkdir -p /app

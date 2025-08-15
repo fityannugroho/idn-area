@@ -1,15 +1,29 @@
-# To get started with Dependabot version updates, you'll need to specify which
-# package ecosystems to update and where the package manifests are located.
-# Please see the documentation for all configuration options:
-# https://docs.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
+# Dependabot configuration
+# Docs: https://docs.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
 
 version: 2
 updates:
-  - package-ecosystem: 'npm' # See documentation for possible values
-    directory: '/' # Location of package manifests
+  # NPM / PNPM (Dependabot understands pnpm-lock.yaml in the npm ecosystem)
+  - package-ecosystem: npm
+    directory: /
     schedule:
-      interval: 'daily'
-    ignore:
-      # Only update the patch versions for all dependencies
-      - dependency-name: '*'
-        update-types: ['version-update:semver-major', 'version-update:semver-minor']
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 2
+    versioning-strategy: increase-if-necessary
+
+    # Only update direct dependencies (transitive dependencies remain if there's a security advisory)
+    allow:
+      - dependency-type: direct
+
+    # Refine Dependabot PR commit message
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+
+  # Update GitHub Actions in .github/workflows
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    labels: [ci, dependencies]

@@ -1,0 +1,289 @@
+name: App & Container CI
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-tests:
+    name: "App build & tests (Node ${{ matrix.node-version }} / DB ${{ matrix.db }})"
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [20, 22]
+        db: [postgresql, mysql, mongodb, sqlite]
+    # Matrix: run full build + unit + e2e across each DB provider (and Node versions)
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+    # --- Database setup (only one of the following three runs) ---
+      - name: Start PostgreSQL
+        if: matrix.db == 'postgresql'
+        run: |
+          PW=$(openssl rand -hex 12); echo "PG_PASS=$PW" >> $GITHUB_ENV
+          docker run -d --name db -p 5432:5432 \
+            -e POSTGRES_USER=test -e POSTGRES_PASSWORD=$PW -e POSTGRES_DB=test \
+            postgres:14
+            # Wait for PostgreSQL to accept connections
+          ready=0
+          for i in {1..40}; do
+            if docker exec db pg_isready -U test >/dev/null 2>&1; then echo "Postgres ready"; ready=1; break; fi
+            sleep 2
+          done
+          if [ $ready -eq 0 ]; then echo "Postgres failed to start"; docker logs db || true; exit 1; fi
+
+      - name: Start MySQL
+        if: matrix.db == 'mysql'
+        run: |
+          PW=$(openssl rand -hex 12); echo "MYSQL_PASS=$PW" >> $GITHUB_ENV
+          docker run -d --name db -p 3306:3306 \
+            -e MYSQL_ROOT_PASSWORD=$PW -e MYSQL_DATABASE=test mysql:8
+          ready=0
+          for i in {1..60}; do
+            if docker exec db mysql -uroot -p$PW -e 'SELECT 1' >/dev/null 2>&1; then echo "MySQL ready"; ready=1; break; fi
+            sleep 2
+          done
+          if [ $ready -eq 0 ]; then echo "MySQL failed to start"; docker logs db || true; exit 1; fi
+
+      - name: Start MongoDB
+        if: matrix.db == 'mongodb'
+        run: |
+          docker run -d --name db -p 27017:27017 mongo:7 --replSet rs0 --bind_ip_all
+          for i in {1..40}; do docker run --rm --network host mongo:7 mongosh "mongodb://localhost:27017/admin" --quiet --eval "db.runCommand({ ping: 1 }).ok" 2>/dev/null | grep 1 && break; sleep 2; done
+          docker run --rm --network host mongo:7 mongosh "mongodb://localhost:27017/admin" --quiet --eval 'try { rs.initiate({_id:"rs0", members:[{_id:0, host:"localhost:27017"}]}); } catch(e) { }'
+          for i in {1..40}; do state=$(docker run --rm --network host mongo:7 mongosh "mongodb://localhost:27017/admin" --quiet --eval 'try { rs.status().members && rs.status().members[0].stateStr } catch(e) { "" }'); [ "$state" = "PRIMARY" ] && break; sleep 2; done
+
+    # --- Dynamic DB env variables used by Prisma scripts ---
+      - name: Set DB env vars
+        run: |
+          if [ "${{ matrix.db }}" = "postgresql" ]; then
+            echo "DB_PROVIDER=postgresql" >> $GITHUB_ENV
+            echo "DB_URL=postgresql://test:$PG_PASS@localhost:5432/test" >> $GITHUB_ENV
+          elif [ "${{ matrix.db }}" = "mysql" ]; then
+            echo "DB_PROVIDER=mysql" >> $GITHUB_ENV
+            echo "DB_URL=mysql://root:$MYSQL_PASS@localhost:3306/test" >> $GITHUB_ENV
+          elif [ "${{ matrix.db }}" = "mongodb" ]; then
+            echo "DB_PROVIDER=mongodb" >> $GITHUB_ENV
+            echo "DB_URL=mongodb://localhost:27017/test?replicaSet=rs0" >> $GITHUB_ENV
+          else
+            echo "DB_PROVIDER=sqlite" >> $GITHUB_ENV
+            echo "DB_URL=file:./dev.db" >> $GITHUB_ENV
+          fi
+
+    # --- Build & test pipeline ---
+      - name: Lint
+        run: pnpm run lint
+
+      - name: Verify DB readiness
+        if: matrix.db != 'sqlite'
+        run: |
+          echo "Verifying readiness for ${{ matrix.db }}"
+          if [ "${{ matrix.db }}" = "postgresql" ]; then
+            for i in {1..10}; do
+              if docker exec db pg_isready -U test >/dev/null 2>&1; then echo "Postgres still ready"; break; fi; sleep 2;
+            done
+          elif [ "${{ matrix.db }}" = "mysql" ]; then
+            for i in {1..15}; do
+              if docker exec db mysql -uroot -p$MYSQL_PASS -e 'SELECT 1' >/dev/null 2>&1; then echo "MySQL still ready"; break; fi; sleep 2;
+            done
+          elif [ "${{ matrix.db }}" = "mongodb" ]; then
+            for i in {1..15}; do
+              state=$(docker run --rm --network host mongo:7 mongosh "mongodb://localhost:27017/admin" --quiet --eval 'try { rs.status().members && rs.status().members[0].stateStr } catch(e) { "" }');
+              [ "$state" = "PRIMARY" ] && echo "Mongo PRIMARY confirmed" && break; sleep 2;
+            done
+          fi
+
+      - name: Generate Prisma Client
+        run: pnpm run prisma:gen
+
+      - name: Migrate DB
+        run: pnpm run db:migrate
+
+      - name: Seed DB
+        run: pnpm run db:seed
+
+      - name: Build
+        run: pnpm run build
+
+      - name: Unit tests
+        run: pnpm run test
+
+      - name: E2E tests
+        run: pnpm run test:e2e
+
+      - name: DB Logs on failure
+        if: failure() && matrix.db != 'sqlite'
+        run: docker logs db || true
+
+      - name: Cleanup
+        if: always() && matrix.db != 'sqlite'
+        run: docker rm -f db || true
+
+  container-smoke:
+    name: "App container smoke (DB ${{ matrix.db }})"
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        db: [postgresql, mysql, mongodb, sqlite]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup network (non-sqlite)
+        if: matrix.db != 'sqlite'
+        run: docker network create integration
+
+    # --- Database container (one per matrix entry) ---
+      - name: Start PostgreSQL
+        if: matrix.db == 'postgresql'
+        run: |
+          PW=$(openssl rand -hex 16)
+          echo "POSTGRES_PASSWORD=$PW" >> $GITHUB_ENV
+          docker run -d --name db --network integration \
+            -e POSTGRES_USER=test \
+            -e POSTGRES_PASSWORD=$PW \
+            -e POSTGRES_DB=test \
+            postgres:14
+          ready=0
+          for i in {1..40}; do
+            if docker exec db pg_isready -U test >/dev/null 2>&1; then echo "Postgres ready"; ready=1; break; fi
+            sleep 2
+          done
+          if [ $ready -eq 0 ]; then echo "Postgres failed to start"; docker logs db || true; exit 1; fi
+
+      - name: Start MySQL
+        if: matrix.db == 'mysql'
+        run: |
+          MPW=$(openssl rand -hex 16)
+          echo "MYSQL_ROOT_PASSWORD=$MPW" >> $GITHUB_ENV
+          docker run -d --name db --network integration \
+            -e MYSQL_ROOT_PASSWORD=$MPW \
+            -e MYSQL_DATABASE=test \
+            mysql:8
+          ready=0
+          for i in {1..60}; do
+            if docker exec db mysql -uroot -p$MPW -e 'SELECT 1' >/dev/null 2>&1; then echo "MySQL ready"; ready=1; break; fi
+            sleep 2
+          done
+          if [ $ready -eq 0 ]; then echo "MySQL failed to start"; docker logs db || true; exit 1; fi
+
+      - name: Start MongoDB
+        if: matrix.db == 'mongodb'
+        run: |
+          docker run -d --name db --network integration \
+            -p 27017:27017 \
+            mongo:7 --replSet rs0 --bind_ip_all
+          for i in {1..40}; do \
+            docker run --rm --network integration mongo:7 mongosh "mongodb://db:27017/admin" --quiet --eval "db.runCommand({ ping: 1 }).ok" 2>/dev/null | grep 1 && break; \
+            sleep 2; \
+          done
+          docker run --rm --network integration mongo:7 mongosh "mongodb://db:27017/admin" --quiet --eval 'try { rs.initiate({_id:"rs0", members:[{_id:0, host:"db:27017"}]}); } catch(e) { print(e); }'
+          for i in {1..40}; do \
+            state=$(docker run --rm --network integration mongo:7 mongosh "mongodb://db:27017/admin" --quiet --eval 'try { rs.status().members && rs.status().members[0].stateStr } catch(e) { "" }'); \
+            if [ "$state" = "PRIMARY" ]; then echo "Replica set PRIMARY"; break; fi; \
+            sleep 2; \
+          done
+
+    # --- Set connection string for migrations & runtime ---
+      - name: Set DB environment variables
+        run: |
+          if [ "${{ matrix.db }}" = "postgresql" ]; then
+            echo "DB_PROVIDER=postgresql" >> $GITHUB_ENV
+            echo "DB_URL=postgresql://test:$POSTGRES_PASSWORD@db:5432/test" >> $GITHUB_ENV
+          elif [ "${{ matrix.db }}" = "mysql" ]; then
+            echo "DB_PROVIDER=mysql" >> $GITHUB_ENV
+            echo "DB_URL=mysql://root:$MYSQL_ROOT_PASSWORD@db:3306/test" >> $GITHUB_ENV
+          elif [ "${{ matrix.db }}" = "mongodb" ]; then
+            echo "DB_PROVIDER=mongodb" >> $GITHUB_ENV
+            echo "DB_URL=mongodb://db:27017/test?replicaSet=rs0" >> $GITHUB_ENV
+          else
+            echo "DB_PROVIDER=sqlite" >> $GITHUB_ENV
+            echo "DB_URL=file:/data/dev.db" >> $GITHUB_ENV
+          fi
+
+    # --- Build the application image (provider-specific Prisma client) ---
+      - name: Build docker image
+        run: docker build --build-arg DB_PROVIDER=$DB_PROVIDER -t idn-area:${{ github.sha }} .
+
+    # --- Run schema migrations and seed data inside image ---
+      - name: Run migration & seed
+        run: |
+          if [ "${{ matrix.db }}" = "sqlite" ]; then
+            docker volume create sqlite-data > /dev/null
+            NET_ARGS="-v sqlite-data:/data"
+          else
+            NET_ARGS="--network integration"
+          fi
+          if [ "${{ matrix.db }}" = "sqlite" ]; then
+            docker run --rm $NET_ARGS \
+              -e DB_PROVIDER=$DB_PROVIDER \
+              -e DB_URL="$DB_URL" \
+              idn-area:${{ github.sha }} sh -c 'set -e; pnpm run db:migrate; pnpm run db:seed'
+          else
+            docker run --rm $NET_ARGS \
+              -e DB_PROVIDER=$DB_PROVIDER \
+              -e DB_URL="$DB_URL" \
+              idn-area:${{ github.sha }} pnpm run db:migrate
+            docker run --rm $NET_ARGS \
+              -e DB_PROVIDER=$DB_PROVIDER \
+              -e DB_URL="$DB_URL" \
+              idn-area:${{ github.sha }} pnpm run db:seed
+          fi
+
+    # --- Launch container and wait for health ---
+      - name: Start app container
+        run: |
+          if [ "${{ matrix.db }}" = "sqlite" ]; then
+            NET_ARGS="-v sqlite-data:/data"
+          else
+            NET_ARGS="--network integration"
+          fi
+          docker run -d --name app $NET_ARGS \
+            -e DB_PROVIDER=$DB_PROVIDER \
+            -e DB_URL="$DB_URL" \
+            -p 3000:3000 \
+            idn-area:${{ github.sha }}
+          for i in {1..40}; do
+            if curl -fsS http://localhost:3000/health > /dev/null; then echo "App is up"; break; fi; sleep 2; done
+
+    # --- Simple smoke assertion on /health ---
+      - name: Smoke test /health endpoint
+        run: |
+          curl -v http://localhost:3000/health | tee /tmp/health.json
+          grep 'OK' /tmp/health.json
+
+      - name: Show logs on failure
+        if: failure()
+        run: |
+          docker logs app || true
+          docker ps -a || true
+          docker logs db || true
+
+      - name: Cleanup
+        if: always()
+        run: |
+          docker rm -f app || true
+          docker rm -f db || true
+          docker network rm integration || true
+          docker images | grep idn-area | awk '{print $3}' | xargs -r docker rmi -f
