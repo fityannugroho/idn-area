@@ -1,4 +1,4 @@
-name: CI Tests
+name: App & Container CI
 on:
   pull_request:
     branches:
@@ -9,28 +9,34 @@ on:
   workflow_dispatch:
 
 jobs:
-  tests:
-    name: Tests (Node ${{ matrix.node-version }} / DB ${{ matrix.db }})
+  build-tests:
+    name: "App build & tests (Node ${{ matrix.node-version }} / DB ${{ matrix.db }})"
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        node-version: [20]
+        node-version: [20, 22]
         db: [postgresql, mysql, mongodb, sqlite]
+    # Matrix: run full build + unit + e2e across each DB provider (and Node versions)
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
+
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 9
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
+
       - name: Install dependencies
         run: pnpm install
+
+    # --- Database setup (only one of the following three runs) ---
       - name: Start PostgreSQL
         if: matrix.db == 'postgresql'
         run: |
@@ -38,26 +44,27 @@ jobs:
           docker run -d --name db -p 5432:5432 \
             -e POSTGRES_USER=test -e POSTGRES_PASSWORD=$PW -e POSTGRES_DB=test \
             postgres:14
-          # Wait for PostgreSQL to accept connections
+            # Wait for PostgreSQL to accept connections
           ready=0
           for i in {1..40}; do
             if docker exec db pg_isready -U test >/dev/null 2>&1; then echo "Postgres ready"; ready=1; break; fi
             sleep 2
           done
           if [ $ready -eq 0 ]; then echo "Postgres failed to start"; docker logs db || true; exit 1; fi
+
       - name: Start MySQL
         if: matrix.db == 'mysql'
         run: |
           PW=$(openssl rand -hex 12); echo "MYSQL_PASS=$PW" >> $GITHUB_ENV
           docker run -d --name db -p 3306:3306 \
             -e MYSQL_ROOT_PASSWORD=$PW -e MYSQL_DATABASE=test mysql:8
-          # Wait for MySQL to accept connections
           ready=0
-            for i in {1..60}; do
-              if docker exec db mysql -uroot -p$PW -e 'SELECT 1' >/dev/null 2>&1; then echo "MySQL ready"; ready=1; break; fi
-              sleep 2
-            done
+          for i in {1..60}; do
+            if docker exec db mysql -uroot -p$PW -e 'SELECT 1' >/dev/null 2>&1; then echo "MySQL ready"; ready=1; break; fi
+            sleep 2
+          done
           if [ $ready -eq 0 ]; then echo "MySQL failed to start"; docker logs db || true; exit 1; fi
+
       - name: Start MongoDB
         if: matrix.db == 'mongodb'
         run: |
@@ -65,6 +72,8 @@ jobs:
           for i in {1..40}; do docker run --rm --network host mongo:7 mongosh "mongodb://localhost:27017/admin" --quiet --eval "db.runCommand({ ping: 1 }).ok" 2>/dev/null | grep 1 && break; sleep 2; done
           docker run --rm --network host mongo:7 mongosh "mongodb://localhost:27017/admin" --quiet --eval 'try { rs.initiate({_id:"rs0", members:[{_id:0, host:"localhost:27017"}]}); } catch(e) { }'
           for i in {1..40}; do state=$(docker run --rm --network host mongo:7 mongosh "mongodb://localhost:27017/admin" --quiet --eval 'try { rs.status().members && rs.status().members[0].stateStr } catch(e) { "" }'); [ "$state" = "PRIMARY" ] && break; sleep 2; done
+
+    # --- Dynamic DB env variables used by Prisma scripts ---
       - name: Set DB env vars
         run: |
           if [ "${{ matrix.db }}" = "postgresql" ]; then
@@ -80,8 +89,11 @@ jobs:
             echo "DB_PROVIDER=sqlite" >> $GITHUB_ENV
             echo "DB_URL=file:./dev.db" >> $GITHUB_ENV
           fi
+
+    # --- Build & test pipeline ---
       - name: Lint
         run: pnpm run lint
+
       - name: Verify DB readiness
         if: matrix.db != 'sqlite'
         run: |
@@ -100,27 +112,35 @@ jobs:
               [ "$state" = "PRIMARY" ] && echo "Mongo PRIMARY confirmed" && break; sleep 2;
             done
           fi
+
       - name: Generate Prisma Client
         run: pnpm run prisma:gen
+
       - name: Migrate DB
         run: pnpm run db:migrate
+
       - name: Seed DB
         run: pnpm run db:seed
+
       - name: Build
         run: pnpm run build
+
       - name: Unit tests
         run: pnpm run test
+
       - name: E2E tests
         run: pnpm run test:e2e
+
       - name: DB Logs on failure
         if: failure() && matrix.db != 'sqlite'
         run: docker logs db || true
+
       - name: Cleanup
         if: always() && matrix.db != 'sqlite'
         run: docker rm -f db || true
 
-  docker-image-smoke:
-    name: Docker image smoke test (${{ matrix.db }})
+  container-smoke:
+    name: "App container smoke (DB ${{ matrix.db }})"
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -134,6 +154,7 @@ jobs:
         if: matrix.db != 'sqlite'
         run: docker network create integration
 
+    # --- Database container (one per matrix entry) ---
       - name: Start PostgreSQL
         if: matrix.db == 'postgresql'
         run: |
@@ -150,6 +171,7 @@ jobs:
             sleep 2
           done
           if [ $ready -eq 0 ]; then echo "Postgres failed to start"; docker logs db || true; exit 1; fi
+
       - name: Start MySQL
         if: matrix.db == 'mysql'
         run: |
@@ -159,7 +181,6 @@ jobs:
             -e MYSQL_ROOT_PASSWORD=$MPW \
             -e MYSQL_DATABASE=test \
             mysql:8
-          # Wait for readiness
           ready=0
           for i in {1..60}; do
             if docker exec db mysql -uroot -p$MPW -e 'SELECT 1' >/dev/null 2>&1; then echo "MySQL ready"; ready=1; break; fi
@@ -170,27 +191,21 @@ jobs:
       - name: Start MongoDB
         if: matrix.db == 'mongodb'
         run: |
-          # Start MongoDB single-node replica set WITHOUT auth (sufficient for tests)
           docker run -d --name db --network integration \
             -p 27017:27017 \
             mongo:7 --replSet rs0 --bind_ip_all
-
-          # Wait for mongod to accept connections
           for i in {1..40}; do \
             docker run --rm --network integration mongo:7 mongosh "mongodb://db:27017/admin" --quiet --eval "db.runCommand({ ping: 1 }).ok" 2>/dev/null | grep 1 && break; \
             sleep 2; \
           done
-
-          # Initiate replica set (ignore error if already initiated)
           docker run --rm --network integration mongo:7 mongosh "mongodb://db:27017/admin" --quiet --eval 'try { rs.initiate({_id:"rs0", members:[{_id:0, host:"db:27017"}]}); } catch(e) { print(e); }'
-
-          # Wait for PRIMARY state
           for i in {1..40}; do \
             state=$(docker run --rm --network integration mongo:7 mongosh "mongodb://db:27017/admin" --quiet --eval 'try { rs.status().members && rs.status().members[0].stateStr } catch(e) { "" }'); \
             if [ "$state" = "PRIMARY" ]; then echo "Replica set PRIMARY"; break; fi; \
             sleep 2; \
           done
 
+    # --- Set connection string for migrations & runtime ---
       - name: Set DB environment variables
         run: |
           if [ "${{ matrix.db }}" = "postgresql" ]; then
@@ -207,20 +222,20 @@ jobs:
             echo "DB_URL=file:/data/dev.db" >> $GITHUB_ENV
           fi
 
+    # --- Build the application image (provider-specific Prisma client) ---
       - name: Build docker image
         run: docker build --build-arg DB_PROVIDER=$DB_PROVIDER -t idn-area:${{ github.sha }} .
 
+    # --- Run schema migrations and seed data inside image ---
       - name: Run migration & seed
         run: |
           if [ "${{ matrix.db }}" = "sqlite" ]; then
-            # Prepare a persistent volume for sqlite so migrate + seed + app share the same DB file
             docker volume create sqlite-data > /dev/null
             NET_ARGS="-v sqlite-data:/data"
           else
             NET_ARGS="--network integration"
           fi
           if [ "${{ matrix.db }}" = "sqlite" ]; then
-            # Fail fast on any error inside the container
             docker run --rm $NET_ARGS \
               -e DB_PROVIDER=$DB_PROVIDER \
               -e DB_URL="$DB_URL" \
@@ -236,6 +251,7 @@ jobs:
               idn-area:${{ github.sha }} pnpm run db:seed
           fi
 
+    # --- Launch container and wait for health ---
       - name: Start app container
         run: |
           if [ "${{ matrix.db }}" = "sqlite" ]; then
@@ -251,6 +267,7 @@ jobs:
           for i in {1..40}; do
             if curl -fsS http://localhost:3000/health > /dev/null; then echo "App is up"; break; fi; sleep 2; done
 
+    # --- Simple smoke assertion on /health ---
       - name: Smoke test /health endpoint
         run: |
           curl -v http://localhost:3000/health | tee /tmp/health.json
