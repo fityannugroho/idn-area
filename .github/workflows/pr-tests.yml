@@ -20,7 +20,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
@@ -48,4 +48,55 @@ jobs:
       - name: Run unit tests
         run: pnpm run test
 
-  # TODO: test the docker image
+  docker-image-smoke:
+    name: Docker image smoke test (sqlite)
+    runs-on: ubuntu-latest
+    env:
+      DB_PROVIDER: sqlite
+      DB_URL: file:./dev.db
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Build docker image (sqlite provider, no secrets needed)
+        run: |
+          docker build --build-arg DB_PROVIDER=sqlite -t idn-area:${{ github.sha }} .
+
+      - name: Prepare schema (migrate + seed)
+        run: |
+          docker run --rm \
+            -e DB_PROVIDER=sqlite \
+            -e DB_URL="file:./dev.db" \
+            idn-area:${{ github.sha }} pnpm run db:migrate
+          # Seeding is optional in smoke test; run and ignore if skipped
+          docker run --rm \
+            -e DB_PROVIDER=sqlite \
+            -e DB_URL="file:./dev.db" \
+            idn-area:${{ github.sha }} pnpm run db:seed || true
+
+      - name: Start container
+        run: |
+          docker run -d --name app \
+            -e DB_PROVIDER=sqlite \
+            -e DB_URL="file:./dev.db" \
+            -p 3000:3000 \
+            idn-area:${{ github.sha }}
+          for i in {1..30}; do
+            if curl -fsS http://localhost:3000/health > /dev/null; then echo "App is up"; break; fi; sleep 2; done
+
+      - name: Smoke test /health endpoint
+        run: |
+          curl -v http://localhost:3000/health | tee /tmp/health.json
+          grep 'OK' /tmp/health.json
+
+      - name: Show logs on failure
+        if: failure()
+        run: |
+          docker logs app || true
+          docker ps -a
+
+      - name: Cleanup
+        if: always()
+        run: |
+          docker rm -f app || true
+          docker images | grep idn-area | awk '{print $3}' | xargs -r docker rmi -f
