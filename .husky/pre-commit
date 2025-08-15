@@ -1,0 +1,12 @@
+#!/usr/bin/env sh
+
+# Husky v9+: remove deprecated sourcing of _/husky.sh
+# Run lint only on staged files with autofix via lint-staged (Biome)
+set -e
+command -v pnpm >/dev/null 2>&1 || { echo "pnpm not found"; exit 127; }
+
+# Collect relevant files (exclude pnpm-lock.yaml)
+STAGED=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '\.(ts|tsx|js|jsx|json|md)$' | grep -v '^pnpm-lock.yaml$' || true)
+[ -z "$STAGED" ] && exit 0
+
+pnpm lint:staged || exit 1

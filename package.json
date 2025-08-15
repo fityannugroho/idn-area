@@ -21,6 +21,8 @@
     "start:prod": "node dist/main",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
+    "prepare": "husky",
+    "lint:staged": "lint-staged",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:cov": "vitest run --coverage",
@@ -63,9 +65,15 @@
     "tsx": "^4.20.4",
     "typescript": "^5.9.2",
     "unplugin-swc": "^1.5.5",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.2.0",
     "vitest": "^3.2.4"
   },
   "engines": {
     "node": ">=20.9.0"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": ["biome check --write"],
+    "*.{json,md}": ["biome check --write"]
   }
 }
