@@ -10,7 +10,7 @@ export class MongodbSeeder extends Seeder {
       island: 'islands',
     };
 
-    // @ts-ignore Skip TypeScript checking because `$runCommandRaw()` method only available for mongodb provider.
+    // @ts-expect-error Skip TypeScript checking because `$runCommandRaw()` method only available for mongodb provider.
     const res = await this.prisma.$runCommandRaw({
       delete: mongoCollectionMap[area],
       deletes: [

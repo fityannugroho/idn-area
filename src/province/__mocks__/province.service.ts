@@ -1,5 +1,5 @@
-import { sortArray } from '@/common/utils/array';
 import { Province } from '@prisma/client';
+import { sortArray } from '@/common/utils/array';
 import { ProvinceFindQueries } from '../province.dto';
 
 export class MockProvinceService {

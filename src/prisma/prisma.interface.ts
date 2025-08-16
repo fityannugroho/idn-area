@@ -1,4 +1,3 @@
-import { PaginationQuery } from '@/common/dto/pagination.dto';
 import {
   District,
   Island,
@@ -7,6 +6,7 @@ import {
   Regency,
   Village,
 } from '@prisma/client';
+import { PaginationQuery } from '@/common/dto/pagination.dto';
 
 export type Models = keyof typeof Prisma.ModelName;
 

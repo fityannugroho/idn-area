@@ -1,7 +1,3 @@
-import { PaginationQuery } from '@/common/dto/pagination.dto';
-import { Province } from '@/province/province.dto';
-import { Regency } from '@/regency/regency.dto';
-import { SortQuery } from '@/sort/sort.dto';
 import {
   ApiProperty,
   IntersectionType,
@@ -18,6 +14,10 @@ import {
   MaxLength,
   ValidateIf,
 } from 'class-validator';
+import { PaginationQuery } from '@/common/dto/pagination.dto';
+import { Province } from '@/province/province.dto';
+import { Regency } from '@/regency/regency.dto';
+import { SortQuery } from '@/sort/sort.dto';
 import { EqualsAny } from '../common/decorator/EqualsAny';
 import { IsNotSymbol } from '../common/decorator/IsNotSymbol';
 

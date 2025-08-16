@@ -1,5 +1,5 @@
-import { sortArray } from '@/common/utils/array';
 import { Regency } from '@prisma/client';
+import { sortArray } from '@/common/utils/array';
 import { RegencyFindQueries } from '../regency.dto';
 
 export class MockRegencyService {

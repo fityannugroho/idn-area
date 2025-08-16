@@ -1,4 +1,3 @@
-import { appConfig } from '@/common/config/app';
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import {
@@ -6,6 +5,7 @@ import {
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { appConfig } from '@/common/config/app';
 import { AppModule } from './app.module';
 
 async function bootstrap() {

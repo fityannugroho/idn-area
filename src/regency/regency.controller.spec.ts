@@ -1,9 +1,9 @@
-import { getValues, sortArray } from '@/common/utils/array';
-import { getRegencies } from '@/common/utils/data';
-import { SortOrder } from '@/sort/sort.dto';
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Regency } from '@prisma/client';
+import { getValues, sortArray } from '@/common/utils/array';
+import { getRegencies } from '@/common/utils/data';
+import { SortOrder } from '@/sort/sort.dto';
 import { MockRegencyService } from './__mocks__/regency.service';
 import { RegencyController } from './regency.controller';
 import { RegencyService } from './regency.service';
