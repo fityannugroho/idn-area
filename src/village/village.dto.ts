@@ -4,8 +4,9 @@ import {
   PartialType,
   PickType,
 } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumberString, Length, MaxLength } from 'class-validator';
+import { IsNotEmpty, MaxLength } from 'class-validator';
 import { EqualsAny } from '@/common/decorator/EqualsAny';
+import { IsAreaCode } from '@/common/decorator/IsAreaCode';
 import { IsNotSymbol } from '@/common/decorator/IsNotSymbol';
 import { PaginationQuery } from '@/common/dto/pagination.dto';
 import { District } from '@/district/district.dto';
@@ -15,9 +16,8 @@ import { SortQuery } from '@/sort/sort.dto';
 
 export class Village {
   @IsNotEmpty()
-  @IsNumberString()
-  @Length(10, 10)
-  @ApiProperty({ description: 'The village code', example: '1101012001' })
+  @IsAreaCode('village')
+  @ApiProperty({ description: 'The village code', example: '11.01.01.2001' })
   code: string;
 
   @IsNotSymbol(`'()-./"*\u2019`)
@@ -26,11 +26,10 @@ export class Village {
   name: string;
 
   @IsNotEmpty()
-  @IsNumberString()
-  @Length(6, 6)
+  @IsAreaCode('district')
   @ApiProperty({
     description: 'The district code of the village',
-    example: '110101',
+    example: '11.01.01',
   })
   districtCode: string;
 }

@@ -9,7 +9,7 @@ import { RegencyController } from './regency.controller';
 import { RegencyService } from './regency.service';
 
 describe('RegencyController', () => {
-  const testRegencyCode = '1101';
+  const testRegencyCode = '11.01';
 
   let regencies: Regency[];
   let controller: RegencyController;

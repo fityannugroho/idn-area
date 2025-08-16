@@ -1,15 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { Island } from '@prisma/client';
 import { PaginatedReturn } from '@/common/interceptor/paginate.interceptor';
+import { extractProvinceCode } from '@/common/utils/code';
 import { convertCoordinate } from '@/common/utils/coordinate';
 import { getDBProviderFeatures } from '@/common/utils/db';
-import {
-  Island as IslandDTO,
-  IslandFindQueries,
-  IslandWithParent,
-} from '@/island/island.dto';
 import { PrismaService } from '@/prisma/prisma.service';
 import { SortService } from '@/sort/sort.service';
+import { IslandFindQueries, IslandWithParent } from './island.dto';
 
 @Injectable()
 export class IslandService {
@@ -25,7 +22,9 @@ export class IslandService {
   /**
    * Add decimal latitude and longitude to the island object.
    */
-  addDecimalCoordinate(island: Island): IslandDTO {
+  addDecimalCoordinate(
+    island: Island,
+  ): Island & { latitude: number; longitude: number } {
     const [latitude, longitude] = convertCoordinate(island.coordinate);
 
     return { ...island, latitude, longitude };
@@ -83,7 +82,7 @@ export class IslandService {
           regency: null,
           province: (await this.prisma.province.findUnique({
             where: {
-              code: code.slice(0, 2),
+              code: extractProvinceCode(code),
             },
           })) as NonNullable<IslandWithParent['parent']['province']>,
         },

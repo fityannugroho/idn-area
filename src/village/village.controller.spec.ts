@@ -9,7 +9,7 @@ import { VillageController } from './village.controller';
 import { VillageService } from './village.service';
 
 describe('VillageController', () => {
-  const testVillageCode = '1101012001';
+  const testVillageCode = '11.01.01.2001';
 
   let villages: Village[];
   let controller: VillageController;

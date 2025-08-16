@@ -1,6 +1,11 @@
 import { Village } from '@prisma/client';
 import { AppTester } from './helper/app-tester';
 import {
+  extractDistrictCode,
+  extractProvinceCode,
+  extractRegencyCode,
+} from './helper/code-utils';
+import {
   districtRegex,
   provinceRegex,
   regencyRegex,
@@ -10,8 +15,13 @@ import { getEncodedSymbols } from './helper/utils';
 
 describe('Village (e2e)', () => {
   const baseUrl = '/villages';
-  const testCode = '3204052004';
-  const badVillageCodes = ['', '1234', '12345678910', 'abcdefghij'] as const;
+  const testCode = '32.04.05.2004';
+  const badVillageCodes = [
+    '',
+    '12.34',
+    '12.34.56.78910',
+    'ab.cd.ef.ghij',
+  ] as const;
   let tester: AppTester;
 
   beforeAll(async () => {
@@ -27,7 +37,7 @@ describe('Village (e2e)', () => {
         expect(village).toEqual({
           code: expect.stringMatching(villageRegex.code),
           name: expect.stringMatching(villageRegex.name),
-          districtCode: village.code.slice(0, 6),
+          districtCode: extractDistrictCode(village.code),
         });
       }
     });
@@ -68,13 +78,13 @@ describe('Village (e2e)', () => {
         expect(village).toEqual({
           code: expect.stringMatching(villageRegex.code),
           name: expect.stringMatching(new RegExp(testName, 'i')),
-          districtCode: village.code.slice(0, 6),
+          districtCode: extractDistrictCode(village.code),
         });
       }
     });
 
     it('should return all villages match with the `districtCode`', async () => {
-      const districtCode = '110101';
+      const districtCode = '11.01.01';
       const villages = await tester.expectData<Village[]>(
         `${baseUrl}?districtCode=${districtCode}`,
       );
@@ -98,7 +108,7 @@ describe('Village (e2e)', () => {
     });
 
     it('should return 404 if the `code` does not exist', async () => {
-      await tester.expectNotFound(`${baseUrl}/0000000000`);
+      await tester.expectNotFound(`${baseUrl}/00.00.00.0000`);
     });
 
     it('should return the village data if the `code` exists', async () => {
@@ -109,20 +119,20 @@ describe('Village (e2e)', () => {
       expect(village).toEqual({
         code: testCode,
         name: expect.stringMatching(villageRegex.name),
-        districtCode: testCode.slice(0, 6),
+        districtCode: extractDistrictCode(testCode),
         parent: {
           district: {
-            code: testCode.slice(0, 6),
+            code: extractDistrictCode(testCode),
             name: expect.stringMatching(districtRegex.name),
-            regencyCode: testCode.slice(0, 4),
+            regencyCode: extractRegencyCode(testCode),
           },
           regency: {
-            code: testCode.slice(0, 4),
+            code: extractRegencyCode(testCode),
             name: expect.stringMatching(regencyRegex.name),
-            provinceCode: testCode.slice(0, 2),
+            provinceCode: extractProvinceCode(testCode),
           },
           province: {
-            code: testCode.slice(0, 2),
+            code: extractProvinceCode(testCode),
             name: expect.stringMatching(provinceRegex.name),
           },
         },

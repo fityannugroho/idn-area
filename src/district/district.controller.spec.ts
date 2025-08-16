@@ -9,7 +9,7 @@ import { DistrictController } from './district.controller';
 import { DistrictService } from './district.service';
 
 describe('DistrictController', () => {
-  const testDistrictCode = '110101';
+  const testDistrictCode = '11.01.01';
 
   let districts: District[];
   let controller: DistrictController;
@@ -115,7 +115,7 @@ describe('DistrictController', () => {
     });
 
     it('should return districts filtered by regency code', async () => {
-      const regencyCode = '1101';
+      const regencyCode = '11.01';
       const filteredDistrictsByRegencyCode = districts.filter(
         (p) => p.regencyCode === regencyCode,
       );

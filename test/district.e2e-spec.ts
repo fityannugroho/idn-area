@@ -1,5 +1,6 @@
 import { District } from '@prisma/client';
 import { AppTester } from './helper/app-tester';
+import { extractProvinceCode, extractRegencyCode } from './helper/code-utils';
 import {
   districtRegex,
   provinceRegex,
@@ -9,8 +10,8 @@ import { getEncodedSymbols } from './helper/utils';
 
 describe('District (e2e)', () => {
   const baseUrl = '/districts';
-  const testCode = '327325';
-  const badDistrictCodes = ['', '1234', '1234567', 'abcdef'] as const;
+  const testCode = '32.73.25';
+  const badDistrictCodes = ['', '12.34', '12.34.567', 'ab.cd.ef'] as const;
   let tester: AppTester;
 
   beforeAll(async () => {
@@ -26,7 +27,7 @@ describe('District (e2e)', () => {
         expect(district).toEqual({
           code: expect.stringMatching(districtRegex.code),
           name: expect.stringMatching(districtRegex.name),
-          regencyCode: district.code.slice(0, 4),
+          regencyCode: extractRegencyCode(district.code),
         });
       }
     });
@@ -67,13 +68,13 @@ describe('District (e2e)', () => {
         expect(district).toEqual({
           code: expect.stringMatching(districtRegex.code),
           name: expect.stringMatching(new RegExp(testName, 'i')),
-          regencyCode: district.code.slice(0, 4),
+          regencyCode: extractRegencyCode(district.code),
         });
       }
     });
 
     it('should return all districts match with the `regencyCode`', async () => {
-      const regencyCode = '1101';
+      const regencyCode = '11.01';
       const districts = await tester.expectData<District[]>(
         `${baseUrl}?regencyCode=${regencyCode}`,
       );
@@ -97,7 +98,7 @@ describe('District (e2e)', () => {
     });
 
     it('should return 404 if the `code` does not exist', async () => {
-      await tester.expectNotFound(`${baseUrl}/000000`);
+      await tester.expectNotFound(`${baseUrl}/00.00.00`);
     });
 
     it('should return the district with the `code`', async () => {
@@ -108,15 +109,15 @@ describe('District (e2e)', () => {
       expect(district).toEqual({
         code: testCode,
         name: expect.stringMatching(districtRegex.name),
-        regencyCode: testCode.slice(0, 4),
+        regencyCode: extractRegencyCode(testCode),
         parent: {
           regency: {
-            code: testCode.slice(0, 4),
+            code: extractRegencyCode(testCode),
             name: expect.stringMatching(regencyRegex.name),
-            provinceCode: testCode.slice(0, 2),
+            provinceCode: extractProvinceCode(testCode),
           },
           province: {
-            code: testCode.slice(0, 2),
+            code: extractProvinceCode(testCode),
             name: expect.stringMatching(provinceRegex.name),
           },
         },

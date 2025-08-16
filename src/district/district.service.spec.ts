@@ -132,7 +132,7 @@ describe('DistrictService', () => {
     });
 
     it('should return districts filtered by regency code', async () => {
-      const regencyCode = '1101';
+      const regencyCode = '11.01';
       const expectedDistricts = districts.filter(
         (d) => d.regencyCode === regencyCode,
       );
@@ -170,7 +170,7 @@ describe('DistrictService', () => {
     });
 
     it('should return a district', async () => {
-      const testCode = '110101';
+      const testCode = '11.01.01';
       const expectedDistrict = districts.find((d) => d.code === testCode);
       const expectedRegency = regencies.find(
         (r) => r.code === expectedDistrict?.regencyCode,

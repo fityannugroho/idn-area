@@ -1,12 +1,18 @@
 import { Island } from '@prisma/client';
 import { AppTester } from './helper/app-tester';
+import { extractProvinceCode, extractRegencyCode } from './helper/code-utils';
 import { islandRegex, regencyRegex } from './helper/data-regex';
 import { getEncodedSymbols } from './helper/utils';
 
 describe('Island (e2e)', () => {
   const baseUrl = '/islands';
-  const testCode = '110140001';
-  const badIslandCodes = ['', '12345678', '1234567890', 'abcdefghi'] as const;
+  const testCode = '11.01.40001';
+  const badIslandCodes = [
+    '',
+    '12.34.567',
+    '12.34.567890',
+    'ab.cd.efghi',
+  ] as const;
   let tester: AppTester;
 
   beforeAll(async () => {
@@ -27,7 +33,9 @@ describe('Island (e2e)', () => {
           latitude: expect.any(Number),
           longitude: expect.any(Number),
           name: expect.stringMatching(islandRegex.name),
-          regencyCode: island.regencyCode ? island.code.slice(0, 4) : null,
+          regencyCode: island.regencyCode
+            ? extractRegencyCode(island.code)
+            : null,
         });
       }
     });
@@ -73,13 +81,15 @@ describe('Island (e2e)', () => {
           latitude: expect.any(Number),
           longitude: expect.any(Number),
           name: expect.stringMatching(new RegExp(testName, 'i')),
-          regencyCode: island.regencyCode ? island.code.slice(0, 4) : null,
+          regencyCode: island.regencyCode
+            ? extractRegencyCode(island.code)
+            : null,
         });
       }
     });
 
     it('should return all islands match with the `regencyCode`', async () => {
-      const testRegencyCode = '1101';
+      const testRegencyCode = '11.01';
       const islands = await tester.expectData<Island[]>(
         `${baseUrl}?regencyCode=${testRegencyCode}`,
       );
@@ -127,7 +137,7 @@ describe('Island (e2e)', () => {
     });
 
     it('should return 404 if the `code` does not exist', async () => {
-      await tester.expectNotFound(`${baseUrl}/123456789`);
+      await tester.expectNotFound(`${baseUrl}/00.00.40000`);
     });
 
     it('should return the island with the `code`', async () => {
@@ -141,17 +151,19 @@ describe('Island (e2e)', () => {
         latitude: expect.any(Number),
         longitude: expect.any(Number),
         name: expect.stringMatching(islandRegex.name),
-        regencyCode: island.regencyCode ? island.code.slice(0, 4) : null,
+        regencyCode: island.regencyCode
+          ? extractRegencyCode(island.code)
+          : null,
         parent: {
           regency: island.regencyCode
             ? {
                 code: island.regencyCode,
                 name: expect.stringMatching(regencyRegex.name),
-                provinceCode: island.code.slice(0, 2),
+                provinceCode: extractProvinceCode(island.code),
               }
             : null,
           province: {
-            code: island.code.slice(0, 2),
+            code: extractProvinceCode(island.code),
             name: expect.stringMatching(islandRegex.name),
           },
         },

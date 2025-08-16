@@ -1,12 +1,13 @@
 import { Regency } from '@prisma/client';
 import { AppTester } from './helper/app-tester';
+import { extractProvinceCode } from './helper/code-utils';
 import { provinceRegex, regencyRegex } from './helper/data-regex';
 import { getEncodedSymbols } from './helper/utils';
 
 describe('Regency (e2e)', () => {
   const baseUrl = '/regencies';
-  const testCode = '3273';
-  const badRegencyCodes = ['', '123', '12345', 'abcd'] as const;
+  const testCode = '32.73';
+  const badRegencyCodes = ['', '12', '12.345', 'ab.cd'] as const;
   let tester: AppTester;
 
   beforeAll(async () => {
@@ -75,7 +76,7 @@ describe('Regency (e2e)', () => {
     });
 
     it('should return 404 if the `code` does not match with any regency', async () => {
-      await tester.expectNotFound(`${baseUrl}/0000`);
+      await tester.expectNotFound(`${baseUrl}/00.00`);
     });
 
     it('should return a regency that match with the `code`', async () => {
@@ -86,10 +87,10 @@ describe('Regency (e2e)', () => {
       expect(regency).toEqual({
         code: testCode,
         name: expect.stringMatching(regencyRegex.name),
-        provinceCode: testCode.slice(0, 2),
+        provinceCode: extractProvinceCode(testCode),
         parent: {
           province: {
-            code: testCode.slice(0, 2),
+            code: extractProvinceCode(testCode),
             name: expect.stringMatching(provinceRegex.name),
           },
         },

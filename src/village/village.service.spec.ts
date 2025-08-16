@@ -141,7 +141,7 @@ describe('VillageService', () => {
     });
 
     it('should return filtered villages by district code', async () => {
-      const districtCode = '110101';
+      const districtCode = '11.01.01';
       const expectedVillages = villages.filter(
         (v) => v.districtCode === districtCode,
       );
@@ -178,7 +178,7 @@ describe('VillageService', () => {
     });
 
     it('should return the village with the provided code', async () => {
-      const testCode = '1101012001';
+      const testCode = '11.01.01.2001';
       const expectedVillage = villages.find((v) => v.code === testCode);
       const expectedDistrict = districts.find(
         (d) => d.code === expectedVillage?.districtCode,

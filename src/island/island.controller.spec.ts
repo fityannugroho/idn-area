@@ -9,7 +9,7 @@ import { IslandController } from './island.controller';
 import { IslandService } from './island.service';
 
 describe('IslandController', () => {
-  const testIslandCode = '110140001';
+  const testIslandCode = '11.01.40001';
 
   let islands: Island[];
   let controller: IslandController;
@@ -146,7 +146,7 @@ describe('IslandController', () => {
     });
 
     it('should return islands filtered by regencyCode', async () => {
-      const regencyCode = '1101';
+      const regencyCode = '11.01';
       const { data } = await controller.find({ regencyCode });
 
       for (const island of data) {

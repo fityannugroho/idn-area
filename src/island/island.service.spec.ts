@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { Island, Province, Regency } from '@prisma/client';
+import { extractProvinceCode } from '@/common/utils/code';
 import { getProvinces, getRegencies } from '@/common/utils/data';
 import { getDBProviderFeatures } from '@/common/utils/db';
 import { mockPrismaService } from '@/prisma/__mocks__/prisma.service';
@@ -9,47 +10,47 @@ import { IslandService } from './island.service';
 
 const islands: readonly Island[] = [
   {
-    code: '110140001',
+    code: '11.01.40001',
     coordinate: '03°19\'03.44" N 097°07\'41.73" E',
     isOutermostSmall: false,
     isPopulated: false,
     name: 'Pulau Batukapal',
-    regencyCode: '1101',
+    regencyCode: '11.01',
   },
   {
-    code: '110140002',
+    code: '11.01.40002',
     coordinate: '03°24\'55.00" N 097°04\'21.00" E',
     isOutermostSmall: false,
     isPopulated: false,
     name: 'Pulau Batutunggal',
-    regencyCode: '1101',
+    regencyCode: '11.01',
   },
   {
-    code: '110140003',
+    code: '11.01.40003',
     coordinate: '02°52\'54.99" N 097°31\'07.00" E',
     isOutermostSmall: false,
     isPopulated: false,
     name: 'Pulau Kayee',
-    regencyCode: '1101',
+    regencyCode: '11.01',
   },
   {
-    code: '110140004',
+    code: '11.01.40004',
     coordinate: '02°54\'25.11" N 097°26\'18.51" E',
     isOutermostSmall: false,
     isPopulated: true,
     name: 'Pulau Mangki Palsu',
-    regencyCode: '1101',
+    regencyCode: '11.01',
   },
   {
-    code: '110140005',
+    code: '11.01.40005',
     coordinate: '02°53\'16.00" N 097°30\'54.00" E',
     isOutermostSmall: true,
     isPopulated: false,
     name: 'Pulau Tengku Palsu',
-    regencyCode: '1101',
+    regencyCode: '11.01',
   },
   {
-    code: '120040001',
+    code: '12.00.40001',
     coordinate: '01°45\'42.58" N 098°45\'09.03" E',
     isOutermostSmall: false,
     isPopulated: false,
@@ -182,7 +183,7 @@ describe('IslandService', () => {
     });
 
     it('should return filtered islands by regency code', async () => {
-      const regencyCode = '1101';
+      const regencyCode = '11.01';
       const expectedIslands = islands.filter(
         (i) => i.regencyCode === regencyCode,
       );
@@ -222,7 +223,7 @@ describe('IslandService', () => {
 
   describe('findByCode', () => {
     it('should return an island', async () => {
-      const testCode = '110140001';
+      const testCode = '11.01.40001';
       const expectedIsland = islands.find((i) => i.code === testCode) as Island;
       const expectedRegency = regencies.find(
         (r) => r.code === expectedIsland?.regencyCode,
@@ -257,10 +258,10 @@ describe('IslandService', () => {
     });
 
     it('should return an island without regency', async () => {
-      const testCode = '120040001';
+      const testCode = '12.00.40001';
       const expectedIsland = islands.find((i) => i.code === testCode) as Island;
       const expectedProvince = provinces.find(
-        (p) => p.code === testCode.slice(0, 2),
+        (p) => p.code === extractProvinceCode(testCode),
       ) as Province;
 
       const findUniqueIslandSpy = vitest
@@ -285,7 +286,7 @@ describe('IslandService', () => {
       );
       expect(findUniqueProvinceSpy).toHaveBeenCalledWith(
         expect.objectContaining({
-          where: { code: testCode.slice(0, 2) },
+          where: { code: extractProvinceCode(testCode) },
         }),
       );
       expect(result).toEqual({
