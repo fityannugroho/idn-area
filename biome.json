@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.2.0/schema.json",
   "vcs": {
     "enabled": false,
     "clientKind": "git",
@@ -7,7 +7,7 @@
   },
   "files": {
     "ignoreUnknown": true,
-    "ignore": ["node_modules", "dist", "coverage"]
+    "includes": ["**", "!**/node_modules", "!**/dist", "!**/coverage"]
   },
   "formatter": {
     "enabled": true,
@@ -20,23 +20,27 @@
     "attributePosition": "auto",
     "bracketSpacing": true
   },
-  "organizeImports": {
-    "enabled": true
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
   },
   "linter": {
     "enabled": true,
     "rules": {
       "recommended": true,
       "correctness": {
-        "noUnusedVariables": "error",
-        "useArrayLiterals": "error"
+        "noUnusedVariables": "error"
       },
       "style": {
         "noNamespace": "error",
         "useBlockStatements": "error",
         "useConsistentArrayType": "error",
         "useForOf": "error",
-        "useImportType": "off"
+        "useImportType": "off",
+        "useArrayLiterals": "error"
       },
       "suspicious": {
         "noEmptyBlockStatements": "error",

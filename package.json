@@ -9,7 +9,14 @@
     "type": "git",
     "url": "https://github.com/fityannugroho/idn-area"
   },
-  "keywords": ["idn-area", "indonesia", "wilayah", "area", "data", "api"],
+  "keywords": [
+    "idn-area",
+    "indonesia",
+    "wilayah",
+    "area",
+    "data",
+    "api"
+  ],
   "scripts": {
     "build": "nest build",
     "prisma:gen": "tsx prisma/generate.ts",
@@ -48,7 +55,7 @@
     "rxjs": "^7.8.2"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.9.4",
+    "@biomejs/biome": "2.2.0",
     "@nestjs/cli": "^11.0.10",
     "@nestjs/schematics": "^11.0.7",
     "@nestjs/testing": "^11.1.6",
@@ -58,22 +65,26 @@
     "@types/node": "^22.13.14",
     "@types/supertest": "^6.0.3",
     "@vitest/coverage-v8": "^3.2.4",
+    "husky": "^9.1.7",
     "idn-area-data": "^3.1.2",
+    "lint-staged": "^15.2.0",
     "prisma": "^6.14.0",
     "source-map-support": "^0.5.21",
     "supertest": "^7.1.4",
     "tsx": "^4.20.4",
     "typescript": "^5.9.2",
     "unplugin-swc": "^1.5.5",
-    "husky": "^9.1.7",
-    "lint-staged": "^15.2.0",
     "vitest": "^3.2.4"
   },
   "engines": {
     "node": ">=20.9.0"
   },
   "lint-staged": {
-    "*.{ts,tsx,js,jsx}": ["biome check --write"],
-    "*.{json,md}": ["biome check --write"]
+    "*.{ts,tsx,js,jsx}": [
+      "biome check --write"
+    ],
+    "*.{json,md}": [
+      "biome check --write"
+    ]
   }
 }
