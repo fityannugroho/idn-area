@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import {
-  TransformInterceptor,
   TransformedResponse,
+  TransformInterceptor,
   WrappedData,
 } from './transform.interceptor';
 

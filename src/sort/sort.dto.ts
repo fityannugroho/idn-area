@@ -1,6 +1,6 @@
-import { EqualsAny } from '@/common/decorator/EqualsAny';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional, IsString } from 'class-validator';
+import { EqualsAny } from '@/common/decorator/EqualsAny';
 import { SortOptions } from './sort.service';
 
 export enum SortOrder {

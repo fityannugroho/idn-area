@@ -1,9 +1,9 @@
-import { getValues, sortArray } from '@/common/utils/array';
-import { getProvinces } from '@/common/utils/data';
-import { SortOrder } from '@/sort/sort.dto';
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Province } from '@prisma/client';
+import { getValues, sortArray } from '@/common/utils/array';
+import { getProvinces } from '@/common/utils/data';
+import { SortOrder } from '@/sort/sort.dto';
 import { MockProvinceService } from './__mocks__/province.service';
 import { ProvinceController } from './province.controller';
 import { ProvinceService } from './province.service';

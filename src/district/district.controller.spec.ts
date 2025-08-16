@@ -1,9 +1,9 @@
-import { getValues, sortArray } from '@/common/utils/array';
-import { getDistricts } from '@/common/utils/data';
-import { SortOrder } from '@/sort/sort.dto';
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { District } from '@prisma/client';
+import { getValues, sortArray } from '@/common/utils/array';
+import { getDistricts } from '@/common/utils/data';
+import { SortOrder } from '@/sort/sort.dto';
 import { MockDistrictService } from './__mocks__/district.service';
 import { DistrictController } from './district.controller';
 import { DistrictService } from './district.service';

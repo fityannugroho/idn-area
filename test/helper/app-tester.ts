@@ -1,10 +1,3 @@
-import { AppController } from '@/app.controller';
-import { TransformedResponse } from '@/common/interceptor/transform.interceptor';
-import { DistrictModule } from '@/district/district.module';
-import { IslandModule } from '@/island/island.module';
-import { ProvinceModule } from '@/province/province.module';
-import { RegencyModule } from '@/regency/regency.module';
-import { VillageModule } from '@/village/village.module';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import {
@@ -12,6 +5,13 @@ import {
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 import { Test, TestingModule } from '@nestjs/testing';
+import { AppController } from '@/app.controller';
+import { TransformedResponse } from '@/common/interceptor/transform.interceptor';
+import { DistrictModule } from '@/district/district.module';
+import { IslandModule } from '@/island/island.module';
+import { ProvinceModule } from '@/province/province.module';
+import { RegencyModule } from '@/regency/regency.module';
+import { VillageModule } from '@/village/village.module';
 
 export type HttpMethods =
   | 'DELETE'

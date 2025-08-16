@@ -1,7 +1,7 @@
-import { appConfig } from '@/common/config/app';
-import { PaginatedReturn } from '@/common/interceptor/paginate.interceptor';
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
+import { appConfig } from '@/common/config/app';
+import { PaginatedReturn } from '@/common/interceptor/paginate.interceptor';
 import {
   ArgsType,
   MethodDelegate,

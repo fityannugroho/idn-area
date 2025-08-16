@@ -44,7 +44,7 @@ export const convertCoordinate = (coordinate: string): number[] => {
     throw new Error('Invalid coordinate format');
   }
 
-  const degrees = coordinate.match(/[0-9,\.]+/g);
+  const degrees = coordinate.match(/[0-9,.]+/g);
   const polars = coordinate.match(/(N|S|E|W)/g);
 
   if (!degrees || !polars) {

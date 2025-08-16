@@ -1,9 +1,11 @@
-# Use an official Node.js runtime as the base image
-FROM node:20 AS builder
+FROM node:22 AS builder
 
 # Accept the database provider at build time so Prisma Client can be generated
 ARG DB_PROVIDER
 ENV DB_PROVIDER=$DB_PROVIDER
+
+# Skip husky hook setup inside build image
+ENV HUSKY=0
 
 # Install pnpm and set the working directory inside the container
 RUN npm install -g pnpm && mkdir -p /app
@@ -13,7 +15,7 @@ WORKDIR /app
 COPY package.json pnpm-lock.yaml prisma ./
 
 # Install the app dependencies
-RUN pnpm install
+RUN pnpm install --frozen-lockfile
 
 # Copy the rest of the application code
 COPY . .
@@ -22,11 +24,14 @@ COPY . .
 RUN pnpm run prisma:gen && pnpm run build
 
 # Stage 2: A minimal Docker image with node and compiled app
-FROM node:20
+FROM node:22
 
 # Propagate DB_PROVIDER for runtime (optional; can still be overridden at run)
 ARG DB_PROVIDER
 ENV DB_PROVIDER=$DB_PROVIDER
+
+# Skip husky hook setup inside build image
+ENV HUSKY=0
 
 # Install pnpm and set the working directory inside the container
 RUN npm install -g pnpm && mkdir -p /app

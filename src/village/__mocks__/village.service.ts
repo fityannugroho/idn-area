@@ -1,5 +1,5 @@
-import { sortArray } from '@/common/utils/array';
 import { Village } from '@prisma/client';
+import { sortArray } from '@/common/utils/array';
 import { VillageFindQueries } from '../village.dto';
 
 export class MockVillageService {

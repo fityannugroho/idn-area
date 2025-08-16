@@ -1,3 +1,5 @@
+import { Test } from '@nestjs/testing';
+import { District, Province, Regency, Village } from '@prisma/client';
 import {
   getDistricts,
   getProvinces,
@@ -8,8 +10,6 @@ import { getDBProviderFeatures } from '@/common/utils/db';
 import { mockPrismaService } from '@/prisma/__mocks__/prisma.service';
 import { PrismaService } from '@/prisma/prisma.service';
 import { SortOrder } from '@/sort/sort.dto';
-import { Test } from '@nestjs/testing';
-import { District, Province, Regency, Village } from '@prisma/client';
 import { VillageService } from './village.service';
 
 describe('VillageService', () => {
