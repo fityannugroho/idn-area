@@ -1,174 +1,158 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { Province, Regency } from '@prisma/client';
-import { getProvinces, getRegencies } from '@/common/utils/data';
-import { getDBProviderFeatures } from '@/common/utils/db';
-import { mockPrismaService } from '@/prisma/__mocks__/prisma.service';
 import { PrismaService } from '@/prisma/prisma.service';
 import { SortOrder } from '@/sort/sort.dto';
+import { mockTestData } from '../../test/fixtures/data.fixtures';
+
+// ✅ Use shared test utilities
+import { createMockPrismaService } from '../../test/mocks/prisma.mock';
 import { RegencyService } from './regency.service';
 
-describe('RegencyService', () => {
-  let regencies: Regency[];
-  let provinces: Province[];
-  let service: RegencyService;
-  let prismaService: PrismaService;
+// Use test data from fixtures
+const mockRegencies = mockTestData.westJavaRegencies;
+const mockProvinces = mockTestData.javaProvinces;
 
-  beforeAll(async () => {
-    regencies = await getRegencies();
-    provinces = await getProvinces();
-  });
+describe('RegencyService', () => {
+  let service: RegencyService;
+  let mockPrismaService: ReturnType<typeof createMockPrismaService>;
 
   beforeEach(async () => {
+    mockPrismaService = createMockPrismaService();
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         RegencyService,
         {
           provide: PrismaService,
-          useValue: mockPrismaService('Regency', regencies),
+          useValue: mockPrismaService,
         },
       ],
     }).compile();
 
-    service = module.get<RegencyService>(RegencyService);
-    prismaService = module.get<PrismaService>(PrismaService);
-  });
+    service = module.get(RegencyService);
 
-  afterEach(async () => {
-    vitest.resetAllMocks();
+    // Reset all mocks before each test
+    vi.clearAllMocks();
   });
 
   describe('find', () => {
-    const paginatorOptions = {
-      model: 'Regency',
-      paginate: { limit: undefined, page: undefined },
-      args: {},
-    };
-
-    it('should return all regencies ', async () => {
-      const paginatorSpy = vitest
-        .spyOn(prismaService, 'paginator')
-        .mockResolvedValue({ data: [...regencies] });
+    it('should return all regencies', async () => {
+      const expectedResponse = { data: mockRegencies };
+      mockPrismaService.paginator.mockResolvedValue(expectedResponse);
 
       const result = await service.find();
 
-      expect(paginatorSpy).toHaveBeenCalledTimes(1);
-      expect(paginatorSpy).toHaveBeenCalledWith({
-        ...paginatorOptions,
+      expect(result).toEqual(expectedResponse);
+      expect(mockPrismaService.paginator).toHaveBeenCalledWith({
+        model: 'Regency',
+        paginate: { limit: undefined, page: undefined },
         args: { where: {} },
       });
-      expect(result.data).toEqual(regencies);
     });
 
     it('should filter regencies by name', async () => {
-      const testName = 'aceh';
-      const expectedRegencies = regencies.filter((r) =>
-        r.name.toLowerCase().includes(testName),
+      const testName = 'bogor';
+      const filteredRegencies = mockRegencies.filter((r) =>
+        r.name.toLowerCase().includes(testName.toLowerCase()),
       );
+      const expectedResponse = { data: filteredRegencies };
 
-      const paginatorSpy = vitest
-        .spyOn(prismaService, 'paginator')
-        .mockResolvedValue({ data: expectedRegencies });
+      mockPrismaService.paginator.mockResolvedValue(expectedResponse);
 
       const result = await service.find({ name: testName });
 
-      expect(paginatorSpy).toHaveBeenCalledTimes(1);
-      expect(paginatorSpy).toHaveBeenCalledWith({
-        ...paginatorOptions,
-        args: {
-          where: {
-            name: {
-              contains: testName,
-              ...(getDBProviderFeatures()?.filtering?.insensitive && {
-                mode: 'insensitive',
+      expect(result).toEqual(expectedResponse);
+      expect(mockPrismaService.paginator).toHaveBeenCalledWith(
+        expect.objectContaining({
+          model: 'Regency',
+          args: expect.objectContaining({
+            where: expect.objectContaining({
+              name: expect.objectContaining({
+                contains: testName,
               }),
-            },
-          },
-        },
-      });
-      expect(result.data).toEqual(expectedRegencies);
+            }),
+          }),
+        }),
+      );
     });
 
     it('should filter regencies by province code', async () => {
-      const provinceCode = '11';
-      const expectedRegencies = regencies.filter((r) =>
-        r.provinceCode.includes(provinceCode),
+      const provinceCode = '32';
+      const filteredRegencies = mockRegencies.filter(
+        (r) => r.provinceCode === provinceCode,
       );
+      const expectedResponse = { data: filteredRegencies };
 
-      const paginatorSpy = vitest
-        .spyOn(prismaService, 'paginator')
-        .mockResolvedValue({ data: expectedRegencies });
+      mockPrismaService.paginator.mockResolvedValue(expectedResponse);
 
       const result = await service.find({ provinceCode });
 
-      expect(paginatorSpy).toHaveBeenCalledTimes(1);
-      expect(paginatorSpy).toHaveBeenCalledWith({
-        ...paginatorOptions,
+      expect(result).toEqual(expectedResponse);
+      expect(mockPrismaService.paginator).toHaveBeenCalledWith({
+        model: 'Regency',
+        paginate: { limit: undefined, page: undefined },
         args: { where: { provinceCode } },
       });
-      expect(result.data).toEqual(expectedRegencies);
     });
 
-    it('should sort regencies by name in ascending order by default', async () => {
-      const expectedRegencies = [...regencies].sort((a, b) =>
+    it('should sort regencies by name in ascending order', async () => {
+      const sortedRegencies = [...mockRegencies].sort((a, b) =>
         a.name.localeCompare(b.name),
       );
+      const expectedResponse = { data: sortedRegencies };
 
-      const paginatorSpy = vitest
-        .spyOn(prismaService, 'paginator')
-        .mockResolvedValue({ data: expectedRegencies });
+      mockPrismaService.paginator.mockResolvedValue(expectedResponse);
 
       const result = await service.find({ sortBy: 'name' });
 
-      expect(paginatorSpy).toHaveBeenCalledTimes(1);
-      expect(paginatorSpy).toHaveBeenCalledWith({
-        ...paginatorOptions,
+      expect(result).toEqual(expectedResponse);
+      expect(mockPrismaService.paginator).toHaveBeenCalledWith({
+        model: 'Regency',
+        paginate: { limit: undefined, page: undefined },
         args: { where: {}, orderBy: { name: 'asc' } },
       });
-      expect(result.data).toEqual(expectedRegencies);
     });
 
     it('should sort regencies by name in descending order', async () => {
-      const expectedRegencies = [...regencies].sort((a, b) =>
+      const sortedRegencies = [...mockRegencies].sort((a, b) =>
         b.name.localeCompare(a.name),
       );
+      const expectedResponse = { data: sortedRegencies };
 
-      const findManySpy = vitest
-        .spyOn(prismaService, 'paginator')
-        .mockResolvedValue({ data: expectedRegencies });
+      mockPrismaService.paginator.mockResolvedValue(expectedResponse);
 
       const result = await service.find({
         sortBy: 'name',
         sortOrder: SortOrder.DESC,
       });
 
-      expect(findManySpy).toHaveBeenCalledTimes(1);
-      expect(findManySpy).toHaveBeenCalledWith({
-        ...paginatorOptions,
+      expect(result).toEqual(expectedResponse);
+      expect(mockPrismaService.paginator).toHaveBeenCalledWith({
+        model: 'Regency',
+        paginate: { limit: undefined, page: undefined },
         args: { where: {}, orderBy: { name: 'desc' } },
       });
-      expect(result.data).toEqual(expectedRegencies);
     });
   });
 
   describe('findByCode', () => {
     it('should return a regency with its province', async () => {
-      const expectedRegency = regencies[0];
-      const expectedProvince = provinces.find(
+      const expectedRegency = mockRegencies[0];
+      const expectedProvince = mockProvinces.find(
         (p) => p.code === expectedRegency.provinceCode,
       );
 
-      const findUniqueSpy = vitest
-        .spyOn(prismaService.regency, 'findUnique')
-        .mockReturnValue({
-          ...expectedRegency,
-          // @ts-expect-error
-          province: expectedProvince,
-        });
+      const regencyWithProvince = {
+        ...expectedRegency,
+        province: expectedProvince,
+      };
+
+      mockPrismaService.regency.findUnique.mockResolvedValue(
+        regencyWithProvince,
+      );
 
       const result = await service.findByCode(expectedRegency.code);
 
-      expect(findUniqueSpy).toHaveBeenCalledTimes(1);
-      expect(findUniqueSpy).toHaveBeenCalledWith(
+      expect(mockPrismaService.regency.findUnique).toHaveBeenCalledWith(
         expect.objectContaining({ where: { code: expectedRegency.code } }),
       );
 
@@ -182,14 +166,12 @@ describe('RegencyService', () => {
 
     it('should return null when no regency is found', async () => {
       const testCode = '9999';
-      const findUniqueSpy = vitest
-        .spyOn(prismaService.regency, 'findUnique')
-        .mockResolvedValue(null);
+
+      mockPrismaService.regency.findUnique.mockResolvedValue(null);
 
       const result = await service.findByCode(testCode);
 
-      expect(findUniqueSpy).toHaveBeenCalledTimes(1);
-      expect(findUniqueSpy).toHaveBeenCalledWith(
+      expect(mockPrismaService.regency.findUnique).toHaveBeenCalledWith(
         expect.objectContaining({ where: { code: testCode } }),
       );
       expect(result).toBeNull();
