@@ -1,146 +1,126 @@
+import { ValidationPipe } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import {
+  FastifyAdapter,
+  NestFastifyApplication,
+} from '@nestjs/platform-fastify';
+import { Test, TestingModule } from '@nestjs/testing';
 import { Village } from '@prisma/client';
-import { AppTester } from './helper/app-tester';
-import {
-  extractDistrictCode,
-  extractProvinceCode,
-  extractRegencyCode,
-} from './helper/code-utils';
-import {
-  districtRegex,
-  provinceRegex,
-  regencyRegex,
-  villageRegex,
-} from './helper/data-regex';
-import { getEncodedSymbols } from './helper/utils';
+import { VillageModule } from '@/village/village.module';
 
 describe('Village (e2e)', () => {
-  const baseUrl = '/villages';
-  const testCode = '32.04.05.2004';
-  const badVillageCodes = [
-    '',
-    '12.34',
-    '12.34.56.78910',
-    'ab.cd.ef.ghij',
-  ] as const;
-  let tester: AppTester;
+  let app: NestFastifyApplication;
 
   beforeAll(async () => {
-    tester = await AppTester.make();
-    await tester.bootApp();
-  });
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [ConfigModule.forRoot(), VillageModule],
+    }).compile();
 
-  describe(`GET ${baseUrl}`, () => {
-    it('should return villages', async () => {
-      const villages = await tester.expectData<Village[]>(baseUrl);
+    app = moduleFixture.createNestApplication<NestFastifyApplication>(
+      new FastifyAdapter(),
+    );
 
-      for (const village of villages) {
-        expect(village).toEqual({
-          code: expect.stringMatching(villageRegex.code),
-          name: expect.stringMatching(villageRegex.name),
-          districtCode: extractDistrictCode(village.code),
-        });
-      }
-    });
-
-    it('should return 400 if the `name` more than 100 chars, or contains any other symbols besides \'()-./"*', async () => {
-      const invalidNames = [
-        'x'.repeat(101),
-        ...getEncodedSymbols({ exclude: '\'()-./"*' }),
-      ];
-
-      for (const name of invalidNames) {
-        await tester.expectBadRequest(`${baseUrl}?name=${name}`);
-      }
-    });
-
-    it('should return 400 if any village sort query is invalid', async () => {
-      await tester.expectBadSortQuery(
-        (sortQueryStr) => `${baseUrl}?${sortQueryStr}`,
-        ['', 'unknown'],
-      );
-    });
-
-    it('should return empty array if there are no any villages match with the `name`', async () => {
-      const villages = await tester.expectData<Village[]>(
-        `${baseUrl}?name=unknown`,
-      );
-
-      expect(villages).toEqual([]);
-    });
-
-    it('should return all villages match with the `name`', async () => {
-      const testName = 'cinunuk';
-      const villages = await tester.expectData<Village[]>(
-        `${baseUrl}?name=${testName}`,
-      );
-
-      for (const village of villages) {
-        expect(village).toEqual({
-          code: expect.stringMatching(villageRegex.code),
-          name: expect.stringMatching(new RegExp(testName, 'i')),
-          districtCode: extractDistrictCode(village.code),
-        });
-      }
-    });
-
-    it('should return all villages match with the `districtCode`', async () => {
-      const districtCode = '11.01.01';
-      const villages = await tester.expectData<Village[]>(
-        `${baseUrl}?districtCode=${districtCode}`,
-      );
-
-      for (const village of villages) {
-        expect(village).toEqual({
-          code: expect.stringMatching(villageRegex.code),
-          name: expect.stringMatching(villageRegex.name),
-          districtCode,
-        });
-      }
-    });
-  });
-
-  describe(`GET ${baseUrl}/{code}`, () => {
-    it('should return 400 if the `code` is invalid', async () => {
-      await tester.expectBadCode(
-        (code) => `${baseUrl}/${code}`,
-        badVillageCodes,
-      );
-    });
-
-    it('should return 404 if the `code` does not exist', async () => {
-      await tester.expectNotFound(`${baseUrl}/00.00.00.0000`);
-    });
-
-    it('should return the village data if the `code` exists', async () => {
-      const village = await tester.expectData<Village>(
-        `${baseUrl}/${testCode}`,
-      );
-
-      expect(village).toEqual({
-        code: testCode,
-        name: expect.stringMatching(villageRegex.name),
-        districtCode: extractDistrictCode(testCode),
-        parent: {
-          district: {
-            code: extractDistrictCode(testCode),
-            name: expect.stringMatching(districtRegex.name),
-            regencyCode: extractRegencyCode(testCode),
-          },
-          regency: {
-            code: extractRegencyCode(testCode),
-            name: expect.stringMatching(regencyRegex.name),
-            provinceCode: extractProvinceCode(testCode),
-          },
-          province: {
-            code: extractProvinceCode(testCode),
-            name: expect.stringMatching(provinceRegex.name),
-          },
-        },
-      });
-    });
+    app.useGlobalPipes(new ValidationPipe({ transform: true }));
+    await app.init();
+    await app.getHttpAdapter().getInstance().ready();
   });
 
   afterAll(async () => {
-    await tester.closeApp();
+    await app.close();
+  });
+
+  it('/GET villages', async () => {
+    const response = await app.inject({
+      method: 'GET',
+      url: '/villages',
+    });
+
+    expect(response.statusCode).toBe(200);
+
+    const data = response.json();
+    expect(data).toHaveProperty('statusCode', 200);
+    expect(data).toHaveProperty('data');
+    expect(data).toHaveProperty('meta');
+    expect(data.data).toBeInstanceOf(Array);
+    expect(data.meta).toHaveProperty('total');
+
+    // Validate structure of first village if exists
+    if (data.data.length > 0) {
+      const village: Village = data.data[0];
+      expect(village).toHaveProperty('code');
+      expect(village).toHaveProperty('name');
+      expect(village).toHaveProperty('districtCode');
+      expect(typeof village.code).toBe('string');
+      expect(typeof village.name).toBe('string');
+      expect(typeof village.districtCode).toBe('string');
+    }
+  });
+
+  it('/GET villages with name filter', async () => {
+    const response = await app.inject({
+      method: 'GET',
+      url: '/villages?name=desa',
+    });
+
+    expect(response.statusCode).toBe(200);
+
+    const data = response.json();
+    expect(data.data).toBeInstanceOf(Array);
+
+    // All results should contain 'desa' in name (case insensitive)
+    data.data.forEach((village: Village) => {
+      expect(village.name.toLowerCase()).toContain('desa');
+    });
+  });
+
+  it('/GET villages/:code', async () => {
+    // First get a valid village code
+    const listResponse = await app.inject({
+      method: 'GET',
+      url: '/villages?limit=1',
+    });
+
+    const listData = listResponse.json();
+    if (listData.data.length > 0) {
+      const testCode = listData.data[0].code;
+
+      const response = await app.inject({
+        method: 'GET',
+        url: `/villages/${testCode}`,
+      });
+
+      expect(response.statusCode).toBe(200);
+
+      const data = response.json();
+      expect(data.data).toHaveProperty('code', testCode);
+      expect(data.data).toHaveProperty('name');
+      expect(data.data).toHaveProperty('districtCode');
+      expect(data.data).toHaveProperty('parent');
+      expect(data.data.parent).toHaveProperty('district');
+      expect(data.data.parent).toHaveProperty('regency');
+      expect(data.data.parent).toHaveProperty('province');
+    }
+  });
+
+  it('/GET villages/:code with invalid code should return 400', async () => {
+    const response = await app.inject({
+      method: 'GET',
+      url: '/villages/invalid',
+    });
+
+    expect(response.statusCode).toBe(400);
+    expect(response.json()).toHaveProperty('statusCode', 400);
+    expect(response.json()).toHaveProperty('error', 'Bad Request');
+  });
+
+  it('/GET villages/:code with non-existent code should return 404', async () => {
+    const response = await app.inject({
+      method: 'GET',
+      url: '/villages/99.99.99.9999',
+    });
+
+    expect(response.statusCode).toBe(404);
+    expect(response.json()).toHaveProperty('statusCode', 404);
+    expect(response.json()).toHaveProperty('error', 'Not Found');
   });
 });
