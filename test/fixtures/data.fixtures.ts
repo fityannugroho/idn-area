@@ -120,7 +120,7 @@ export const mockTestData = {
     }),
     createMockDistrict({
       code: '32.01.02',
-      name: 'LEUWILIANG',
+      name: 'Leuwiliang',
       regencyCode: '32.01',
     }),
     createMockDistrict({
