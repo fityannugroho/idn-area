@@ -180,7 +180,7 @@ describe('IslandService', () => {
         }),
       );
       expect(result).toEqual({
-        ...service.addDecimalCoordinate(expectedIsland),
+        ...expectedIsland,
         parent: {
           regency: expectedRegency,
           province: expectedProvince,
@@ -245,19 +245,6 @@ describe('IslandService', () => {
         }),
       );
       expect(result).toBeNull();
-    });
-  });
-
-  describe('addDecimalCoordinate', () => {
-    it('should return an island with decimal latitude and longitude', () => {
-      const testIsland = mockTestData.sampleIslands[0];
-      const result = service.addDecimalCoordinate(testIsland);
-
-      expect(result).toEqual({
-        ...testIsland,
-        latitude: expect.any(Number),
-        longitude: expect.any(Number),
-      });
     });
   });
 });

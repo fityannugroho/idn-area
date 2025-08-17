@@ -1,17 +1,15 @@
 /**
  * Test Data Fixtures
  *
- * Factory functions untuk membuat test data yang consistent dan reusable.
- * Menggunakan factory pattern untuk flexibility dalam creating test data.
+ * Factory functions to create consistent and reusable test data.
+ * Using factory pattern for flexibility in creating test data.
  */
 
-import type {
-  District,
-  Island,
-  Province,
-  Regency,
-  Village,
-} from '@prisma/client';
+import { District } from '@/district/district.dto';
+import { Island } from '@/island/island.dto';
+import { Province } from '@/province/province.dto';
+import { Regency } from '@/regency/regency.dto';
+import { Village } from '@/village/village.dto';
 
 /**
  * Creates a mock Province with optional overrides
@@ -70,6 +68,8 @@ export const createMockIsland = (overrides: Partial<Island> = {}): Island => ({
   isOutermostSmall: false,
   isPopulated: false,
   regencyCode: '32.01',
+  latitude: -6.175,
+  longitude: 106.827,
   ...overrides,
 });
 
@@ -152,6 +152,8 @@ export const mockTestData = {
       regencyCode: '32.01',
       coordinate: '06°10\'30.00" S 106°38\'30.00" E',
       isPopulated: false,
+      latitude: -6.175000000000001,
+      longitude: 106.64166666666668,
     }),
     createMockIsland({
       code: '32.02.40001',
@@ -159,6 +161,8 @@ export const mockTestData = {
       regencyCode: '32.02',
       coordinate: '06°45\'15.00" S 106°20\'45.00" E',
       isPopulated: true,
+      latitude: -6.754,
+      longitude: 106.345,
     }),
     createMockIsland({
       code: '32.00.40001',
@@ -166,6 +170,8 @@ export const mockTestData = {
       regencyCode: null,
       coordinate: '06°15\'20.00" S 106°42\'10.00" E',
       isPopulated: false,
+      latitude: -6.25,
+      longitude: 106.7,
     }),
   ],
 };
