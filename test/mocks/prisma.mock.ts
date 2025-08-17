@@ -2,7 +2,8 @@
  * Shared Prisma Mock Factory
  *
  * Centralized mocking untuk PrismaService yang bisa digunakan di semua test files.
- * Hanya mock methods yang benar-benar digunakan untuk menjaga simplicity.
+ * Centralized mocking for PrismaService that can be used in all test files.
+ * Only mock methods that are actually used to maintain simplicity.
  */
 
 /**
