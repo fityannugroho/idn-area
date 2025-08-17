@@ -131,6 +131,40 @@ describe('VillageService', () => {
       });
       expect(result.data).toEqual(mockData);
     });
+
+    it('should apply insensitive filtering when supported by provider', async () => {
+      const testName = 'test village';
+      const expectedResponse = { data: [] };
+
+      // Mock getDBProviderFeatures to return filtering with insensitive mode
+      const getDBProviderFeatures = await import('@/common/utils/db');
+      const spy = vi
+        .spyOn(getDBProviderFeatures, 'getDBProviderFeatures')
+        .mockReturnValue({
+          filtering: { insensitive: true },
+        });
+
+      prismaService.paginator = vi.fn().mockResolvedValue(expectedResponse);
+
+      const result = await service.find({ name: testName });
+
+      expect(result).toEqual(expectedResponse);
+      expect(prismaService.paginator).toHaveBeenCalledWith(
+        expect.objectContaining({
+          args: expect.objectContaining({
+            where: expect.objectContaining({
+              name: expect.objectContaining({
+                contains: testName,
+                mode: 'insensitive',
+              }),
+            }),
+          }),
+        }),
+      );
+
+      // Clean up
+      spy.mockRestore();
+    });
   });
 
   describe('findByCode', () => {

@@ -136,6 +136,40 @@ describe('DistrictService', () => {
         args: { where: {}, orderBy: { name: 'desc' } },
       });
     });
+
+    it('should apply insensitive filtering when supported by provider', async () => {
+      const testName = 'test';
+      const expectedResponse = { data: [] };
+
+      // Mock getDBProviderFeatures to return filtering with insensitive mode
+      const getDBProviderFeatures = await import('@/common/utils/db');
+      const spy = vi
+        .spyOn(getDBProviderFeatures, 'getDBProviderFeatures')
+        .mockReturnValue({
+          filtering: { insensitive: true },
+        });
+
+      mockPrismaService.paginator.mockResolvedValue(expectedResponse);
+
+      const result = await service.find({ name: testName });
+
+      expect(result).toEqual(expectedResponse);
+      expect(mockPrismaService.paginator).toHaveBeenCalledWith(
+        expect.objectContaining({
+          args: expect.objectContaining({
+            where: expect.objectContaining({
+              name: expect.objectContaining({
+                contains: testName,
+                mode: 'insensitive',
+              }),
+            }),
+          }),
+        }),
+      );
+
+      // Clean up
+      spy.mockRestore();
+    });
   });
 
   describe('findByCode', () => {
