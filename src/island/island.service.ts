@@ -6,7 +6,11 @@ import { convertCoordinate } from '@/common/utils/coordinate';
 import { getDBProviderFeatures } from '@/common/utils/db';
 import { PrismaService } from '@/prisma/prisma.service';
 import { SortService } from '@/sort/sort.service';
-import { IslandFindQueries, IslandWithParent } from './island.dto';
+import {
+  Island as IslandDTO,
+  IslandFindQueries,
+  IslandWithParent,
+} from './island.dto';
 
 @Injectable()
 export class IslandService {
@@ -22,18 +26,16 @@ export class IslandService {
   /**
    * Add decimal latitude and longitude to the island object.
    */
-  addDecimalCoordinate(
-    island: Island,
-  ): Island & { latitude: number; longitude: number } {
+  private _addDecimalCoordinate(island: Island): IslandDTO {
     const [latitude, longitude] = convertCoordinate(island.coordinate);
 
     return { ...island, latitude, longitude };
   }
 
-  async find(options?: IslandFindQueries): Promise<PaginatedReturn<Island>> {
+  async find(options?: IslandFindQueries): Promise<PaginatedReturn<IslandDTO>> {
     const { page, limit, name, regencyCode, sortBy, sortOrder } = options ?? {};
 
-    return this.prisma.paginator({
+    const result = await this.prisma.paginator({
       model: 'Island',
       paginate: { page, limit },
       args: {
@@ -55,6 +57,11 @@ export class IslandService {
         }),
       },
     });
+
+    return {
+      ...result,
+      data: result.data.map((island) => this._addDecimalCoordinate(island)),
+    };
   }
 
   async findByCode(code: string): Promise<IslandWithParent | null> {
@@ -77,7 +84,7 @@ export class IslandService {
 
     if (!regencyWithProvince) {
       return {
-        ...this.addDecimalCoordinate(island),
+        ...this._addDecimalCoordinate(island),
         parent: {
           regency: null,
           province: (await this.prisma.province.findUnique({
@@ -92,7 +99,7 @@ export class IslandService {
     const { province, ...regency } = regencyWithProvince;
 
     return {
-      ...this.addDecimalCoordinate(island),
+      ...this._addDecimalCoordinate(island),
       parent: { regency, province },
     };
   }

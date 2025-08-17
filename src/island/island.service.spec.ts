@@ -223,7 +223,7 @@ describe('IslandService', () => {
         }),
       );
       expect(result).toEqual({
-        ...service.addDecimalCoordinate(expectedIsland),
+        ...expectedIsland,
         parent: {
           regency: null,
           province: expectedProvince,

@@ -43,12 +43,7 @@ export class IslandController {
   async find(
     @Query() queries?: IslandFindQueries,
   ): Promise<PaginatedReturn<Island>> {
-    const res = await this.islandService.find(queries);
-    const islands = res.data.map((island) =>
-      this.islandService.addDecimalCoordinate(island),
-    );
-
-    return { ...res, data: islands };
+    return await this.islandService.find(queries);
   }
 
   @ApiOperation({ description: 'Get an island by its code.' })

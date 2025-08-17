@@ -161,8 +161,8 @@ export const mockTestData = {
       regencyCode: '32.02',
       coordinate: '06°45\'15.00" S 106°20\'45.00" E',
       isPopulated: true,
-      latitude: -6.754,
-      longitude: 106.345,
+      latitude: -6.754166666666666,
+      longitude: 106.34583333333333,
     }),
     createMockIsland({
       code: '32.00.40001',
@@ -170,8 +170,8 @@ export const mockTestData = {
       regencyCode: null,
       coordinate: '06°15\'20.00" S 106°42\'10.00" E',
       isPopulated: false,
-      latitude: -6.25,
-      longitude: 106.7,
+      latitude: -6.2555555555555555,
+      longitude: 106.70277777777778,
     }),
   ],
 };

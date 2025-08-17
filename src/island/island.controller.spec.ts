@@ -19,7 +19,7 @@ describe('IslandController', () => {
           useValue: {
             find: vi.fn(),
             findByCode: vi.fn(),
-            addDecimalCoordinate: vi.fn((island: Island) => island),
+            _addDecimalCoordinate: vi.fn((island: Island) => island),
           },
         },
       ],
