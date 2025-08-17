@@ -15,8 +15,7 @@ import { SortQuery } from '@/sort/sort.dto';
 
 export class District {
   @IsNotEmpty()
-  @IsAreaCode('district')
-  @ApiProperty({ description: 'The district code', example: '11.01.01' })
+  @IsAreaCode('district', { example: '11.01.01' })
   code: string;
 
   @IsNotSymbol("'()-./")
@@ -25,8 +24,7 @@ export class District {
   name: string;
 
   @IsNotEmpty()
-  @IsAreaCode('regency')
-  @ApiProperty({
+  @IsAreaCode('regency', {
     description: 'The regency code of the district',
     example: '11.01',
   })

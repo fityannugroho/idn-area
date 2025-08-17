@@ -1,3 +1,5 @@
+import { applyDecorators } from '@nestjs/common';
+import { ApiProperty, ApiPropertyOptions } from '@nestjs/swagger';
 import {
   registerDecorator,
   ValidationArguments,
@@ -6,26 +8,41 @@ import {
   ValidatorConstraintInterface,
 } from 'class-validator';
 
-type AreaType = 'regency' | 'district' | 'village' | 'island';
+type AreaType = 'province' | 'regency' | 'district' | 'village' | 'island';
+
+type IsAreaCodeOptions = ApiPropertyOptions & {
+  /** Validation options for class-validator */
+  validation?: ValidationOptions;
+};
 
 /**
  * Custom validator for Indonesian area codes with dots format.
  * Validates format like: 11.01, 11.01.01, 11.01.01.2001, 11.01.40001
+ *
+ * This decorator also automatically adds Swagger metadata with type: 'string'
  */
-export function IsAreaCode(
-  areaType: AreaType,
-  validationOptions?: ValidationOptions,
-) {
-  return (object: object, propertyName: string) => {
-    registerDecorator({
-      name: 'isAreaCode',
-      target: object.constructor,
-      propertyName: propertyName,
-      constraints: [areaType],
-      options: validationOptions,
-      validator: IsAreaCodeConstraint,
-    });
-  };
+export function IsAreaCode(areaType: AreaType, options?: IsAreaCodeOptions) {
+  const { validation, ...apiPropertyOptions } = options || {};
+
+  return applyDecorators(
+    // Swagger metadata - automatically sets type as string
+    ApiProperty({
+      type: 'string',
+      description: `The ${areaType} code`,
+      ...apiPropertyOptions,
+    }),
+    // Validation logic
+    (object: object, propertyName: string) => {
+      registerDecorator({
+        name: 'isAreaCode',
+        target: object.constructor,
+        propertyName: propertyName,
+        constraints: [areaType],
+        options: validation,
+        validator: IsAreaCodeConstraint,
+      });
+    },
+  );
 }
 
 @ValidatorConstraint({ name: 'isAreaCode' })
@@ -34,6 +51,9 @@ export class IsAreaCodeConstraint implements ValidatorConstraintInterface {
     const [areaType] = args.constraints;
 
     switch (areaType) {
+      case 'province':
+        // Format: xx (2 chars)
+        return /^\d{2}$/.test(value);
       case 'regency':
         // Format: xx.xx (5 chars)
         return /^\d{2}\.\d{2}$/.test(value);

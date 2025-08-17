@@ -2,6 +2,46 @@ import { validate } from 'class-validator';
 import { IsAreaCode } from '../IsAreaCode';
 
 describe('IsAreaCode Decorator', () => {
+  describe('province area code validation', () => {
+    class ProvinceCodeClass {
+      @IsAreaCode('province')
+      code: string;
+
+      constructor(code: string) {
+        this.code = code;
+      }
+    }
+
+    it('should validate correct province codes', async () => {
+      const validCodes = ['11', '32', '99', '00', '01'];
+
+      for (const code of validCodes) {
+        const instance = new ProvinceCodeClass(code);
+        const errors = await validate(instance);
+        expect(errors).toHaveLength(0);
+      }
+    });
+
+    it('should reject invalid province codes', async () => {
+      const invalidCodes = [
+        '1', // Too short
+        '111', // Too long
+        '1a', // Non-numeric
+        '11.01', // With separator
+        'ab', // Non-numeric
+      ];
+
+      for (const code of invalidCodes) {
+        const instance = new ProvinceCodeClass(code);
+        const errors = await validate(instance);
+        expect(errors).toHaveLength(1);
+        expect(errors[0].constraints?.isAreaCode).toBe(
+          'code must be a valid province code',
+        );
+      }
+    });
+  });
+
   describe('regency area code validation', () => {
     class RegencyCodeClass {
       @IsAreaCode('regency')
@@ -178,7 +218,9 @@ describe('IsAreaCode Decorator', () => {
     it('should use custom error message', async () => {
       class CustomMessageClass {
         @IsAreaCode('regency', {
-          message: 'Please provide a valid regency code format',
+          validation: {
+            message: 'Please provide a valid regency code format',
+          },
         })
         code: string;
 

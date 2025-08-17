@@ -23,8 +23,7 @@ import { IsNotSymbol } from '../common/decorator/IsNotSymbol';
 
 export class Island {
   @IsNotEmpty()
-  @IsAreaCode('island')
-  @ApiProperty({ description: 'The island code', example: '11.01.40001' })
+  @IsAreaCode('island', { example: '11.01.40001' })
   code: string;
 
   @IsNotEmpty()
@@ -53,19 +52,18 @@ export class Island {
 
   @ValidateIf((o) => o.regencyCode)
   @IsOptional()
-  @IsAreaCode('regency')
-  @ApiProperty({
-    description: `The regency code of the island.
-      Providing an empty string will filter islands that are not part of any regency.`,
+  @IsAreaCode('regency', {
+    description: `The regency code of the island.`,
     example: '11.01',
+    nullable: true,
   })
-  regencyCode?: string | null;
+  regencyCode: string | null;
 
   @ApiProperty({ example: 3.317622222222222 })
-  latitude?: number;
+  latitude: number;
 
   @ApiProperty({ example: 97.12825833333332 })
-  longitude?: number;
+  longitude: number;
 }
 
 export class IslandSortQuery extends SortQuery {
