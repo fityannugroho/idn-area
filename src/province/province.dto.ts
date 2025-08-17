@@ -19,7 +19,7 @@ export class Province {
 
   @IsNotSymbol()
   @MaxLength(100)
-  @ApiProperty({ description: 'The province name', example: 'ACEH' })
+  @ApiProperty({ description: 'The province name', example: 'Aceh' })
   name: string;
 }
 

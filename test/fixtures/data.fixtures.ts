@@ -18,7 +18,7 @@ export const createMockProvince = (
   overrides: Partial<Province> = {},
 ): Province => ({
   code: '32',
-  name: 'JAWA BARAT',
+  name: 'Jawa Barat',
   ...overrides,
 });
 
@@ -29,7 +29,7 @@ export const createMockRegency = (
   overrides: Partial<Regency> = {},
 ): Regency => ({
   code: '32.01',
-  name: 'KABUPATEN BOGOR',
+  name: 'Kabupaten Bogor',
   provinceCode: '32',
   ...overrides,
 });
@@ -41,7 +41,7 @@ export const createMockDistrict = (
   overrides: Partial<District> = {},
 ): District => ({
   code: '32.01.01',
-  name: 'NANGGUNG',
+  name: 'Nanggung',
   regencyCode: '32.01',
   ...overrides,
 });
@@ -53,7 +53,7 @@ export const createMockVillage = (
   overrides: Partial<Village> = {},
 ): Village => ({
   code: '32.01.01.2001',
-  name: 'BANTARJATI',
+  name: 'Bantarjati',
   districtCode: '32.01.01',
   ...overrides,
 });
@@ -63,7 +63,7 @@ export const createMockVillage = (
  */
 export const createMockIsland = (overrides: Partial<Island> = {}): Island => ({
   code: '32.01.40001',
-  name: 'PULAU RAMBUT',
+  name: 'Pulau Rambut',
   coordinate: '06°10\'30.00" S 106°38\'30.00" E',
   isOutermostSmall: false,
   isPopulated: false,
@@ -79,34 +79,34 @@ export const createMockIsland = (overrides: Partial<Island> = {}): Island => ({
 export const mockTestData = {
   // Java provinces
   javaProvinces: [
-    createMockProvince({ code: '32', name: 'JAWA BARAT' }),
-    createMockProvince({ code: '33', name: 'JAWA TENGAH' }),
-    createMockProvince({ code: '34', name: 'DI YOGYAKARTA' }),
-    createMockProvince({ code: '35', name: 'JAWA TIMUR' }),
+    createMockProvince({ code: '32', name: 'Jawa Barat' }),
+    createMockProvince({ code: '33', name: 'Jawa Tengah' }),
+    createMockProvince({ code: '34', name: 'Daerah Istimewa Yogyakarta' }),
+    createMockProvince({ code: '35', name: 'Jawa Timur' }),
   ],
 
   // Sumatra provinces
   sumatraProvinces: [
-    createMockProvince({ code: '11', name: 'ACEH' }),
-    createMockProvince({ code: '12', name: 'SUMATERA UTARA' }),
-    createMockProvince({ code: '13', name: 'SUMATERA BARAT' }),
+    createMockProvince({ code: '11', name: 'Aceh' }),
+    createMockProvince({ code: '12', name: 'Sumatera Utara' }),
+    createMockProvince({ code: '13', name: 'Sumatera Barat' }),
   ],
 
   // West Java regencies
   westJavaRegencies: [
     createMockRegency({
       code: '32.01',
-      name: 'KABUPATEN BOGOR',
+      name: 'Kabupaten Bogor',
       provinceCode: '32',
     }),
     createMockRegency({
       code: '32.02',
-      name: 'KABUPATEN SUKABUMI',
+      name: 'Kabupaten Sukabumi',
       provinceCode: '32',
     }),
     createMockRegency({
       code: '32.71',
-      name: 'KOTA BOGOR',
+      name: 'Kota Bogor',
       provinceCode: '32',
     }),
   ],
@@ -115,7 +115,7 @@ export const mockTestData = {
   bogorDistricts: [
     createMockDistrict({
       code: '32.01.01',
-      name: 'NANGGUNG',
+      name: 'Nanggung',
       regencyCode: '32.01',
     }),
     createMockDistrict({
@@ -125,7 +125,7 @@ export const mockTestData = {
     }),
     createMockDistrict({
       code: '32.01.03',
-      name: 'LEUWISADENG',
+      name: 'Leuwisadeng',
       regencyCode: '32.01',
     }),
   ],
@@ -134,12 +134,12 @@ export const mockTestData = {
   sampleVillages: [
     createMockVillage({
       code: '32.01.01.2001',
-      name: 'BANTARJATI',
+      name: 'Bantarjati',
       districtCode: '32.01.01',
     }),
     createMockVillage({
       code: '32.01.01.2002',
-      name: 'CURUGBITUNG',
+      name: 'Curugbitung',
       districtCode: '32.01.01',
     }),
   ],
@@ -148,7 +148,7 @@ export const mockTestData = {
   sampleIslands: [
     createMockIsland({
       code: '32.01.40001',
-      name: 'PULAU RAMBUT',
+      name: 'Pulau Rambut',
       regencyCode: '32.01',
       coordinate: '06°10\'30.00" S 106°38\'30.00" E',
       isPopulated: false,
@@ -157,7 +157,7 @@ export const mockTestData = {
     }),
     createMockIsland({
       code: '32.02.40001',
-      name: 'PULAU HANDEULEUM',
+      name: 'Pulau Handeuleum',
       regencyCode: '32.02',
       coordinate: '06°45\'15.00" S 106°20\'45.00" E',
       isPopulated: true,
@@ -166,7 +166,7 @@ export const mockTestData = {
     }),
     createMockIsland({
       code: '32.00.40001',
-      name: 'PULAU DAMAR',
+      name: 'Pulau Damar',
       regencyCode: null,
       coordinate: '06°15\'20.00" S 106°42\'10.00" E',
       isPopulated: false,
@@ -180,20 +180,20 @@ export const mockTestData = {
  * Helper function to create hierarchical test data
  */
 export const createHierarchicalData = () => {
-  const province = createMockProvince({ code: '32', name: 'JAWA BARAT' });
+  const province = createMockProvince({ code: '32', name: 'Jawa Barat' });
   const regency = createMockRegency({
     code: '32.01',
-    name: 'KABUPATEN BOGOR',
+    name: 'Kabupaten Bogor',
     provinceCode: province.code,
   });
   const district = createMockDistrict({
     code: '32.01.01',
-    name: 'NANGGUNG',
+    name: 'Nanggung',
     regencyCode: regency.code,
   });
   const village = createMockVillage({
     code: '32.01.01.2001',
-    name: 'BANTARJATI',
+    name: 'Bantarjati',
     districtCode: district.code,
   });
 

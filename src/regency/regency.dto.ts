@@ -22,7 +22,7 @@ export class Regency {
   @MaxLength(100)
   @ApiProperty({
     description: 'The regency name',
-    example: 'KABUPATEN ACEH SELATAN',
+    example: 'Kabupaten Aceh Selatan',
   })
   name: string;
 

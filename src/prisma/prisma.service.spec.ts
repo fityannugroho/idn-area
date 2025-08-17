@@ -51,12 +51,12 @@ describe('PrismaService', () => {
     const { defaultPageSize, maxPageSize } = appConfig.pagination;
 
     const provinces: readonly Province[] = [
-      { code: '11', name: 'ACEH' },
-      { code: '12', name: 'SUMATERA UTARA' },
-      { code: '32', name: 'JAWA BARAT' },
-      { code: '33', name: 'JAWA TENGAH' },
-      { code: '34', name: 'DI YOGYAKARTA' },
-      { code: '35', name: 'JAWA TIMUR' },
+      { code: '11', name: 'Aceh' },
+      { code: '12', name: 'Sumatera Utara' },
+      { code: '32', name: 'Jawa Barat' },
+      { code: '33', name: 'Jawa Tengah' },
+      { code: '34', name: 'Daerah Istimewa Yogyakarta' },
+      { code: '35', name: 'Jawa Timur' },
     ] as const;
 
     const requiredOptions: PaginatorOptions<'Province'> = {
@@ -186,7 +186,7 @@ describe('PrismaService', () => {
     });
 
     test('call with `args`', async () => {
-      const args = { where: { name: 'ACEH' } };
+      const args = { where: { name: 'Aceh' } };
       await service.paginator({ ...requiredOptions, args });
 
       expect(service.province.findMany).toHaveBeenCalledTimes(1);
