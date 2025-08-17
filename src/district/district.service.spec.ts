@@ -3,7 +3,7 @@ import { PrismaService } from '@/prisma/prisma.service';
 import { SortOrder } from '@/sort/sort.dto';
 import { mockTestData } from '../../test/fixtures/data.fixtures';
 
-// ✅ Use shared test utilities
+// Use shared test utilities
 import { createMockPrismaService } from '../../test/mocks/prisma.mock';
 import { DistrictService } from './district.service';
 
