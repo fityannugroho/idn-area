@@ -74,7 +74,7 @@ export const createMockIsland = (overrides: Partial<Island> = {}): Island => ({
 });
 
 /**
- * Pre-defined test data sets untuk common test scenarios
+ * Pre-defined test data sets for common test scenarios
  */
 export const mockTestData = {
   // Java provinces
