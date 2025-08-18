@@ -1,9 +1,9 @@
+import { Injectable } from '@nestjs/common';
+import { District } from '@prisma/client';
 import { PaginatedReturn } from '@/common/interceptor/paginate.interceptor';
 import { getDBProviderFeatures } from '@/common/utils/db';
 import { PrismaService } from '@/prisma/prisma.service';
 import { SortService } from '@/sort/sort.service';
-import { Injectable } from '@nestjs/common';
-import { District } from '@prisma/client';
 import { DistrictFindQueries, DistrictWithParent } from './district.dto';
 
 @Injectable()

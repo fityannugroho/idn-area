@@ -28,6 +28,8 @@ export type TransformedResponse<Data, Meta = WrappedData<unknown>['meta']> = {
  */
 function isDataWrapped<T>(value: any): value is WrappedData<T> {
   return (
+    value != null &&
+    typeof value === 'object' &&
     'data' in value &&
     (typeof value.data === 'object' || Array.isArray(value.data))
   );
@@ -39,7 +41,10 @@ export class TransformInterceptor<T, R extends TransformedResponse<T>>
 {
   constructor(private reflector: Reflector) {}
 
-  protected transformValue(val: any): WrappedData<T> {
+  /**
+   * Transforms the response value.
+   */
+  transformValue(val: any): WrappedData<T> {
     return isDataWrapped<T>(val) ? val : { data: val };
   }
 

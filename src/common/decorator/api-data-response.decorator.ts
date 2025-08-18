@@ -1,8 +1,8 @@
 import {
+  applyDecorators,
   SetMetadata,
   Type,
   UseInterceptors,
-  applyDecorators,
 } from '@nestjs/common';
 import { ApiExtraModels, ApiOkResponse, getSchemaPath } from '@nestjs/swagger';
 import { TransformInterceptor } from '../interceptor/transform.interceptor';

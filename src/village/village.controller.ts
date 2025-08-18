@@ -1,6 +1,3 @@
-import { ApiDataResponse } from '@/common/decorator/api-data-response.decorator';
-import { ApiPaginatedResponse } from '@/common/decorator/api-paginated-response.decorator';
-import { PaginatedReturn } from '@/common/interceptor/paginate.interceptor';
 import {
   Controller,
   Get,
@@ -14,6 +11,9 @@ import {
   ApiOperation,
   ApiQuery,
 } from '@nestjs/swagger';
+import { ApiDataResponse } from '@/common/decorator/api-data-response.decorator';
+import { ApiPaginatedResponse } from '@/common/decorator/api-paginated-response.decorator';
+import { PaginatedReturn } from '@/common/interceptor/paginate.interceptor';
 import {
   Village,
   VillageFindByCodeParams,
@@ -62,7 +62,7 @@ export class VillageController {
     const village = await this.villageService.findByCode(code);
 
     if (village === null) {
-      throw new NotFoundException(`There are no village with code '${code}'`);
+      throw new NotFoundException(`Village with code ${code} not found.`);
     }
 
     return village;

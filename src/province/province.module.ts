@@ -1,6 +1,6 @@
+import { Module } from '@nestjs/common';
 import { PrismaModule } from '@/prisma/prisma.module';
 import { RegencyModule } from '@/regency/regency.module';
-import { Module } from '@nestjs/common';
 import { ProvinceController } from './province.controller';
 import { ProvinceService } from './province.service';
 

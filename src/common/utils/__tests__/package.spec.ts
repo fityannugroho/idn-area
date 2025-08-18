@@ -20,7 +20,7 @@ describe('getInstalledPackageVersion', () => {
     ]);
 
     vi.mocked(exec).mockImplementation((_cmd, callback) => {
-      // @ts-ignore (mocked)
+      // @ts-expect-error (mocked)
       return callback(null, mockStdout, '');
     });
 
@@ -37,7 +37,7 @@ describe('getInstalledPackageVersion', () => {
     ]);
 
     vi.mocked(exec).mockImplementation((_cmd, callback) => {
-      // @ts-ignore (mocked)
+      // @ts-expect-error (mocked)
       return callback(null, mockStdout, '');
     });
 
@@ -47,7 +47,7 @@ describe('getInstalledPackageVersion', () => {
 
   it('should return undefined if there is an error in stderr', async () => {
     vi.mocked(exec).mockImplementation((_cmd, callback) => {
-      // @ts-ignore
+      // @ts-expect-error
       return callback(null, '', 'Some error');
     });
 
@@ -57,7 +57,7 @@ describe('getInstalledPackageVersion', () => {
 
   it('should reject if exec returns an error', async () => {
     vi.mocked(exec).mockImplementation((_cmd, callback) => {
-      // @ts-ignore
+      // @ts-expect-error
       return callback(new Error('exec error'), '', '');
     });
 

@@ -1,10 +1,6 @@
 import { District, Island, Province, Regency, Village } from '@prisma/client';
 import { getData } from 'idn-area-data';
 
-function removeDots(value: string): string {
-  return value.replaceAll('.', '');
-}
-
 /**
  * Get customized provinces data.
  */
@@ -21,10 +17,6 @@ export function getRegencies() {
       headers: {
         province_code: 'provinceCode',
       },
-      values: {
-        code: removeDots,
-        province_code: removeDots,
-      },
     },
   });
 }
@@ -38,10 +30,6 @@ export function getDistricts() {
       headers: {
         regency_code: 'regencyCode',
       },
-      values: {
-        code: removeDots,
-        regency_code: removeDots,
-      },
     },
   });
 }
@@ -54,10 +42,6 @@ export function getVillages() {
     transform: {
       headers: {
         district_code: 'districtCode',
-      },
-      values: {
-        code: removeDots,
-        district_code: removeDots,
       },
     },
   });
@@ -75,8 +59,7 @@ export function getIslands() {
         regency_code: 'regencyCode',
       },
       values: {
-        code: removeDots,
-        regency_code: (value) => (value === '' ? null : removeDots(value)),
+        regency_code: (value) => (value === '' ? null : value),
         is_outermost_small: (value) => !!Number.parseInt(value, 10),
         is_populated: (value) => !!Number.parseInt(value, 10),
       },

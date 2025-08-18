@@ -1,3 +1,4 @@
+import { PrismaClient } from '@prisma/client';
 import {
   getDistricts,
   getIslands,
@@ -6,7 +7,6 @@ import {
   getVillages,
 } from '@/common/utils/data';
 import { getInstalledPackageVersion } from '@/common/utils/package';
-import { PrismaClient } from '@prisma/client';
 
 export type Area = 'province' | 'regency' | 'district' | 'village' | 'island';
 
@@ -50,13 +50,13 @@ export class Seeder {
       island: getIslands,
     }[area]();
 
-    // @ts-ignore prisma[area] is a valid property since area is one of the valid values.
+    // @ts-expect-error prisma[area] is a valid property since area is one of the valid values.
     const res = await this.prisma[area].createMany({ data });
     return res.count;
   }
 
   async deleteAreas(area: Area): Promise<number> {
-    // @ts-ignore prisma[area] is a valid property since area is one of the valid values.
+    // @ts-expect-error prisma[area] is a valid property since area is one of the valid values.
     const res = await this.prisma[area].deleteMany();
     return res.count;
   }
