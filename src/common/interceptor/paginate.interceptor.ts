@@ -26,7 +26,7 @@ export class PaginateInterceptor<T> extends TransformInterceptor<
   T[],
   PaginatedResponse<T>
 > {
-  protected transformValue({ data, meta }: PaginatedReturn<T>) {
+  transformValue({ data, meta }: PaginatedReturn<T>) {
     return { data, meta: { pagination: meta } };
   }
 }

@@ -59,7 +59,7 @@ export class ProvinceController {
     const province = await this.provinceService.findByCode(code);
 
     if (province === null) {
-      throw new NotFoundException(`There are no province with code '${code}'`);
+      throw new NotFoundException(`Province with code ${code} not found.`);
     }
 
     return province;

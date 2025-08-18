@@ -82,8 +82,8 @@ importers:
         specifier: ^9.1.7
         version: 9.1.7
       idn-area-data:
-        specifier: ^3.1.2
-        version: 3.1.2
+        specifier: ^4.0.0
+        version: 4.0.0
       lint-staged:
         specifier: ^16.1.5
         version: 16.1.5
@@ -2193,9 +2193,9 @@ packages:
     resolution: {integrity: sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw==}
     engines: {node: '>=0.10.0'}
 
-  idn-area-data@3.1.2:
-    resolution: {integrity: sha512-arO+tS+PQoc7pZjkPGiG+CqyiLbsc+rcbsYN5CQitzw3tgbEHNl2mFQHzGZrQXjwtDqOjc10th4spsxNEReOOg==}
-    engines: {node: '>=18'}
+  idn-area-data@4.0.0:
+    resolution: {integrity: sha512-qAiNR25Wa/QUcwJyRnoor0TNTyB8XWz7RkstkkY3poOqyQKuD4V/JSySmTq5s7vGZfT0NZ6YdqI9BS2kGob+TA==}
+    engines: {node: '>=22.0.0'}
 
   ieee754@1.2.1:
     resolution: {integrity: sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==}
@@ -2566,8 +2566,8 @@ packages:
   package-json-from-dist@1.0.1:
     resolution: {integrity: sha512-UEZIS3/by4OC8vL3P2dTXRETpebLI2NiI5vIrjaD/5UtrkFX/tNbwjTSRAGC/+7CAo2pIcBaRgWmcBBHcsaCIw==}
 
-  papaparse@5.5.2:
-    resolution: {integrity: sha512-PZXg8UuAc4PcVwLosEEDYjPyfWnTEhOrUfdv+3Bx+NuAb+5NhDmXzg5fHWmdCh1mP5p7JAZfFr3IMQfcntNAdA==}
+  papaparse@5.5.3:
+    resolution: {integrity: sha512-5QvjGxYVjxO59MGU2lHVYpRWBBtKHnlIAcSe1uNFCkkptUh63NFRj0FJQm7nR67puEruUci/ZkjmEFrjCAyP4A==}
 
   parent-module@1.0.1:
     resolution: {integrity: sha512-GQ2EWRpQV8/o+Aw8YqtfZZPfNRWZYkbidE9k5rpl/hC3vtHHBfGm2Ifi6qWV+coDGkrUKZAxE3Lot5kcsRlh+g==}
@@ -5338,9 +5338,9 @@ snapshots:
     dependencies:
       safer-buffer: 2.1.2
 
-  idn-area-data@3.1.2:
+  idn-area-data@4.0.0:
     dependencies:
-      papaparse: 5.5.2
+      papaparse: 5.5.3
 
   ieee754@1.2.1: {}
 
@@ -5666,7 +5666,7 @@ snapshots:
 
   package-json-from-dist@1.0.1: {}
 
-  papaparse@5.5.2: {}
+  papaparse@5.5.3: {}
 
   parent-module@1.0.1:
     dependencies:

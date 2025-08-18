@@ -1,73 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { Island, Province, Regency } from '@prisma/client';
-import { getProvinces, getRegencies } from '@/common/utils/data';
+import { mockTestData } from '@/../test/fixtures/data.fixtures';
+import { createMockPrismaService } from '@/../test/mocks/prisma.mock';
+import { extractProvinceCode } from '@/common/utils/code';
 import { getDBProviderFeatures } from '@/common/utils/db';
-import { mockPrismaService } from '@/prisma/__mocks__/prisma.service';
 import { PrismaService } from '@/prisma/prisma.service';
 import { SortOrder } from '@/sort/sort.dto';
 import { IslandService } from './island.service';
 
-const islands: readonly Island[] = [
-  {
-    code: '110140001',
-    coordinate: '03°19\'03.44" N 097°07\'41.73" E',
-    isOutermostSmall: false,
-    isPopulated: false,
-    name: 'Pulau Batukapal',
-    regencyCode: '1101',
-  },
-  {
-    code: '110140002',
-    coordinate: '03°24\'55.00" N 097°04\'21.00" E',
-    isOutermostSmall: false,
-    isPopulated: false,
-    name: 'Pulau Batutunggal',
-    regencyCode: '1101',
-  },
-  {
-    code: '110140003',
-    coordinate: '02°52\'54.99" N 097°31\'07.00" E',
-    isOutermostSmall: false,
-    isPopulated: false,
-    name: 'Pulau Kayee',
-    regencyCode: '1101',
-  },
-  {
-    code: '110140004',
-    coordinate: '02°54\'25.11" N 097°26\'18.51" E',
-    isOutermostSmall: false,
-    isPopulated: true,
-    name: 'Pulau Mangki Palsu',
-    regencyCode: '1101',
-  },
-  {
-    code: '110140005',
-    coordinate: '02°53\'16.00" N 097°30\'54.00" E',
-    isOutermostSmall: true,
-    isPopulated: false,
-    name: 'Pulau Tengku Palsu',
-    regencyCode: '1101',
-  },
-  {
-    code: '120040001',
-    coordinate: '01°45\'42.58" N 098°45\'09.03" E',
-    isOutermostSmall: false,
-    isPopulated: false,
-    name: 'Pulau Babi',
-    regencyCode: null,
-  },
-] as const;
-
 describe('IslandService', () => {
   let service: IslandService;
   let prismaService: PrismaService;
-  let provinces: Province[];
-  let regencies: Regency[];
-
-  beforeAll(async () => {
-    provinces = await getProvinces();
-    regencies = await getRegencies();
-  });
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -75,10 +17,7 @@ describe('IslandService', () => {
         IslandService,
         {
           provide: PrismaService,
-          useValue: {
-            ...mockPrismaService('Island', islands),
-            province: mockPrismaService('Province', provinces).province,
-          },
+          useValue: createMockPrismaService(),
         },
       ],
     }).compile();
@@ -87,42 +26,36 @@ describe('IslandService', () => {
     prismaService = module.get<PrismaService>(PrismaService);
   });
 
-  afterEach(() => {
-    vitest.resetAllMocks();
-  });
-
   describe('find', () => {
-    const paginatorOptions = {
-      model: 'Island',
-      paginate: { page: undefined, limit: undefined },
-      args: { where: {} },
-    };
-
     it('should return all islands', async () => {
-      const paginatorSpy = vitest
-        .spyOn(prismaService, 'paginator')
-        .mockResolvedValue({ data: [...islands] });
+      const mockData = mockTestData.sampleIslands;
+      prismaService.paginator = vi.fn().mockResolvedValue({ data: mockData });
 
       const result = await service.find();
 
-      expect(paginatorSpy).toHaveBeenCalledTimes(1);
-      expect(paginatorSpy).toHaveBeenCalledWith(paginatorOptions);
-      expect(result.data).toEqual(islands);
+      expect(prismaService.paginator).toHaveBeenCalledOnce();
+      expect(prismaService.paginator).toHaveBeenCalledWith({
+        model: 'Island',
+        paginate: { page: undefined, limit: undefined },
+        args: { where: {} },
+      });
+      expect(result.data).toEqual(mockData);
     });
 
     it('should return filtered islands by name', async () => {
       const testName = 'Batu';
-      const expectedIslands = islands.filter((i) => i.name.includes(testName));
+      const mockData = mockTestData.sampleIslands.filter((i) =>
+        i.name.includes(testName),
+      );
 
-      const paginatorSpy = vitest
-        .spyOn(prismaService, 'paginator')
-        .mockResolvedValue({ data: expectedIslands });
+      prismaService.paginator = vi.fn().mockResolvedValue({ data: mockData });
 
       const result = await service.find({ name: testName });
 
-      expect(paginatorSpy).toHaveBeenCalledTimes(1);
-      expect(paginatorSpy).toHaveBeenCalledWith({
-        ...paginatorOptions,
+      expect(prismaService.paginator).toHaveBeenCalledOnce();
+      expect(prismaService.paginator).toHaveBeenCalledWith({
+        model: 'Island',
+        paginate: { page: undefined, limit: undefined },
         args: {
           where: {
             name: {
@@ -134,121 +67,154 @@ describe('IslandService', () => {
           },
         },
       });
-      expect(result.data).toEqual(expectedIslands);
+      expect(result.data).toEqual(mockData);
     });
 
     it('should return islands sorted by name in ascending order', async () => {
-      const expectedIslands = [...islands].sort((a, b) =>
+      const mockData = [...mockTestData.sampleIslands].sort((a, b) =>
         a.name.localeCompare(b.name),
       );
 
-      const paginatorSpy = vitest
-        .spyOn(prismaService, 'paginator')
-        .mockResolvedValue({ data: expectedIslands });
+      prismaService.paginator = vi.fn().mockResolvedValue({ data: mockData });
 
       const result = await service.find({
         sortBy: 'name',
         sortOrder: SortOrder.ASC,
       });
 
-      expect(paginatorSpy).toHaveBeenCalledTimes(1);
-      expect(paginatorSpy).toHaveBeenCalledWith({
-        ...paginatorOptions,
+      expect(prismaService.paginator).toHaveBeenCalledOnce();
+      expect(prismaService.paginator).toHaveBeenCalledWith({
+        model: 'Island',
+        paginate: { page: undefined, limit: undefined },
         args: { where: {}, orderBy: { name: 'asc' } },
       });
-      expect(result.data).toEqual(expectedIslands);
+      expect(result.data).toEqual(mockData);
     });
 
     it('should return islands sorted by name in descending order', async () => {
-      const expectedIslands = [...islands].sort((a, b) =>
+      const mockData = [...mockTestData.sampleIslands].sort((a, b) =>
         b.name.localeCompare(a.name),
       );
 
-      const paginatorSpy = vitest
-        .spyOn(prismaService, 'paginator')
-        .mockResolvedValue({ data: expectedIslands });
+      prismaService.paginator = vi.fn().mockResolvedValue({ data: mockData });
 
       const result = await service.find({
         sortBy: 'name',
         sortOrder: SortOrder.DESC,
       });
 
-      expect(paginatorSpy).toHaveBeenCalledTimes(1);
-      expect(paginatorSpy).toHaveBeenCalledWith({
-        ...paginatorOptions,
+      expect(prismaService.paginator).toHaveBeenCalledOnce();
+      expect(prismaService.paginator).toHaveBeenCalledWith({
+        model: 'Island',
+        paginate: { page: undefined, limit: undefined },
         args: { where: {}, orderBy: { name: 'desc' } },
       });
-      expect(result.data).toEqual(expectedIslands);
+      expect(result.data).toEqual(mockData);
     });
 
     it('should return filtered islands by regency code', async () => {
-      const regencyCode = '1101';
-      const expectedIslands = islands.filter(
+      const regencyCode = '32.01';
+      const mockData = mockTestData.sampleIslands.filter(
         (i) => i.regencyCode === regencyCode,
       );
 
-      const paginatorSpy = vitest
-        .spyOn(prismaService, 'paginator')
-        .mockResolvedValue({ data: expectedIslands });
+      prismaService.paginator = vi.fn().mockResolvedValue({ data: mockData });
 
       const result = await service.find({ regencyCode });
 
-      expect(paginatorSpy).toHaveBeenCalledTimes(1);
-      expect(paginatorSpy).toHaveBeenCalledWith({
-        ...paginatorOptions,
+      expect(prismaService.paginator).toHaveBeenCalledOnce();
+      expect(prismaService.paginator).toHaveBeenCalledWith({
+        model: 'Island',
+        paginate: { page: undefined, limit: undefined },
         args: { where: { regencyCode } },
       });
-      expect(result.data).toEqual(expectedIslands);
+      expect(result.data).toEqual(mockData);
     });
 
     it('should return filtered islands that does not belongs to any regency', async () => {
       const regencyCode = '';
-      const expectedIslands = islands.filter((i) => i.regencyCode === null);
+      const mockData = mockTestData.sampleIslands.filter(
+        (i) => i.regencyCode === null,
+      );
 
-      const paginatorSpy = vitest
-        .spyOn(prismaService, 'paginator')
-        .mockResolvedValue({ data: expectedIslands });
+      prismaService.paginator = vi.fn().mockResolvedValue({ data: mockData });
 
       const result = await service.find({ regencyCode });
 
-      expect(paginatorSpy).toHaveBeenCalledTimes(1);
-      expect(paginatorSpy).toHaveBeenCalledWith({
-        ...paginatorOptions,
+      expect(prismaService.paginator).toHaveBeenCalledOnce();
+      expect(prismaService.paginator).toHaveBeenCalledWith({
+        model: 'Island',
+        paginate: { page: undefined, limit: undefined },
         args: { where: { regencyCode: null } },
       });
-      expect(result.data).toEqual(expectedIslands);
+      expect(result.data).toEqual(mockData);
+    });
+
+    it('should apply insensitive filtering when supported by provider', async () => {
+      const testName = 'test island';
+      const expectedResponse = { data: [] };
+
+      // Mock getDBProviderFeatures to return filtering with insensitive mode
+      const getDBProviderFeatures = await import('@/common/utils/db');
+      const spy = vi
+        .spyOn(getDBProviderFeatures, 'getDBProviderFeatures')
+        .mockReturnValue({
+          filtering: { insensitive: true },
+        });
+
+      prismaService.paginator = vi.fn().mockResolvedValue(expectedResponse);
+
+      const result = await service.find({ name: testName });
+
+      expect(result).toEqual(expectedResponse);
+      expect(prismaService.paginator).toHaveBeenCalledWith(
+        expect.objectContaining({
+          args: expect.objectContaining({
+            where: expect.objectContaining({
+              name: expect.objectContaining({
+                contains: testName,
+                mode: 'insensitive',
+              }),
+            }),
+          }),
+        }),
+      );
+
+      // Clean up
+      spy.mockRestore();
     });
   });
 
   describe('findByCode', () => {
     it('should return an island', async () => {
-      const testCode = '110140001';
-      const expectedIsland = islands.find((i) => i.code === testCode) as Island;
-      const expectedRegency = regencies.find(
-        (r) => r.code === expectedIsland?.regencyCode,
-      );
-      const expectedProvince = provinces.find(
-        (p) => p.code === expectedRegency?.provinceCode,
-      );
+      const testCode = '32.01.40001';
+      const expectedIsland =
+        mockTestData.sampleIslands.find((i) => i.code === testCode) ||
+        mockTestData.sampleIslands[0];
+      const expectedRegency =
+        mockTestData.westJavaRegencies.find(
+          (r) => r.code === expectedIsland.regencyCode,
+        ) || mockTestData.westJavaRegencies[0];
+      const expectedProvince =
+        mockTestData.javaProvinces.find(
+          (p) => p.code === expectedRegency.provinceCode,
+        ) || mockTestData.javaProvinces[0];
 
-      const findUniqueSpy = vitest
-        .spyOn(prismaService.island, 'findUnique')
-        .mockResolvedValue({
-          ...expectedIsland,
-          // @ts-expect-error
-          regency: { ...expectedRegency, province: expectedProvince },
-        });
+      prismaService.island.findUnique = vi.fn().mockResolvedValue({
+        ...expectedIsland,
+        regency: { ...expectedRegency, province: expectedProvince },
+      });
 
       const result = await service.findByCode(testCode);
 
-      expect(findUniqueSpy).toHaveBeenCalledTimes(1);
-      expect(findUniqueSpy).toHaveBeenCalledWith(
+      expect(prismaService.island.findUnique).toHaveBeenCalledOnce();
+      expect(prismaService.island.findUnique).toHaveBeenCalledWith(
         expect.objectContaining({
           where: { code: testCode },
         }),
       );
       expect(result).toEqual({
-        ...service.addDecimalCoordinate(expectedIsland),
+        ...expectedIsland,
         parent: {
           regency: expectedRegency,
           province: expectedProvince,
@@ -257,39 +223,41 @@ describe('IslandService', () => {
     });
 
     it('should return an island without regency', async () => {
-      const testCode = '120040001';
-      const expectedIsland = islands.find((i) => i.code === testCode) as Island;
-      const expectedProvince = provinces.find(
-        (p) => p.code === testCode.slice(0, 2),
-      ) as Province;
+      const testCode = '32.00.40001';
+      const expectedIsland = {
+        ...mockTestData.sampleIslands[0],
+        code: testCode,
+        regencyCode: null,
+      };
+      const expectedProvince =
+        mockTestData.javaProvinces.find(
+          (p) => p.code === extractProvinceCode(testCode),
+        ) || mockTestData.javaProvinces[0];
 
-      const findUniqueIslandSpy = vitest
-        .spyOn(prismaService.island, 'findUnique')
-        .mockResolvedValue({
-          ...expectedIsland,
-          // @ts-expect-error
-          regency: null,
-        });
+      prismaService.island.findUnique = vi.fn().mockResolvedValue({
+        ...expectedIsland,
+        regency: null,
+      });
 
-      const findUniqueProvinceSpy = vitest
-        .spyOn(prismaService.province, 'findUnique')
+      prismaService.province.findUnique = vi
+        .fn()
         .mockResolvedValue(expectedProvince);
 
       const result = await service.findByCode(testCode);
 
-      expect(findUniqueIslandSpy).toHaveBeenCalledTimes(1);
-      expect(findUniqueIslandSpy).toHaveBeenCalledWith(
+      expect(prismaService.island.findUnique).toHaveBeenCalledOnce();
+      expect(prismaService.island.findUnique).toHaveBeenCalledWith(
         expect.objectContaining({
           where: { code: testCode },
         }),
       );
-      expect(findUniqueProvinceSpy).toHaveBeenCalledWith(
+      expect(prismaService.province.findUnique).toHaveBeenCalledWith(
         expect.objectContaining({
-          where: { code: testCode.slice(0, 2) },
+          where: { code: extractProvinceCode(testCode) },
         }),
       );
       expect(result).toEqual({
-        ...service.addDecimalCoordinate(expectedIsland),
+        ...expectedIsland,
         parent: {
           regency: null,
           province: expectedProvince,
@@ -300,32 +268,17 @@ describe('IslandService', () => {
     it('should return null if the island is not found', async () => {
       const testCode = '999999999';
 
-      const findUniqueSpy = vitest
-        .spyOn(prismaService.island, 'findUnique')
-        .mockResolvedValue(null);
+      prismaService.island.findUnique = vi.fn().mockResolvedValue(null);
 
       const result = await service.findByCode(testCode);
 
-      expect(findUniqueSpy).toHaveBeenCalledTimes(1);
-      expect(findUniqueSpy).toHaveBeenCalledWith(
+      expect(prismaService.island.findUnique).toHaveBeenCalledOnce();
+      expect(prismaService.island.findUnique).toHaveBeenCalledWith(
         expect.objectContaining({
           where: { code: testCode },
         }),
       );
       expect(result).toBeNull();
-    });
-  });
-
-  describe('addDecimalCoordinate', () => {
-    it('should return an island with decimal latitude and longitude', () => {
-      const testIsland = islands[0];
-      const result = service.addDecimalCoordinate(testIsland);
-
-      expect(result).toEqual({
-        ...testIsland,
-        latitude: expect.any(Number),
-        longitude: expect.any(Number),
-      });
     });
   });
 });

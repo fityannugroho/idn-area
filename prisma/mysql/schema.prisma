@@ -9,9 +9,9 @@ generator client {
 }
 
 model District {
-  code        String    @id @db.VarChar(6)
+  code        String    @id @db.VarChar(8)
   name        String    @db.VarChar(255)
-  regencyCode String    @map("regency_code") @db.VarChar(4)
+  regencyCode String    @map("regency_code") @db.VarChar(5)
   regency     Regency   @relation(fields: [regencyCode], references: [code])
   villages    Village[]
 
@@ -19,12 +19,12 @@ model District {
 }
 
 model Island {
-  code             String   @id @db.VarChar(9)
+  code             String   @id @db.VarChar(11)
   coordinate       String   @db.VarChar(30)
   isOutermostSmall Boolean  @map("is_outermost_small")
   isPopulated      Boolean  @map("is_populated")
   name             String   @db.VarChar(255)
-  regencyCode      String?  @map("regency_code") @db.VarChar(4)
+  regencyCode      String?  @map("regency_code") @db.VarChar(5)
   regency          Regency? @relation(fields: [regencyCode], references: [code])
 
   @@map("islands")
@@ -39,7 +39,7 @@ model Province {
 }
 
 model Regency {
-  code         String     @id @db.VarChar(4)
+  code         String     @id @db.VarChar(5)
   name         String     @db.VarChar(255)
   provinceCode String     @map("province_code") @db.VarChar(2)
   islands      Island[]
@@ -58,8 +58,8 @@ model SeederLogs {
 }
 
 model Village {
-  code         String   @id @db.VarChar(10)
-  districtCode String   @map("district_code") @db.VarChar(6)
+  code         String   @id @db.VarChar(13)
+  districtCode String   @map("district_code") @db.VarChar(8)
   name         String   @db.VarChar(255)
   district     District @relation(fields: [districtCode], references: [code])
 

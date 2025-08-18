@@ -62,7 +62,7 @@ export class RegencyController {
     const regency = await this.regencyService.findByCode(code);
 
     if (regency === null) {
-      throw new NotFoundException(`There are no regency with code '${code}'`);
+      throw new NotFoundException(`Regency with code ${code} not found.`);
     }
 
     return regency;

@@ -7,7 +7,6 @@ import {
 import {
   IsBooleanString,
   IsNotEmpty,
-  IsNumberString,
   IsOptional,
   IsString,
   Length,
@@ -19,13 +18,12 @@ import { Province } from '@/province/province.dto';
 import { Regency } from '@/regency/regency.dto';
 import { SortQuery } from '@/sort/sort.dto';
 import { EqualsAny } from '../common/decorator/EqualsAny';
+import { IsAreaCode } from '../common/decorator/IsAreaCode';
 import { IsNotSymbol } from '../common/decorator/IsNotSymbol';
 
 export class Island {
   @IsNotEmpty()
-  @IsNumberString()
-  @Length(9, 9)
-  @ApiProperty({ description: 'The island code', example: '110140001' })
+  @IsAreaCode('island', { example: '11.01.40001' })
   code: string;
 
   @IsNotEmpty()
@@ -54,20 +52,18 @@ export class Island {
 
   @ValidateIf((o) => o.regencyCode)
   @IsOptional()
-  @IsNumberString()
-  @Length(4, 4)
-  @ApiProperty({
-    description: `The regency code of the island.
-      Providing an empty string will filter islands that are not part of any regency.`,
-    example: '1101',
+  @IsAreaCode('regency', {
+    description: `The regency code of the island.`,
+    example: '11.01',
+    nullable: true,
   })
-  regencyCode?: string | null;
+  regencyCode: string | null;
 
-  @ApiProperty({ example: 3.317622222222222 })
-  latitude?: number;
+  @ApiProperty({ example: 3.317622222222222, nullable: true })
+  latitude: number | null;
 
-  @ApiProperty({ example: 97.12825833333332 })
-  longitude?: number;
+  @ApiProperty({ example: 97.12825833333332, nullable: true })
+  longitude: number | null;
 }
 
 export class IslandSortQuery extends SortQuery {

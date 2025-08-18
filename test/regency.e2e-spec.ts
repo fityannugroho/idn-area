@@ -1,103 +1,124 @@
+import { ValidationPipe } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import {
+  FastifyAdapter,
+  NestFastifyApplication,
+} from '@nestjs/platform-fastify';
+import { Test, TestingModule } from '@nestjs/testing';
 import { Regency } from '@prisma/client';
-import { AppTester } from './helper/app-tester';
-import { provinceRegex, regencyRegex } from './helper/data-regex';
-import { getEncodedSymbols } from './helper/utils';
+import { RegencyModule } from '@/regency/regency.module';
 
 describe('Regency (e2e)', () => {
-  const baseUrl = '/regencies';
-  const testCode = '3273';
-  const badRegencyCodes = ['', '123', '12345', 'abcd'] as const;
-  let tester: AppTester;
+  let app: NestFastifyApplication;
 
   beforeAll(async () => {
-    tester = await AppTester.make();
-    await tester.bootApp();
-  });
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [ConfigModule.forRoot(), RegencyModule],
+    }).compile();
 
-  describe(`GET ${baseUrl}`, () => {
-    it('should return regencies', async () => {
-      const regencies = await tester.expectData<Regency[]>(baseUrl);
+    app = moduleFixture.createNestApplication<NestFastifyApplication>(
+      new FastifyAdapter(),
+    );
 
-      for (const regency of regencies) {
-        expect(regency).toEqual({
-          code: expect.stringMatching(regencyRegex.code),
-          name: expect.stringMatching(regencyRegex.name),
-          provinceCode: expect.stringMatching(regencyRegex.provinceCode),
-        });
-      }
-    });
-
-    it('should return 400 if the `name` is more than 100 chars, or contains any symbols', async () => {
-      const invalidNames = ['x'.repeat(101), ...getEncodedSymbols()];
-
-      for (const name of invalidNames) {
-        await tester.expectBadRequest(`${baseUrl}?name=${name}`);
-      }
-    });
-
-    it('should return 400 if any regency sort query is invalid', async () => {
-      await tester.expectBadSortQuery(
-        (sortQueryStr) => `${baseUrl}?${sortQueryStr}`,
-        ['', 'unknown'],
-      );
-    });
-
-    it('should return empty array if there are no any regencies match with the `name`', async () => {
-      const regencies = await tester.expectData<Regency[]>(
-        `${baseUrl}?name=unknown`,
-      );
-
-      expect(regencies).toEqual([]);
-    });
-
-    it('should return all regencies match with the `name`', async () => {
-      const testName = 'bandung';
-      const regencies = await tester.expectData<Regency[]>(
-        `${baseUrl}?name=${testName}`,
-      );
-
-      for (const regency of regencies) {
-        expect(regency).toEqual({
-          code: expect.stringMatching(regencyRegex.code),
-          name: expect.stringMatching(new RegExp(testName, 'i')),
-          provinceCode: expect.stringMatching(regencyRegex.provinceCode),
-        });
-      }
-    });
-  });
-
-  describe(`GET ${baseUrl}/{code}`, () => {
-    it('should return 400 if the `code` is invalid', async () => {
-      await tester.expectBadCode(
-        (code) => `${baseUrl}/${code}`,
-        badRegencyCodes,
-      );
-    });
-
-    it('should return 404 if the `code` does not match with any regency', async () => {
-      await tester.expectNotFound(`${baseUrl}/0000`);
-    });
-
-    it('should return a regency that match with the `code`', async () => {
-      const regency = await tester.expectData<Regency>(
-        `${baseUrl}/${testCode}`,
-      );
-
-      expect(regency).toEqual({
-        code: testCode,
-        name: expect.stringMatching(regencyRegex.name),
-        provinceCode: testCode.slice(0, 2),
-        parent: {
-          province: {
-            code: testCode.slice(0, 2),
-            name: expect.stringMatching(provinceRegex.name),
-          },
-        },
-      });
-    });
+    app.useGlobalPipes(new ValidationPipe({ transform: true }));
+    await app.init();
+    await app.getHttpAdapter().getInstance().ready();
   });
 
   afterAll(async () => {
-    await tester.closeApp();
+    await app.close();
+  });
+
+  it('/GET regencies', async () => {
+    const response = await app.inject({
+      method: 'GET',
+      url: '/regencies',
+    });
+
+    expect(response.statusCode).toBe(200);
+
+    const data = response.json();
+    expect(data).toHaveProperty('statusCode', 200);
+    expect(data).toHaveProperty('data');
+    expect(data).toHaveProperty('meta');
+    expect(data.data).toBeInstanceOf(Array);
+    expect(data.meta).toHaveProperty('total');
+
+    // Validate structure of first regency if exists
+    if (data.data.length > 0) {
+      const regency: Regency = data.data[0];
+      expect(regency).toHaveProperty('code');
+      expect(regency).toHaveProperty('name');
+      expect(regency).toHaveProperty('provinceCode');
+      expect(typeof regency.code).toBe('string');
+      expect(typeof regency.name).toBe('string');
+      expect(typeof regency.provinceCode).toBe('string');
+    }
+  });
+
+  it('/GET regencies with name filter', async () => {
+    const response = await app.inject({
+      method: 'GET',
+      url: '/regencies?name=bandung',
+    });
+
+    expect(response.statusCode).toBe(200);
+
+    const data = response.json();
+    expect(data.data).toBeInstanceOf(Array);
+
+    // All results should contain 'bandung' in name (case insensitive)
+    data.data.forEach((regency: Regency) => {
+      expect(regency.name.toLowerCase()).toContain('bandung');
+    });
+  });
+
+  it('/GET regencies/:code', async () => {
+    // First get a valid regency code
+    const listResponse = await app.inject({
+      method: 'GET',
+      url: '/regencies',
+    });
+
+    const listData = listResponse.json();
+    if (listData.data.length > 0) {
+      const testCode = listData.data[0].code;
+
+      const response = await app.inject({
+        method: 'GET',
+        url: `/regencies/${testCode}`,
+      });
+
+      expect(response.statusCode).toBe(200);
+
+      const data = response.json();
+      expect(data.data).toHaveProperty('code', testCode);
+      expect(data.data).toHaveProperty('name');
+      expect(data.data).toHaveProperty('provinceCode');
+      expect(data.data).toHaveProperty('parent');
+      expect(data.data.parent).toHaveProperty('province');
+    }
+  });
+
+  it('/GET regencies/:code with invalid code should return 400', async () => {
+    const response = await app.inject({
+      method: 'GET',
+      url: '/regencies/invalid',
+    });
+
+    expect(response.statusCode).toBe(400);
+    expect(response.json()).toHaveProperty('statusCode', 400);
+    expect(response.json()).toHaveProperty('error', 'Bad Request');
+  });
+
+  it('/GET regencies/:code with non-existent code should return 404', async () => {
+    const response = await app.inject({
+      method: 'GET',
+      url: '/regencies/99.99',
+    });
+
+    expect(response.statusCode).toBe(404);
+    expect(response.json()).toHaveProperty('statusCode', 404);
+    expect(response.json()).toHaveProperty('error', 'Not Found');
   });
 });

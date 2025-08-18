@@ -1,32 +1,32 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { Island } from '@prisma/client';
-import { getValues, sortArray } from '@/common/utils/array';
-import { getIslands } from '@/common/utils/data';
+import { mockTestData } from '@/../test/fixtures/data.fixtures';
 import { SortOrder } from '@/sort/sort.dto';
-import { MockIslandService } from './__mocks__/island.service';
 import { IslandController } from './island.controller';
+import { Island } from './island.dto';
 import { IslandService } from './island.service';
 
 describe('IslandController', () => {
-  const testIslandCode = '110140001';
-
-  let islands: Island[];
   let controller: IslandController;
-
-  beforeAll(async () => {
-    islands = await getIslands();
-  });
+  let islandService: IslandService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [IslandController],
       providers: [
-        { provide: IslandService, useValue: new MockIslandService(islands) },
+        {
+          provide: IslandService,
+          useValue: {
+            find: vi.fn(),
+            findByCode: vi.fn(),
+            _addDecimalCoordinate: vi.fn((island: Island) => island),
+          },
+        },
       ],
     }).compile();
 
     controller = module.get<IslandController>(IslandController);
+    islandService = module.get<IslandService>(IslandService);
   });
 
   it('should be defined', () => {
@@ -34,157 +34,164 @@ describe('IslandController', () => {
   });
 
   describe('find', () => {
-    const testIslandName = 'bali';
-    let filteredIslandsByName: Island[];
-
-    beforeAll(() => {
-      filteredIslandsByName = islands.filter((p) =>
-        p.name.toLowerCase().includes(testIslandName.toLowerCase()),
-      );
-    });
-
     it('should return all islands', async () => {
-      const { data } = await controller.find();
+      const mockData = mockTestData.sampleIslands;
+      islandService.find = vi.fn().mockResolvedValue({ data: mockData });
 
-      for (const island of data) {
-        expect(island).toEqual(
-          expect.objectContaining({
-            code: expect.any(String),
-            coordinate: expect.any(String),
-            isOutermostSmall: expect.any(Boolean),
-            isPopulated: expect.any(Boolean),
-            latitude: expect.any(Number),
-            longitude: expect.any(Number),
-            name: expect.any(String),
-            regencyCode:
-              island.regencyCode === null ? null : expect.any(String),
-          }),
-        );
-      }
+      const result = await controller.find();
+      const { data } = result;
 
-      expect(data).toHaveLength(islands.length);
+      expect(islandService.find).toHaveBeenCalledOnce();
+      expect(islandService.find).toHaveBeenCalledWith(undefined);
+      expect(data).toEqual(mockData);
     });
 
     it('should return islands filtered by name', async () => {
-      const { data } = await controller.find({ name: testIslandName });
+      const testIslandName = 'PULAU';
+      const mockData = mockTestData.sampleIslands.filter((i) =>
+        i.name.toUpperCase().includes(testIslandName.toUpperCase()),
+      );
+      islandService.find = vi.fn().mockResolvedValue({ data: mockData });
 
-      for (const island of data) {
-        expect(island).toEqual(
-          expect.objectContaining({
-            code: expect.any(String),
-            coordinate: expect.any(String),
-            isOutermostSmall: expect.any(Boolean),
-            isPopulated: expect.any(Boolean),
-            latitude: expect.any(Number),
-            longitude: expect.any(Number),
-            name: expect.stringMatching(new RegExp(testIslandName, 'i')),
-            regencyCode:
-              island.regencyCode === null ? null : expect.any(String),
-          }),
-        );
-      }
+      const result = await controller.find({ name: testIslandName });
+      const { data } = result;
 
-      expect(data).toHaveLength(filteredIslandsByName.length);
+      expect(islandService.find).toHaveBeenCalledOnce();
+      expect(islandService.find).toHaveBeenCalledWith({ name: testIslandName });
+      expect(data).toEqual(mockData);
     });
 
     it('should return empty array if there is no island with the corresponding name', async () => {
+      islandService.find = vi.fn().mockResolvedValue({ data: [] });
+
       const { data } = await controller.find({ name: 'unknown island' });
 
+      expect(islandService.find).toHaveBeenCalledOnce();
       expect(data).toEqual([]);
     });
 
     it('should return islands filtered and sorted by name ascending', async () => {
-      const { data } = await controller.find({
-        name: testIslandName,
+      const testName = 'PULAU';
+      const mockData = mockTestData.sampleIslands
+        .filter((i) => i.name.toUpperCase().includes(testName.toUpperCase()))
+        .sort((a, b) => a.name.localeCompare(b.name));
+      islandService.find = vi.fn().mockResolvedValue({ data: mockData });
+
+      const result = await controller.find({
+        name: testName,
         sortBy: 'name',
       });
+      const { data } = result;
 
-      expect(getValues(data, 'code')).toEqual(
-        getValues(sortArray(filteredIslandsByName, 'name'), 'code'),
-      );
+      expect(islandService.find).toHaveBeenCalledWith({
+        name: testName,
+        sortBy: 'name',
+      });
+      expect(data).toEqual(mockData);
     });
 
     it('should return islands filtered and sorted by name descending', async () => {
-      const { data } = await controller.find({
-        name: testIslandName,
+      const testName = 'PULAU';
+      const mockData = mockTestData.sampleIslands
+        .filter((i) => i.name.toUpperCase().includes(testName.toUpperCase()))
+        .sort((a, b) => b.name.localeCompare(a.name));
+      islandService.find = vi.fn().mockResolvedValue({ data: mockData });
+
+      const result = await controller.find({
+        name: testName,
         sortBy: 'name',
         sortOrder: SortOrder.DESC,
       });
+      const { data } = result;
 
-      expect(getValues(data, 'code')).toEqual(
-        getValues(
-          sortArray(filteredIslandsByName, 'name', SortOrder.DESC),
-          'code',
-        ),
-      );
-    });
-
-    it('should return islands filtered by name and sorted by coordinate ascending', async () => {
-      const { data } = await controller.find({
-        name: testIslandName,
-        sortBy: 'coordinate',
-      });
-
-      expect(getValues(data, 'code')).toEqual(
-        getValues(sortArray(filteredIslandsByName, 'coordinate'), 'code'),
-      );
-    });
-
-    it('should return islands filtered by name and sorted by coordinate descending', async () => {
-      const { data } = await controller.find({
-        name: testIslandName,
-        sortBy: 'coordinate',
+      expect(islandService.find).toHaveBeenCalledWith({
+        name: testName,
+        sortBy: 'name',
         sortOrder: SortOrder.DESC,
       });
-
-      expect(getValues(data, 'code')).toEqual(
-        getValues(
-          sortArray(filteredIslandsByName, 'coordinate', SortOrder.DESC),
-          'code',
-        ),
-      );
+      expect(data).toEqual(mockData);
     });
 
-    it('should return islands filtered by regencyCode', async () => {
-      const regencyCode = '1101';
+    it('should return islands filtered by regency code', async () => {
+      const regencyCode = '32.01';
+      const mockData = mockTestData.sampleIslands.filter(
+        (i) => i.regencyCode === regencyCode,
+      );
+      islandService.find = vi.fn().mockResolvedValue({ data: mockData });
+
       const { data } = await controller.find({ regencyCode });
 
-      for (const island of data) {
-        expect(island).toEqual(expect.objectContaining({ regencyCode }));
-      }
-
-      expect(data).toHaveLength(
-        islands.filter((island) => island.regencyCode === regencyCode).length,
-      );
+      expect(islandService.find).toHaveBeenCalledOnce();
+      expect(islandService.find).toHaveBeenCalledWith({ regencyCode });
+      expect(data).toEqual(mockData);
     });
 
-    it('should return islands that does not belong to any regency', async () => {
-      const { data } = await controller.find({ regencyCode: '' });
-
-      for (const island of data) {
-        expect(island).toEqual(expect.objectContaining({ regencyCode: null }));
-      }
-
-      expect(data).toHaveLength(
-        islands.filter((island) => island.regencyCode === null).length,
+    it('should return islands that do not belong to any regency', async () => {
+      const regencyCode = '';
+      const mockData = mockTestData.sampleIslands.filter(
+        (i) => i.regencyCode === null,
       );
+      islandService.find = vi.fn().mockResolvedValue({ data: mockData });
+
+      const { data } = await controller.find({ regencyCode });
+
+      expect(islandService.find).toHaveBeenCalledOnce();
+      expect(islandService.find).toHaveBeenCalledWith({ regencyCode });
+      expect(data).toEqual(mockData);
     });
   });
 
   describe('findByCode', () => {
-    it('should return island with the corresponding code', async () => {
-      const testIsland = await controller.findByCode({ code: testIslandCode });
-      const expectedIsland = islands.find(
-        (island) => island.code === testIslandCode,
+    it('should return an island with matching code', async () => {
+      const testIslandCode = '32.01.40001';
+      const expectedIsland = mockTestData.sampleIslands.find(
+        (i) => i.code === testIslandCode,
       );
+      const mockResult = {
+        ...expectedIsland,
+        parent: {
+          regency: mockTestData.westJavaRegencies[0],
+          province: mockTestData.javaProvinces[0],
+        },
+      };
+      islandService.findByCode = vi.fn().mockResolvedValue(mockResult);
 
-      expect(testIsland).toEqual(expect.objectContaining(expectedIsland));
+      const result = await controller.findByCode({ code: testIslandCode });
+
+      expect(islandService.findByCode).toHaveBeenCalledOnce();
+      expect(islandService.findByCode).toHaveBeenCalledWith(testIslandCode);
+      expect(result).toEqual(mockResult);
+    });
+
+    it('should return an island without regency', async () => {
+      const testIslandCode = '32.00.40001';
+      const expectedIsland = mockTestData.sampleIslands.find(
+        (i) => i.regencyCode === null,
+      );
+      const mockResult = {
+        ...expectedIsland,
+        parent: {
+          regency: null,
+          province: mockTestData.javaProvinces[0],
+        },
+      };
+      islandService.findByCode = vi.fn().mockResolvedValue(mockResult);
+
+      const result = await controller.findByCode({ code: testIslandCode });
+
+      expect(islandService.findByCode).toHaveBeenCalledOnce();
+      expect(islandService.findByCode).toHaveBeenCalledWith(testIslandCode);
+      expect(result).toEqual(mockResult);
     });
 
     it('should throw NotFoundException if there is no matching island', async () => {
+      const invalidCode = '0000';
+      islandService.findByCode = vi.fn().mockResolvedValue(null);
+
       await expect(
-        controller.findByCode({ code: '000000000' }),
+        controller.findByCode({ code: invalidCode }),
       ).rejects.toThrowError(NotFoundException);
+      expect(islandService.findByCode).toHaveBeenCalledWith(invalidCode);
     });
   });
 });

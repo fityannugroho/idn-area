@@ -4,22 +4,22 @@ import {
   PartialType,
   PickType,
 } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumberString, Length, MaxLength } from 'class-validator';
+import { IsNotEmpty, Length, MaxLength } from 'class-validator';
 import { EqualsAny } from '@/common/decorator/EqualsAny';
+import { IsAreaCode } from '@/common/decorator/IsAreaCode';
 import { IsNotSymbol } from '@/common/decorator/IsNotSymbol';
 import { PaginationQuery } from '@/common/dto/pagination.dto';
 import { SortQuery } from '@/sort/sort.dto';
 
 export class Province {
   @IsNotEmpty()
-  @IsNumberString()
   @Length(2, 2)
-  @ApiProperty({ description: 'The province code', example: '11' })
+  @IsAreaCode('province', { example: '11' })
   code: string;
 
   @IsNotSymbol()
   @MaxLength(100)
-  @ApiProperty({ description: 'The province name', example: 'ACEH' })
+  @ApiProperty({ description: 'The province name', example: 'Aceh' })
   name: string;
 }
 

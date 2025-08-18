@@ -1,22 +1,13 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { Province } from '@prisma/client';
-import { getValues, sortArray } from '@/common/utils/array';
-import { getProvinces } from '@/common/utils/data';
+import { mockTestData } from '@/../test/fixtures/data.fixtures';
 import { SortOrder } from '@/sort/sort.dto';
-import { MockProvinceService } from './__mocks__/province.service';
 import { ProvinceController } from './province.controller';
 import { ProvinceService } from './province.service';
 
 describe('ProvinceController', () => {
-  const testProvCode = '32';
-
   let controller: ProvinceController;
-  let provinces: Province[];
-
-  beforeAll(async () => {
-    provinces = await getProvinces();
-  });
+  let provinceService: ProvinceService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -24,12 +15,16 @@ describe('ProvinceController', () => {
       providers: [
         {
           provide: ProvinceService,
-          useValue: new MockProvinceService(provinces),
+          useValue: {
+            find: vi.fn(),
+            findByCode: vi.fn(),
+          },
         },
       ],
     }).compile();
 
     controller = module.get<ProvinceController>(ProvinceController);
+    provinceService = module.get<ProvinceService>(ProvinceService);
   });
 
   it('should be defined', () => {
@@ -38,77 +33,96 @@ describe('ProvinceController', () => {
 
   describe('find', () => {
     it('should return all provinces', async () => {
+      const mockData = mockTestData.javaProvinces;
+      provinceService.find = vi.fn().mockResolvedValue({ data: mockData });
+
       const { data } = await controller.find();
 
-      for (const province of data) {
-        expect(province).toEqual(
-          expect.objectContaining({
-            code: expect.any(String),
-            name: expect.any(String),
-          }),
-        );
-      }
-
-      expect(data).toHaveLength(provinces.length);
+      expect(provinceService.find).toHaveBeenCalledOnce();
+      expect(provinceService.find).toHaveBeenCalledWith(undefined);
+      expect(data).toEqual(mockData);
     });
 
     it('should return all provinces sorted by name ascending', async () => {
-      const testProvinces = await controller.find({
+      const mockData = [...mockTestData.javaProvinces].sort((a, b) =>
+        a.name.localeCompare(b.name),
+      );
+      provinceService.find = vi.fn().mockResolvedValue({ data: mockData });
+
+      const result = await controller.find({
         sortBy: 'name',
         sortOrder: SortOrder.ASC,
       });
 
-      expect(getValues(testProvinces.data, 'code')).toEqual(
-        getValues(sortArray(provinces, 'name'), 'code'),
-      );
+      expect(provinceService.find).toHaveBeenCalledOnce();
+      expect(provinceService.find).toHaveBeenCalledWith({
+        sortBy: 'name',
+        sortOrder: SortOrder.ASC,
+      });
+      expect(result.data).toEqual(mockData);
     });
 
     it('should return all provinces sorted by name descending', async () => {
-      const testProvinces = await controller.find({
+      const mockData = [...mockTestData.javaProvinces].sort((a, b) =>
+        b.name.localeCompare(a.name),
+      );
+      provinceService.find = vi.fn().mockResolvedValue({ data: mockData });
+
+      const result = await controller.find({
         sortBy: 'name',
         sortOrder: SortOrder.DESC,
       });
 
-      expect(getValues(testProvinces.data, 'code')).toEqual(
-        getValues(sortArray(provinces, 'name', 'desc'), 'code'),
-      );
+      expect(provinceService.find).toHaveBeenCalledOnce();
+      expect(provinceService.find).toHaveBeenCalledWith({
+        sortBy: 'name',
+        sortOrder: SortOrder.DESC,
+      });
+      expect(result.data).toEqual(mockData);
     });
 
     it('should return all provinces filtered by name', async () => {
       const testProvName = 'jawa';
+      const mockData = mockTestData.javaProvinces.filter((p) =>
+        p.name.toLowerCase().includes(testProvName.toLowerCase()),
+      );
+      provinceService.find = vi.fn().mockResolvedValue({ data: mockData });
+
       const { data } = await controller.find({
         name: testProvName,
       });
 
-      for (const province of data) {
-        expect(province).toEqual(
-          expect.objectContaining({
-            code: expect.any(String),
-            name: expect.stringMatching(new RegExp(testProvName, 'i')),
-          }),
-        );
-      }
-
-      expect(data.length).toEqual(
-        provinces.filter((p) =>
-          p.name.toLowerCase().includes(testProvName.toLowerCase()),
-        ).length,
-      );
+      expect(provinceService.find).toHaveBeenCalledOnce();
+      expect(provinceService.find).toHaveBeenCalledWith({
+        name: testProvName,
+      });
+      expect(data).toEqual(mockData);
     });
   });
 
   describe('findByCode', () => {
     it('should return a province with matching code', async () => {
-      const testProvince = await controller.findByCode({ code: testProvCode });
-      const expectedProvince = provinces.find((p) => p.code === testProvCode);
+      const testProvCode = '32';
+      const expectedProvince = mockTestData.javaProvinces.find(
+        (p) => p.code === testProvCode,
+      );
+      provinceService.findByCode = vi.fn().mockResolvedValue(expectedProvince);
 
-      expect(testProvince).toEqual(expect.objectContaining(expectedProvince));
+      const result = await controller.findByCode({ code: testProvCode });
+
+      expect(provinceService.findByCode).toHaveBeenCalledOnce();
+      expect(provinceService.findByCode).toHaveBeenCalledWith(testProvCode);
+      expect(result).toEqual(expectedProvince);
     });
 
     it('should throw NotFoundException if there is no matching province', async () => {
-      await expect(controller.findByCode({ code: '00' })).rejects.toThrowError(
-        NotFoundException,
-      );
+      const invalidCode = '00';
+      provinceService.findByCode = vi.fn().mockResolvedValue(null);
+
+      await expect(
+        controller.findByCode({ code: invalidCode }),
+      ).rejects.toThrowError(NotFoundException);
+      expect(provinceService.findByCode).toHaveBeenCalledWith(invalidCode);
     });
   });
 });

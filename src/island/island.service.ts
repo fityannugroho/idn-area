@@ -1,15 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { Island } from '@prisma/client';
 import { PaginatedReturn } from '@/common/interceptor/paginate.interceptor';
+import { extractProvinceCode } from '@/common/utils/code';
 import { convertCoordinate } from '@/common/utils/coordinate';
 import { getDBProviderFeatures } from '@/common/utils/db';
+import { PrismaService } from '@/prisma/prisma.service';
+import { SortService } from '@/sort/sort.service';
 import {
   Island as IslandDTO,
   IslandFindQueries,
   IslandWithParent,
-} from '@/island/island.dto';
-import { PrismaService } from '@/prisma/prisma.service';
-import { SortService } from '@/sort/sort.service';
+} from './island.dto';
 
 @Injectable()
 export class IslandService {
@@ -25,16 +26,30 @@ export class IslandService {
   /**
    * Add decimal latitude and longitude to the island object.
    */
-  addDecimalCoordinate(island: Island): IslandDTO {
-    const [latitude, longitude] = convertCoordinate(island.coordinate);
+  private _addDecimalCoordinate(island: Island): IslandDTO {
+    const islandDTO = island as IslandDTO;
 
-    return { ...island, latitude, longitude };
+    try {
+      const [latitude, longitude] = convertCoordinate(island.coordinate);
+      islandDTO.latitude = latitude;
+      islandDTO.longitude = longitude;
+    } catch (error) {
+      // Log the error for debugging but provide fallback values
+      console.warn(
+        `Invalid coordinate format for island ${island.code}: ${island.coordinate}`,
+        error,
+      );
+      islandDTO.latitude = null;
+      islandDTO.longitude = null;
+    }
+
+    return islandDTO;
   }
 
-  async find(options?: IslandFindQueries): Promise<PaginatedReturn<Island>> {
+  async find(options?: IslandFindQueries): Promise<PaginatedReturn<IslandDTO>> {
     const { page, limit, name, regencyCode, sortBy, sortOrder } = options ?? {};
 
-    return this.prisma.paginator({
+    const result = await this.prisma.paginator({
       model: 'Island',
       paginate: { page, limit },
       args: {
@@ -56,6 +71,18 @@ export class IslandService {
         }),
       },
     });
+
+    // Optimize memory usage by modifying objects in place
+    // instead of creating new array with map()
+    const islands = result.data;
+    for (let i = 0; i < islands.length; i++) {
+      islands[i] = this._addDecimalCoordinate(islands[i]);
+    }
+
+    return {
+      ...result,
+      data: islands as IslandDTO[],
+    };
   }
 
   async findByCode(code: string): Promise<IslandWithParent | null> {
@@ -78,12 +105,12 @@ export class IslandService {
 
     if (!regencyWithProvince) {
       return {
-        ...this.addDecimalCoordinate(island),
+        ...this._addDecimalCoordinate(island),
         parent: {
           regency: null,
           province: (await this.prisma.province.findUnique({
             where: {
-              code: code.slice(0, 2),
+              code: extractProvinceCode(code),
             },
           })) as NonNullable<IslandWithParent['parent']['province']>,
         },
@@ -93,7 +120,7 @@ export class IslandService {
     const { province, ...regency } = regencyWithProvince;
 
     return {
-      ...this.addDecimalCoordinate(island),
+      ...this._addDecimalCoordinate(island),
       parent: { regency, province },
     };
   }

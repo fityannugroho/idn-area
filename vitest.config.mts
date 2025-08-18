@@ -8,6 +8,25 @@ export default defineConfig({
     root: './',
     coverage: {
       provider: 'v8',
+      exclude: [
+        'node_modules/**',
+        'dist/**',
+        'coverage/**',
+        '**/*.d.ts',
+        '**/*.module.ts', // Module files usually don't need testing
+        'src/main.ts', // Application bootstrap
+        'prisma/**', // Database scripts
+        '**/*.config.*',
+        'test/**',
+      ],
+      thresholds: {
+        global: {
+          branches: 80,
+          functions: 80,
+          lines: 80,
+          statements: 80,
+        },
+      },
     },
   },
   resolve: {

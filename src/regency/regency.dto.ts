@@ -4,8 +4,9 @@ import {
   PartialType,
   PickType,
 } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumberString, Length, MaxLength } from 'class-validator';
+import { IsNotEmpty, Length, MaxLength } from 'class-validator';
 import { EqualsAny } from '@/common/decorator/EqualsAny';
+import { IsAreaCode } from '@/common/decorator/IsAreaCode';
 import { IsNotSymbol } from '@/common/decorator/IsNotSymbol';
 import { PaginationQuery } from '@/common/dto/pagination.dto';
 import { Province } from '@/province/province.dto';
@@ -13,23 +14,20 @@ import { SortQuery } from '@/sort/sort.dto';
 
 export class Regency {
   @IsNotEmpty()
-  @IsNumberString()
-  @Length(4, 4)
-  @ApiProperty({ description: 'The regency code', example: '1101' })
+  @IsAreaCode('regency', { example: '11.01' })
   code: string;
 
   @IsNotSymbol()
   @MaxLength(100)
   @ApiProperty({
     description: 'The regency name',
-    example: 'KABUPATEN ACEH SELATAN',
+    example: 'Kabupaten Aceh Selatan',
   })
   name: string;
 
   @IsNotEmpty()
-  @IsNumberString()
   @Length(2, 2)
-  @ApiProperty({
+  @IsAreaCode('province', {
     description: 'The province code of the regency',
     example: '11',
   })

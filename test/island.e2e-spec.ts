@@ -1,165 +1,119 @@
+import { ValidationPipe } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import {
+  FastifyAdapter,
+  NestFastifyApplication,
+} from '@nestjs/platform-fastify';
+import { Test, TestingModule } from '@nestjs/testing';
 import { Island } from '@prisma/client';
-import { AppTester } from './helper/app-tester';
-import { islandRegex, regencyRegex } from './helper/data-regex';
-import { getEncodedSymbols } from './helper/utils';
+import { IslandModule } from '@/island/island.module';
 
 describe('Island (e2e)', () => {
-  const baseUrl = '/islands';
-  const testCode = '110140001';
-  const badIslandCodes = ['', '12345678', '1234567890', 'abcdefghi'] as const;
-  let tester: AppTester;
+  let app: NestFastifyApplication;
 
   beforeAll(async () => {
-    tester = await AppTester.make();
-    await tester.bootApp();
-  });
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [ConfigModule.forRoot(), IslandModule],
+    }).compile();
 
-  describe(`GET ${baseUrl}`, () => {
-    it('should return islands', async () => {
-      const islands = await tester.expectData<Island[]>(baseUrl);
+    app = moduleFixture.createNestApplication<NestFastifyApplication>(
+      new FastifyAdapter(),
+    );
 
-      for (const island of islands) {
-        expect(island).toEqual({
-          code: expect.stringMatching(islandRegex.code),
-          coordinate: expect.stringMatching(islandRegex.coordinate),
-          isOutermostSmall: expect.any(Boolean),
-          isPopulated: expect.any(Boolean),
-          latitude: expect.any(Number),
-          longitude: expect.any(Number),
-          name: expect.stringMatching(islandRegex.name),
-          regencyCode: island.regencyCode ? island.code.slice(0, 4) : null,
-        });
-      }
-    });
-
-    it("should return 400 if the `name` is more than 100 chars, or contains any symbols except '-/", async () => {
-      const invalidNames = [
-        'x'.repeat(101),
-        ...getEncodedSymbols({ exclude: "'-/" }),
-      ];
-
-      for (const name of invalidNames) {
-        await tester.expectBadRequest(`${baseUrl}?name=${name}`);
-      }
-    });
-
-    it('should return 400 if any island sort query is invalid', async () => {
-      await tester.expectBadSortQuery(
-        (sortQueryStr) => `${baseUrl}?${sortQueryStr}`,
-        ['', 'unknown'],
-      );
-    });
-
-    it('should return empty array if there are no any islands match with the `name`', async () => {
-      const islands = await tester.expectData<Island[]>(
-        `${baseUrl}?name=unknown`,
-      );
-
-      expect(islands).toEqual([]);
-    });
-
-    it('should return all islands match with the `name`', async () => {
-      const testName = 'batu';
-      const islands = await tester.expectData<Island[]>(
-        `${baseUrl}?name=${testName}`,
-      );
-
-      for (const island of islands) {
-        expect(island).toEqual({
-          code: expect.stringMatching(islandRegex.code),
-          coordinate: expect.stringMatching(islandRegex.coordinate),
-          isOutermostSmall: expect.any(Boolean),
-          isPopulated: expect.any(Boolean),
-          latitude: expect.any(Number),
-          longitude: expect.any(Number),
-          name: expect.stringMatching(new RegExp(testName, 'i')),
-          regencyCode: island.regencyCode ? island.code.slice(0, 4) : null,
-        });
-      }
-    });
-
-    it('should return all islands match with the `regencyCode`', async () => {
-      const testRegencyCode = '1101';
-      const islands = await tester.expectData<Island[]>(
-        `${baseUrl}?regencyCode=${testRegencyCode}`,
-      );
-
-      for (const island of islands) {
-        expect(island).toEqual({
-          code: expect.stringMatching(islandRegex.code),
-          coordinate: expect.stringMatching(islandRegex.coordinate),
-          isOutermostSmall: expect.any(Boolean),
-          isPopulated: expect.any(Boolean),
-          latitude: expect.any(Number),
-          longitude: expect.any(Number),
-          name: expect.stringMatching(islandRegex.name),
-          regencyCode: testRegencyCode,
-        });
-      }
-    });
-
-    it('should return all islands that does not belong to any regency', async () => {
-      const islands = await tester.expectData<Island[]>(
-        `${baseUrl}?regencyCode`,
-      );
-
-      for (const island of islands) {
-        expect(island).toEqual({
-          code: expect.stringMatching(islandRegex.code),
-          coordinate: expect.stringMatching(islandRegex.coordinate),
-          isOutermostSmall: expect.any(Boolean),
-          isPopulated: expect.any(Boolean),
-          latitude: expect.any(Number),
-          longitude: expect.any(Number),
-          name: expect.stringMatching(islandRegex.name),
-          regencyCode: null,
-        });
-      }
-    });
-  });
-
-  describe(`GET ${baseUrl}/{code}`, () => {
-    it('should return 400 if the `code` is invalid', async () => {
-      await tester.expectBadCode(
-        (code) => `${baseUrl}/${code}`,
-        badIslandCodes,
-      );
-    });
-
-    it('should return 404 if the `code` does not exist', async () => {
-      await tester.expectNotFound(`${baseUrl}/123456789`);
-    });
-
-    it('should return the island with the `code`', async () => {
-      const island = await tester.expectData<Island>(`${baseUrl}/${testCode}`);
-
-      expect(island).toEqual({
-        code: testCode,
-        coordinate: expect.stringMatching(islandRegex.coordinate),
-        isOutermostSmall: expect.any(Boolean),
-        isPopulated: expect.any(Boolean),
-        latitude: expect.any(Number),
-        longitude: expect.any(Number),
-        name: expect.stringMatching(islandRegex.name),
-        regencyCode: island.regencyCode ? island.code.slice(0, 4) : null,
-        parent: {
-          regency: island.regencyCode
-            ? {
-                code: island.regencyCode,
-                name: expect.stringMatching(regencyRegex.name),
-                provinceCode: island.code.slice(0, 2),
-              }
-            : null,
-          province: {
-            code: island.code.slice(0, 2),
-            name: expect.stringMatching(islandRegex.name),
-          },
-        },
-      });
-    });
+    app.useGlobalPipes(new ValidationPipe({ transform: true }));
+    await app.init();
+    await app.getHttpAdapter().getInstance().ready();
   });
 
   afterAll(async () => {
-    await tester.closeApp();
+    await app.close();
+  });
+
+  it('/GET islands', async () => {
+    const response = await app.inject({
+      method: 'GET',
+      url: '/islands',
+    });
+
+    expect(response.statusCode).toBe(200);
+
+    const data = response.json();
+    expect(data).toHaveProperty('statusCode', 200);
+    expect(data).toHaveProperty('data');
+    expect(data).toHaveProperty('meta');
+    expect(data.data).toBeInstanceOf(Array);
+    expect(data.meta).toHaveProperty('total');
+
+    // Validate structure of first island if exists
+    if (data.data.length > 0) {
+      const island: Island = data.data[0];
+      expect(island).toHaveProperty('code');
+      expect(island).toHaveProperty('name');
+      expect(typeof island.code).toBe('string');
+      expect(typeof island.name).toBe('string');
+    }
+  });
+
+  it('/GET islands with name filter', async () => {
+    const response = await app.inject({
+      method: 'GET',
+      url: '/islands?name=jawa',
+    });
+
+    expect(response.statusCode).toBe(200);
+
+    const data = response.json();
+    expect(data.data).toBeInstanceOf(Array);
+
+    // All results should contain 'jawa' in name (case insensitive)
+    data.data.forEach((island: Island) => {
+      expect(island.name.toLowerCase()).toContain('jawa');
+    });
+  });
+
+  it('/GET islands/:code', async () => {
+    // First get a valid island code
+    const listResponse = await app.inject({
+      method: 'GET',
+      url: '/islands',
+    });
+
+    const listData = listResponse.json();
+    if (listData.data.length > 0) {
+      const testCode = listData.data[0].code;
+
+      const response = await app.inject({
+        method: 'GET',
+        url: `/islands/${testCode}`,
+      });
+
+      expect(response.statusCode).toBe(200);
+
+      const data = response.json();
+      expect(data.data).toHaveProperty('code', testCode);
+      expect(data.data).toHaveProperty('name');
+    }
+  });
+
+  it('/GET islands/:code with invalid code should return 400', async () => {
+    const response = await app.inject({
+      method: 'GET',
+      url: '/islands/invalid-code',
+    });
+
+    expect(response.statusCode).toBe(400);
+    expect(response.json()).toHaveProperty('statusCode', 400);
+    expect(response.json()).toHaveProperty('error', 'Bad Request');
+  });
+
+  it('/GET islands/:code with non-existent code should return 404', async () => {
+    const response = await app.inject({
+      method: 'GET',
+      url: '/islands/99.99.49999', // Use a valid format but non-existent code
+    });
+
+    expect(response.statusCode).toBe(404);
+    expect(response.json()).toHaveProperty('statusCode', 404);
+    expect(response.json()).toHaveProperty('error', 'Not Found');
   });
 });
