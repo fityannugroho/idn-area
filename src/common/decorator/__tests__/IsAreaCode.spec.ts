@@ -185,7 +185,13 @@ describe('IsAreaCode Decorator', () => {
     }
 
     it('should validate correct island codes', async () => {
-      const validCodes = ['11.01.40001', '32.04.49999', '99.99.44444'];
+      const validCodes = [
+        '11.01.40001',
+        '32.04.49999',
+        '99.99.44444',
+        '11.01.12345',
+        '32.04.98765',
+      ];
 
       for (const code of validCodes) {
         const instance = new IslandCodeClass(code);
@@ -196,11 +202,11 @@ describe('IsAreaCode Decorator', () => {
 
     it('should reject invalid island codes', async () => {
       const invalidCodes = [
-        '11.01.01', // Wrong format (not starting with 4)
-        '11.01.30001', // Third segment doesn't start with 4
+        '11.01.01', // Too short (missing last segment)
         '11.01.4000', // Last segment too short
         '11.01.400001', // Last segment too long
-        '11.01.5001', // Wrong prefix (should be 4)
+        '11.01', // Too short (missing segments)
+        '11.01.abcd5', // Non-numeric characters
       ];
 
       for (const code of invalidCodes) {

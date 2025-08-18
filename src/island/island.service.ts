@@ -27,9 +27,23 @@ export class IslandService {
    * Add decimal latitude and longitude to the island object.
    */
   private _addDecimalCoordinate(island: Island): IslandDTO {
-    const [latitude, longitude] = convertCoordinate(island.coordinate);
+    const islandDTO = island as IslandDTO;
 
-    return { ...island, latitude, longitude };
+    try {
+      const [latitude, longitude] = convertCoordinate(island.coordinate);
+      islandDTO.latitude = latitude;
+      islandDTO.longitude = longitude;
+    } catch (error) {
+      // Log the error for debugging but provide fallback values
+      console.warn(
+        `Invalid coordinate format for island ${island.code}: ${island.coordinate}`,
+        error,
+      );
+      islandDTO.latitude = null;
+      islandDTO.longitude = null;
+    }
+
+    return islandDTO;
   }
 
   async find(options?: IslandFindQueries): Promise<PaginatedReturn<IslandDTO>> {
@@ -58,9 +72,16 @@ export class IslandService {
       },
     });
 
+    // Optimize memory usage by modifying objects in place
+    // instead of creating new array with map()
+    const islands = result.data;
+    for (let i = 0; i < islands.length; i++) {
+      islands[i] = this._addDecimalCoordinate(islands[i]);
+    }
+
     return {
       ...result,
-      data: result.data.map((island) => this._addDecimalCoordinate(island)),
+      data: islands as IslandDTO[],
     };
   }
 

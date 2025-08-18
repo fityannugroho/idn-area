@@ -64,8 +64,8 @@ export class IsAreaCodeConstraint implements ValidatorConstraintInterface {
         // Format: xx.xx.xx.xxxx (13 chars)
         return /^\d{2}\.\d{2}\.\d{2}\.\d{4}$/.test(value);
       case 'island':
-        // Format: xx.xx.4xxxx (11 chars)
-        return /^\d{2}\.\d{2}\.4\d{4}$/.test(value);
+        // Format: xx.xx.xxxxx (11 chars) - flexible island code format
+        return /^\d{2}\.\d{2}\.\d{5}$/.test(value);
       default:
         return false;
     }

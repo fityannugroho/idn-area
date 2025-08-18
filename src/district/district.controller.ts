@@ -62,7 +62,7 @@ export class DistrictController {
     const district = await this.districtService.findByCode(code);
 
     if (district === null) {
-      throw new NotFoundException(`There are no district with code '${code}'`);
+      throw new NotFoundException(`District with code ${code} not found.`);
     }
 
     return district;

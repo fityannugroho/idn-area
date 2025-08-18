@@ -5,7 +5,7 @@ describe('Coordinate utility functions', () => {
     it('should validate correct DMS coordinates', () => {
       // Valid coordinates in DMS format
       expect(isValidCoordinate('00°00\'00.00" N 000°00\'00.00" E')).toBe(true);
-      expect(isValidCoordinate('90°60\'60.00" S 180°60\'60.00" W')).toBe(true);
+      expect(isValidCoordinate('90°59\'59.99" S 180°59\'59.99" W')).toBe(true);
       expect(isValidCoordinate('45°30\'15.50" N 122°45\'30.75" W')).toBe(true);
       // Fix: minutes should be <= 59, not 76
       expect(isValidCoordinate('12°34\'56.78" S 098°45\'54.32" E')).toBe(true);
@@ -14,8 +14,8 @@ describe('Coordinate utility functions', () => {
     it('should reject invalid DMS coordinates', () => {
       // Invalid formats
       expect(isValidCoordinate('91°00\'00.00" N 000°00\'00.00" E')).toBe(false); // degrees > 90
-      expect(isValidCoordinate('00°61\'00.00" N 000°00\'00.00" E')).toBe(false); // minutes > 60
-      expect(isValidCoordinate('00°00\'61.00" N 000°00\'00.00" E')).toBe(false); // seconds > 60
+      expect(isValidCoordinate('00°60\'00.00" N 000°00\'00.00" E')).toBe(false); // minutes >= 60
+      expect(isValidCoordinate('00°00\'60.00" N 000°00\'00.00" E')).toBe(false); // seconds >= 60
       expect(isValidCoordinate('00°00\'00.00" X 000°00\'00.00" E')).toBe(false); // invalid pole
       expect(isValidCoordinate('00°00\'00.00" N 181°00\'00.00" E')).toBe(false); // longitude > 180
       expect(isValidCoordinate('invalid coordinate')).toBe(false);
@@ -70,7 +70,7 @@ describe('Coordinate utility functions', () => {
         convertCoordinate('91°00\'00.00" N 000°00\'00.00" E'),
       ).toThrow('Invalid coordinate format');
       expect(() =>
-        convertCoordinate('00°61\'00.00" N 000°00\'00.00" E'),
+        convertCoordinate('00°60\'00.00" N 000°00\'00.00" E'),
       ).toThrow('Invalid coordinate format');
     });
 

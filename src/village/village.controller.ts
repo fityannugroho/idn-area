@@ -62,7 +62,7 @@ export class VillageController {
     const village = await this.villageService.findByCode(code);
 
     if (village === null) {
-      throw new NotFoundException(`There are no village with code '${code}'`);
+      throw new NotFoundException(`Village with code ${code} not found.`);
     }
 
     return village;

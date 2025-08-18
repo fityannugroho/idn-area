@@ -3,19 +3,19 @@
  *
  * Valid DMS format: `{a}°{b}'{c}" {y} {d}°{e}'{f}" {x}`
  * - `{a}` should be 2 digit integer from 00 to 90
- * - `{b}` should be 2 digit integer from 00 to 60
- * - `{c}` should be 2 digit integer with 2 decimal points from 00.00 to 60.00
+ * - `{b}` should be 2 digit integer from 00 to 59
+ * - `{c}` should be 2 digit integer with 2 decimal points from 00.00 to 59.99
  * - `{y}` should be N or S
  * - `{d}` should be 3 digit integer from 000 to 180
- * - `{e}` should be 2 digit integer from 00 to 60
- * - `{f}` should be 2 digit integer with 2 decimal points from 00.00 to 60.00
+ * - `{e}` should be 2 digit integer from 00 to 59
+ * - `{f}` should be 2 digit integer with 2 decimal points from 00.00 to 59.99
  * - `{x}` should be E or W
  *
  * Tested here: https://regex101.com/r/GQe8WT
  */
 export const isValidCoordinate = (coordinate: string) => {
   const regex =
-    /^([0-8][0-9]|90)°([0-5][0-9]|60)'(([0-5][0-9].[0-9]{2})|60.00)"\s(N|S)\s(0\d{2}|1([0-7][0-9]|80))°([0-5][0-9]|60)'(([0-5][0-9].[0-9]{2})|60.00)"\s(E|W)$/;
+    /^([0-8][0-9]|90)°([0-5][0-9])'([0-5][0-9]\.[0-9]{2})"\s(N|S)\s(0[0-9]{2}|1([0-7][0-9]|80))°([0-5][0-9])'([0-5][0-9]\.[0-9]{2})"\s(E|W)$/;
 
   return regex.test(coordinate);
 };

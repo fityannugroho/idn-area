@@ -10,13 +10,22 @@
  */
 
 /**
+ * Constants for area code segment lengths in dotted format
+ */
+const CODE_LENGTHS = {
+  PROVINCE: 2, // '11'
+  REGENCY: 5, // '11.01'
+  DISTRICT: 8, // '11.01.01'
+} as const;
+
+/**
  * Extract province code from any area code.
  * @param code The area code (province, regency, district, village, or island)
  * @returns The province code (2 digits)
  * @example extractProvinceCode('11.01.01.2001') // returns '11'
  */
 export function extractProvinceCode(code: string): string {
-  return code.slice(0, 2);
+  return code.slice(0, CODE_LENGTHS.PROVINCE);
 }
 
 /**
@@ -26,7 +35,7 @@ export function extractProvinceCode(code: string): string {
  * @example extractRegencyCode('11.01.01.2001') // returns '11.01'
  */
 export function extractRegencyCode(code: string): string {
-  return code.slice(0, 5); // '11.01'
+  return code.slice(0, CODE_LENGTHS.REGENCY); // '11.01'
 }
 
 /**
@@ -36,5 +45,5 @@ export function extractRegencyCode(code: string): string {
  * @example extractDistrictCode('11.01.01.2001') // returns '11.01.01'
  */
 export function extractDistrictCode(code: string): string {
-  return code.slice(0, 8); // '11.01.01'
+  return code.slice(0, CODE_LENGTHS.DISTRICT); // '11.01.01'
 }

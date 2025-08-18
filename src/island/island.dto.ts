@@ -59,11 +59,11 @@ export class Island {
   })
   regencyCode: string | null;
 
-  @ApiProperty({ example: 3.317622222222222 })
-  latitude: number;
+  @ApiProperty({ example: 3.317622222222222, nullable: true })
+  latitude: number | null;
 
-  @ApiProperty({ example: 97.12825833333332 })
-  longitude: number;
+  @ApiProperty({ example: 97.12825833333332, nullable: true })
+  longitude: number | null;
 }
 
 export class IslandSortQuery extends SortQuery {
