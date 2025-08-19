@@ -57,7 +57,7 @@ export class TransformInterceptor<T, R extends TransformedResponse<T>>
 
     return next.handle().pipe(
       map((res) => {
-        const { data, meta } = this.transformValue(res);
+        const { data, meta = {} } = this.transformValue(res);
 
         return {
           statusCode: context.switchToHttp().getResponse().statusCode,

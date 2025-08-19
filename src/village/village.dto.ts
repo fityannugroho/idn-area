@@ -50,10 +50,18 @@ export class VillageFindByCodeParams extends PickType(Village, [
   'code',
 ] as const) {}
 
+export class VillageParent {
+  @ApiProperty({ type: () => District })
+  district: District;
+
+  @ApiProperty({ type: () => Regency })
+  regency: Regency;
+
+  @ApiProperty({ type: () => Province })
+  province: Province;
+}
+
 export class VillageWithParent extends Village {
-  parent: {
-    district: District;
-    regency: Regency;
-    province: Province;
-  };
+  @ApiProperty({ type: () => VillageParent })
+  parent: VillageParent;
 }

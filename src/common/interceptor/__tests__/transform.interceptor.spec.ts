@@ -90,7 +90,7 @@ describe('TransformInterceptor', () => {
         statusCode: 200,
         message: 'OK',
         data: responseData,
-        meta: undefined,
+        meta: {},
       });
     });
 
@@ -110,7 +110,7 @@ describe('TransformInterceptor', () => {
         statusCode: 200,
         message: customMessage,
         data: responseData,
-        meta: undefined,
+        meta: {},
       });
     });
 
@@ -171,7 +171,7 @@ describe('TransformInterceptor', () => {
         statusCode: 200,
         message: messageArray,
         data: responseData,
-        meta: undefined,
+        meta: {},
       });
     });
 
@@ -198,7 +198,7 @@ describe('TransformInterceptor', () => {
         statusCode: 201,
         message: 'Created',
         data: responseData,
-        meta: undefined,
+        meta: {},
       });
     });
 

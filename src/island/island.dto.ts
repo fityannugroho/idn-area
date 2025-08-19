@@ -81,9 +81,15 @@ export class IslandFindByCodeParams extends PickType(Island, [
   'code',
 ] as const) {}
 
+export class IslandParent {
+  @ApiProperty({ type: () => Regency, nullable: true })
+  regency: Regency | null;
+
+  @ApiProperty({ type: () => Province })
+  province: Province;
+}
+
 export class IslandWithParent extends Island {
-  parent: {
-    regency?: Regency | null;
-    province: Province;
-  };
+  @ApiProperty({ type: () => IslandParent })
+  parent: IslandParent;
 }

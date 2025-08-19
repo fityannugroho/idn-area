@@ -49,8 +49,12 @@ export class RegencyFindByCodeParams extends PickType(Regency, [
   'code',
 ] as const) {}
 
+export class RegencyParent {
+  @ApiProperty({ type: () => Province })
+  province: Province;
+}
+
 export class RegencyWithParent extends Regency {
-  parent: {
-    province: Province;
-  };
+  @ApiProperty({ type: () => RegencyParent })
+  parent: RegencyParent;
 }

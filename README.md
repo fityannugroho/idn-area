@@ -15,11 +15,9 @@ API that provides information on the **administrative areas of Indonesia**, from
 
 Built with [NestJS framework](https://nestjs.com) and writen in TypeScript. [Prisma](https://www.prisma.io) is used as the ORM to interact with any kind of databases.
 
-> **Note!**
->
-> If you choose MongoDB as the [database provider](/docs/installation.md#prerequisite), **the `id` property will be added to the response**. See [issue #308](https://github.com/fityannugroho/idn-area/issues/308).
->
-> _This `id` property is **not present** if you use another database providers._
+## Upgrading API
+
+The **idn-area API** is now at **version 7**. If you are upgrading from version 6, please read [Upgrade to v7](docs/upgrading/upgrade-to-v7.md).
 
 ## Getting Started
 

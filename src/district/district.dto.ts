@@ -46,9 +46,15 @@ export class DistrictFindByCodeParams extends PickType(District, [
   'code',
 ] as const) {}
 
+export class DistrictParent {
+  @ApiProperty({ type: () => Regency })
+  regency: Regency;
+
+  @ApiProperty({ type: () => Province })
+  province: Province;
+}
+
 export class DistrictWithParent extends District {
-  parent: {
-    regency: Regency;
-    province: Province;
-  };
+  @ApiProperty({ type: () => DistrictParent })
+  parent: DistrictParent;
 }
