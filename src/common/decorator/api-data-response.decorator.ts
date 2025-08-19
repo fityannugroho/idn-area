@@ -39,7 +39,7 @@ type Options<Model extends Type<any>> = {
  * - `statusCode` (number)
  * - `message` (string)
  * - `data` (object or array)
- * - `meta` (object, optional)
+ * - `meta` (object)
  *    - `total` (number, if the `data` is an array)
  *
  * This decorator will also add `ApiExtraModels` and `ApiOkResponse` decorator
