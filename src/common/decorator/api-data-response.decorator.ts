@@ -39,7 +39,7 @@ type Options<Model extends Type<any>> = {
  * - `statusCode` (number)
  * - `message` (string)
  * - `data` (object or array)
- * - `meta` (object, optional)
+ * - `meta` (object)
  *    - `total` (number, if the `data` is an array)
  *
  * This decorator will also add `ApiExtraModels` and `ApiOkResponse` decorator
@@ -64,15 +64,16 @@ export const ApiDataResponse = <Model extends Type<any>>(
                 type: 'array',
                 items: { $ref: getSchemaPath(options.model) },
               }
-            : {
-                type: 'object',
-                $ref: getSchemaPath(options.model),
-              },
+            : { $ref: getSchemaPath(options.model) },
           meta: {
             type: 'object',
-            nullable: options.multiple ? undefined : true,
             properties: {
-              total: options.multiple ? { type: 'number', example: 1 } : {},
+              ...(options.multiple && {
+                total: {
+                  type: 'number',
+                  example: 1,
+                },
+              }),
             },
           },
         },
