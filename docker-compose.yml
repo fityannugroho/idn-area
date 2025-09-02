@@ -6,26 +6,26 @@ services:
       args:
         - DB_PROVIDER=${DB_PROVIDER}
     ports:
-      - "${APP_PORT:-3000}:3000"
-    depends_on:
-      - db
+      - "${APP_PORT:-9206}:9206"
+    # depends_on:
+    #   - db
     env_file:
       - .env
     # Run migrations after the app is ready
     command: sh -c "pnpm run db:migrate && pnpm run db:seed && pnpm run start:prod"
 
-  db:
-    image: postgres:14
-    ports:
-      - "${DB_PORT:-5432}:5432"
-    environment:
-      - POSTGRES_USER=${DB_USERNAME:?}
-      - POSTGRES_PASSWORD=${DB_PASSWORD:?}
-      - POSTGRES_DB=${DB_NAME:?}
-    env_file:
-      - .env
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
+  # db:
+  #   image: postgres:14
+  #   ports:
+  #     - "${DB_PORT:-5432}:5432"
+  #   environment:
+  #     - POSTGRES_USER=${DB_USERNAME:?}
+  #     - POSTGRES_PASSWORD=${DB_PASSWORD:?}
+  #     - POSTGRES_DB=${DB_NAME:?}
+  #   env_file:
+  #     - .env
+  #   volumes:
+  #     - postgres-data:/var/lib/postgresql/data
 
 volumes:
   postgres-data:

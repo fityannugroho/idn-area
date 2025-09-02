@@ -33,11 +33,11 @@ Data yang kami gunakan menggunakan sumber yang resmi, dikelola di repositori [**
 
 Baca versi terbaru dokumentasi API di [halaman dokumentasi](https://idn-area.up.railway.app). Dokumentasi ini dibuat secara otomatis menggunakan [`@nestjs/swagger`](https://docs.nestjs.com/openapi/introduction).
 
-> Anda juga dapat mengakses dokumentasinya di perangkat lokal Anda dengan menjalankan aplikasi ini (lihat [Memulai](#memulai)) dan buka http://localhost:3000 di browser Anda.
+> Anda juga dapat mengakses dokumentasinya di perangkat lokal Anda dengan menjalankan aplikasi ini (lihat [Memulai](#memulai)) dan buka http://localhost:9206 di browser Anda.
 
 ## Demo
 
-Anda dapat mencoba API ini dengan mengganti http://localhost:3000 dengan endpoint yang disediakan dalam deskripsi repositori ini.
+Anda dapat mencoba API ini dengan mengganti http://localhost:9206 dengan endpoint yang disediakan dalam deskripsi repositori ini.
 
 Berikut adalah beberapa proyek contoh yang menggunakan API ini:
 

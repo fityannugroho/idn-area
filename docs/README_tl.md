@@ -33,11 +33,11 @@ Ang datos na aming ginamit ay batay sa opisyal na pinagkukunan na kinakalagaan s
 
 Basahin ang pinakabagong bersyon ng dokumentasyon ng API sa [Pahina ng dokumentasyon](https://idn-area.up.railway.app). Ang dokumentasyong ito ay awtomatikong nalilikha gamit ang [`@nestjs/swagger`](https://docs.nestjs.com/openapi/introduction).
 
-> Puwede rin kayong mag-access sa dokumentasyon sa inyong lokal na makina sa pamamagitan ng pagsisimula ng aplikasyon (makita [Pagsisimula](#pagsisimula)) at buksan ang http://localhost:3000 sa iyong browser.
+> Puwede rin kayong mag-access sa dokumentasyon sa inyong lokal na makina sa pamamagitan ng pagsisimula ng aplikasyon (makita [Pagsisimula](#pagsisimula)) at buksan ang http://localhost:9206 sa iyong browser.
 
 ## Live na pagpapakita
 
-Maaari mong subukan ang API sa pamamagitan ng pagpapalit ng http://localhost:3000 sa endpoint na ibinigay sa deskripsyon ng repositoriyo na ito.
+Maaari mong subukan ang API sa pamamagitan ng pagpapalit ng http://localhost:9206 sa endpoint na ibinigay sa deskripsyon ng repositoriyo na ito.
 
 Ito ay ilang halimbawang proyekto na gumagamit ng API na ito :
 

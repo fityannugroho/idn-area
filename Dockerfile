@@ -47,7 +47,7 @@ COPY --from=builder /app/tsconfig.* ./
 COPY --from=builder /app/src/common ./src/common
 
 # Expose the port that your NestJS app will listen on
-EXPOSE 3000
+EXPOSE 9206
 
 # Start the application in production mode
 CMD ["pnpm", "run", "start:prod"]

@@ -27,7 +27,7 @@ describe('App Configuration', () => {
 
     expect(appConfig.env).toBe('dev');
     expect(appConfig.host).toBe('0.0.0.0');
-    expect(appConfig.port).toBe(3000);
+    expect(appConfig.port).toBe(9206);
     expect(appConfig.pagination.defaultPageSize).toBe(10);
     expect(appConfig.pagination.maxPageSize).toBe(100);
   });
@@ -93,7 +93,7 @@ describe('App Configuration', () => {
 
     expect(appConfig.env).toBe('dev'); // Default value
     expect(appConfig.host).toBe('0.0.0.0'); // Default value
-    expect(appConfig.port).toBe(3000); // Default value
+    expect(appConfig.port).toBe(9206); // Default value
     expect(appConfig.pagination.defaultPageSize).toBe(10); // Default value
   });
 

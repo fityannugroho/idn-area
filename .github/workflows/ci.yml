@@ -2,10 +2,10 @@ name: App & Container CI
 on:
   pull_request:
     branches:
-      - main
+      - sandbox
   push:
     branches:
-      - main
+      - sandbox
   workflow_dispatch:
 
 env:

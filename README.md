@@ -35,11 +35,11 @@ The data we used is based on official sources, managed in [**idn-area-data**](ht
 
 Read the latest version of API documentation in the [documentation page](https://idn-area.up.railway.app). This documentation is automatically generated using [`@nestjs/swagger`](https://docs.nestjs.com/openapi/introduction).
 
-> You also can access the documentation in your local machine by running the app (see [Getting Started](#getting-started)) and open http://localhost:3000 in your browser.
+> You also can access the documentation in your local machine by running the app (see [Getting Started](#getting-started)) and open http://localhost:9206 in your browser.
 
 ## Live Demo
 
-You can try the API by replacing the http://localhost:3000 with the endpoint provided in this repository description.
+You can try the API by replacing the http://localhost:9206 with the endpoint provided in this repository description.
 
 These are some sample projects that using this API :
 
