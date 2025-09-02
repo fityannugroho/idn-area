@@ -1,0 +1,73 @@
+name: Deploy to Server
+
+on:
+  push:
+    branches:
+      - main
+      
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run unit tests
+        run: pnpm run test
+
+      - name: Install sshpass
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y sshpass
+
+      - name: Deploy to server
+        run: |
+          sshpass -p "${{ secrets.SERVER_PASSWORD }}" ssh \
+            -vvv \
+            -o StrictHostKeyChecking=no \
+            -o IdentitiesOnly=yes \
+            -p ${{ secrets.SERVER_PORT }} \
+            ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "
+                  # docker ps -a &&
+                  # ls -la &&
+                  # whoami &&
+                  # ifconfig &&
+                  # cd /root/backend/wilayah-indonesia &&
+                  # rm -rf node_modules &&
+                  # git checkout main &&
+                  # git pull &&
+                  # npm --version &&
+                  # nvm --version &&
+                  # npm install && 
+                  # npm run build && 
+                  # pm2 stop qurbanasyik_api &&
+                  # pm2 delete qurbanasyik_api &&
+                  # npm run pm2:start && 
+                  # pm2 save
+
+                  cd /root/backend/wilayah-indonesia && # Change to the project directory
+                  ls -la && # List files to verify the directory
+                  git stash && # Stash any local changes
+                  git stash clear && # Clear the stash
+                  git checkout main && # Switch to the main branch
+                  git pull && # Pull the latest changes
+                  rm -rf dist && # Remove the dist directory if it exists
+                  docker compose down && # Stop and remove existing containers (if any)
+                  docker compose up --build -d &&  # Build images and start containers in detached mode
+                  docker ps && # List running containers
+                  rm -rf node_modules # Remove node_modules directory
+            "
