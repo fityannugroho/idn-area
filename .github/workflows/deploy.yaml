@@ -26,23 +26,6 @@ jobs:
             -o IdentitiesOnly=yes \
             -p ${{ secrets.SERVER_PORT }} \
             ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "
-                  # docker ps -a &&
-                  # ls -la &&
-                  # whoami &&
-                  # ifconfig &&
-                  # cd /root/backend/wilayah-indonesia &&
-                  # rm -rf node_modules &&
-                  # git checkout main &&
-                  # git pull &&
-                  # npm --version &&
-                  # nvm --version &&
-                  # npm install && 
-                  # npm run build && 
-                  # pm2 stop qurbanasyik_api &&
-                  # pm2 delete qurbanasyik_api &&
-                  # npm run pm2:start && 
-                  # pm2 save
-
                   cd /root/backend/wilayah-indonesia && # Change to the project directory
                   ls -la && # List files to verify the directory
                   git stash && # Stash any local changes
