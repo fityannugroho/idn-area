@@ -2,6 +2,7 @@
 /dist
 /node_modules
 /src/metadata.ts
+.pnpm-store
 
 # Logs
 logs

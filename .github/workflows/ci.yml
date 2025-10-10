@@ -229,32 +229,12 @@ jobs:
       - name: Build docker image
         run: docker build --build-arg DB_PROVIDER=$DB_PROVIDER -t idn-area:${{ github.sha }} .
 
-    # --- Run schema migrations and seed data inside image ---
-      - name: Run migration & seed
-        run: |
-          if [ "${{ matrix.db }}" = "sqlite" ]; then
-            docker volume create sqlite-data > /dev/null
-            NET_ARGS="-v sqlite-data:/data"
-          else
-            NET_ARGS="--network integration"
-          fi
-          if [ "${{ matrix.db }}" = "sqlite" ]; then
-            docker run --rm $NET_ARGS \
-              -e DB_PROVIDER=$DB_PROVIDER \
-              -e DB_URL="$DB_URL" \
-              idn-area:${{ github.sha }} sh -c 'set -e; pnpm run db:migrate; pnpm run db:seed'
-          else
-            docker run --rm $NET_ARGS \
-              -e DB_PROVIDER=$DB_PROVIDER \
-              -e DB_URL="$DB_URL" \
-              idn-area:${{ github.sha }} pnpm run db:migrate
-            docker run --rm $NET_ARGS \
-              -e DB_PROVIDER=$DB_PROVIDER \
-              -e DB_URL="$DB_URL" \
-              idn-area:${{ github.sha }} pnpm run db:seed
-          fi
+    # --- Create volume for SQLite (migrations and seeding now handled by entrypoint) ---
+      - name: Create SQLite volume
+        if: matrix.db == 'sqlite'
+        run: docker volume create sqlite-data > /dev/null
 
-    # --- Launch container and wait for health ---
+    # --- Launch container (entrypoint handles migration & seeding) and wait for health ---
       - name: Start app container
         run: |
           if [ "${{ matrix.db }}" = "sqlite" ]; then
@@ -267,21 +247,61 @@ jobs:
             -e DB_URL="$DB_URL" \
             -p 3000:3000 \
             idn-area:${{ github.sha }}
-          for i in {1..40}; do
-            if curl -fsS http://localhost:3000/health > /dev/null; then echo "App is up"; break; fi; sleep 2; done
 
-    # --- Simple smoke assertion on /health ---
+          # Wait longer for migrations/seeding to complete before health checks
+          echo "Waiting for migrations and seeding to complete..."
+          sleep 10
+
+          # Wait for health check to pass (app becomes ready)
+          app_ready=false
+          for i in {1..60}; do
+            if curl -fsS http://localhost:3000/health > /dev/null 2>&1; then
+              echo "App is healthy and ready"
+              app_ready=true
+              break
+            fi
+            echo "Attempt $i/60: App not ready yet, waiting..."
+            sleep 3
+          done
+
+          if [ "$app_ready" = "false" ]; then
+            echo "App failed to become ready after 3 minutes"
+            echo "=== App container logs ==="
+            docker logs app || true
+            echo "=== Container status ==="
+            docker ps -a || true
+            exit 1
+          fi        # --- Simple smoke assertion on /health ---
       - name: Smoke test /health endpoint
         run: |
-          curl -v http://localhost:3000/health | tee /tmp/health.json
-          grep 'OK' /tmp/health.json
+          # Test the health endpoint
+          echo "Testing health endpoint..."
+          curl -v http://localhost:3000/health | tee /tmp/health_response.txt
+
+          # Check if response contains expected content
+          if grep -q "OK" /tmp/health_response.txt; then
+            echo "✅ Health check passed - found 'OK' in response"
+          else
+            echo "❌ Health check failed - 'OK' not found in response"
+            cat /tmp/health_response.txt
+            exit 1
+          fi
+
+          # Check container health status
+          health_status=$(docker inspect app --format='{{.State.Health.Status}}' 2>/dev/null || echo "no-health-check")
+          echo "Container health status: $health_status"
 
       - name: Show logs on failure
         if: failure()
         run: |
+          echo "=== App container logs ==="
           docker logs app || true
-          docker ps -a || true
+          echo "=== Database container logs ==="
           docker logs db || true
+          echo "=== Container status ==="
+          docker ps -a || true
+          echo "=== App container health status ==="
+          docker inspect app --format='{{.State.Health.Status}}' || true
 
       - name: Cleanup
         if: always()

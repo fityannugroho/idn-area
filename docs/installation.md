@@ -81,7 +81,7 @@ We also provide Docker configuration with PostgreSQL database support.
 
 - Run `docker compose up` command to build and run the app.
 
-  > If you change any environment variables, you need to rebuild the image using `docker compose up --build` command.
+  > If you change the database provider, you need to rebuild the Docker image using `docker compose up --build` command.
 
 - Finish
 

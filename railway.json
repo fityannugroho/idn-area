@@ -1,12 +1,9 @@
 {
   "$schema": "https://railway.com/railway.schema.json",
   "build": {
-    "builder": "RAILPACK",
-    "buildCommand": "pnpm prisma:gen && pnpm build"
+    "builder": "DOCKERFILE"
   },
   "deploy": {
-    "preDeployCommand": ["pnpm db:migrate && pnpm db:seed"],
-    "startCommand": "pnpm start:prod",
     "healthcheckPath": "/health",
     "healthcheckTimeout": 100,
     "restartPolicyType": "ON_FAILURE"
