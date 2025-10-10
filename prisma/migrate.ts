@@ -23,7 +23,9 @@ const main = async () => {
   console.log('The migration command has been executed.');
 };
 
-main().catch((err: Error) => {
-  console.error(`${err.name}: ${err.message}`);
-  process.exit(1);
-});
+main()
+  .then(() => process.exit(0))
+  .catch((err: Error) => {
+    console.error(`${err.name}: ${err.message}`);
+    process.exit(1);
+  });
