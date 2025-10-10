@@ -23,7 +23,7 @@ The **idn-area API** is now at **version 7**. If you are upgrading from version 
 
 Please read the [installation guide](docs/installation.md) to install and run this app.
 
-[![Deploy on Railway](https://railway.com/button.svg)](https://railway.app/template/9Tcyq9?referralCode=ho_K6W)
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/idn-area-api?referralCode=ho_K6W&utm_medium=integration&utm_source=template&utm_campaign=generic)
 
 ## Data
 
