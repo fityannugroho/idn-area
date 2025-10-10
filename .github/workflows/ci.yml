@@ -253,25 +253,42 @@ jobs:
           sleep 10
 
           # Wait for health check to pass (app becomes ready)
+          app_ready=false
           for i in {1..60}; do
             if curl -fsS http://localhost:3000/health > /dev/null 2>&1; then
               echo "App is healthy and ready"
+              app_ready=true
               break
             fi
             echo "Attempt $i/60: App not ready yet, waiting..."
             sleep 3
           done
 
-    # --- Simple smoke assertion on /health ---
+          if [ "$app_ready" = "false" ]; then
+            echo "App failed to become ready after 3 minutes"
+            echo "=== App container logs ==="
+            docker logs app || true
+            echo "=== Container status ==="
+            docker ps -a || true
+            exit 1
+          fi        # --- Simple smoke assertion on /health ---
       - name: Smoke test /health endpoint
         run: |
-          # Verify the app is responding and healthy
-          response=$(curl -s http://localhost:3000/health)
-          echo "Health response: $response"
-          echo "$response" | grep -q 'OK' || (echo "Health check failed" && exit 1)
+          # Test the health endpoint
+          echo "Testing health endpoint..."
+          curl -v http://localhost:3000/health | tee /tmp/health_response.txt
 
-          # Also check container health status
-          health_status=$(docker inspect app --format='{{.State.Health.Status}}' || echo "no-health-check")
+          # Check if response contains expected content
+          if grep -q "OK" /tmp/health_response.txt; then
+            echo "✅ Health check passed - found 'OK' in response"
+          else
+            echo "❌ Health check failed - 'OK' not found in response"
+            cat /tmp/health_response.txt
+            exit 1
+          fi
+
+          # Check container health status
+          health_status=$(docker inspect app --format='{{.State.Health.Status}}' 2>/dev/null || echo "no-health-check")
           echo "Container health status: $health_status"
 
       - name: Show logs on failure
