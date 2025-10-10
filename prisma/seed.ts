@@ -42,13 +42,15 @@ async function main() {
   await seeder.generateLog();
 }
 
-main()
-  .then(async () => {
+(async () => {
+  try {
+    await main();
+    process.exitCode = 0;
+  } catch (err) {
+    console.error(err);
+    process.exitCode = 1;
+  } finally {
     await prisma.$disconnect();
-    process.exit(0);
-  })
-  .catch(async (err: Error) => {
-    console.error(`${err.name}: ${err.message}`);
-    await prisma.$disconnect();
-    process.exit(1);
-  });
+    // don't call process.exit(), let Node exit naturally
+  }
+})();
