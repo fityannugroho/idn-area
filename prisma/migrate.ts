@@ -31,4 +31,6 @@ const main = async () => {
     console.error(err);
     process.exitCode = 1;
   }
+
+  process.exit();
 })();

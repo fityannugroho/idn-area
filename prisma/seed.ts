@@ -49,8 +49,14 @@ async function main() {
   } catch (err) {
     console.error(err);
     process.exitCode = 1;
-  } finally {
-    await prisma.$disconnect();
-    process.exit();
   }
+
+  // Cleanup
+  try {
+    await prisma.$disconnect();
+  } catch {
+    // ignore
+  }
+
+  process.exit();
 })();
