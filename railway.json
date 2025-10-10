@@ -5,8 +5,8 @@
     "buildCommand": "pnpm prisma:gen && pnpm build"
   },
   "deploy": {
-    "preDeployCommand": ["pnpm db:migrate && pnpm db:seed"],
-    "startCommand": "pnpm start:prod",
+    "preDeployCommand": ["pnpm db:migrate"],
+    "startCommand": "pnpm db:seed && pnpm start:prod",
     "healthcheckPath": "/health",
     "healthcheckTimeout": 100,
     "restartPolicyType": "ON_FAILURE"
