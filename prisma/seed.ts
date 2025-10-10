@@ -51,6 +51,6 @@ async function main() {
     process.exitCode = 1;
   } finally {
     await prisma.$disconnect();
-    // don't call process.exit(), let Node exit naturally
+    process.exit();
   }
 })();
