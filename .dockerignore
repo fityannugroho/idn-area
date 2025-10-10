@@ -1,6 +1,55 @@
+# Dependencies
 /dist
 /node_modules
+
+# Logs
 logs
 *.log
 npm-debug.log*
+pnpm-debug.log*
+
+# Coverage
 /coverage
+
+# Environment files
+.env*
+!.env.example
+
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# CI/CD
+.github
+
+# Documentation
+README*.md
+CONTRIBUTING.md
+LICENSE
+docs/
+
+# Test files
+test/
+**/*.spec.ts
+**/*.test.ts
+vitest.config.*
+
+# Build tools config
+biome.json
+railway.json
