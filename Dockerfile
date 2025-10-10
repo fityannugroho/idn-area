@@ -36,8 +36,8 @@ RUN apk add --no-cache wget
 # Create a non-root user
 RUN addgroup -g 1001 -S nodejs && adduser -S nestjs -u 1001
 
-# Set the working directory inside the container
-RUN mkdir -p /app && chown -R nestjs:nodejs /app
+# Set the working directory inside the container and create data directory for SQLite
+RUN mkdir -p /app /data && chown -R nestjs:nodejs /app /data
 WORKDIR /app
 
 RUN corepack enable pnpm
