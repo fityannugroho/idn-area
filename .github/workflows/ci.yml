@@ -23,7 +23,7 @@ jobs:
     # Matrix: run full build + unit + e2e across each DB provider (and Node versions)
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
@@ -151,7 +151,7 @@ jobs:
         db: [postgresql, mysql, mongodb, sqlite]
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Setup network (non-sqlite)
         if: matrix.db != 'sqlite'
