@@ -7,6 +7,7 @@ export default defineConfig({
     include: ['**/*.e2e-spec.ts'],
     globals: true,
     root: './',
+    exclude: ['dist/**', 'node_modules/**'],
   },
   resolve: {
     alias: {
