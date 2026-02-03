@@ -5,6 +5,46 @@
  * Only mock methods that are actually used to maintain simplicity.
  */
 
+import type { Mock } from 'vitest';
+
+/**
+ * Type-safe mock Prisma service type
+ */
+export interface MockPrismaService {
+  paginator: Mock;
+  province: {
+    findUnique: Mock;
+    findMany: Mock;
+    count: Mock;
+    create: Mock;
+    update: Mock;
+    delete: Mock;
+  };
+  regency: {
+    findUnique: Mock;
+    findMany: Mock;
+    count: Mock;
+  };
+  district: {
+    findUnique: Mock;
+    findMany: Mock;
+    count: Mock;
+  };
+  village: {
+    findUnique: Mock;
+    findMany: Mock;
+    count: Mock;
+  };
+  island: {
+    findUnique: Mock;
+    findMany: Mock;
+    count: Mock;
+  };
+  $connect: Mock;
+  $disconnect: Mock;
+  $transaction: Mock;
+}
+
 /**
  * Creates a mock PrismaService with commonly used methods
  *
@@ -14,7 +54,7 @@
  * mockPrisma.paginator.mockResolvedValue({ data: [] });
  * ```
  */
-export const createMockPrismaService = () => ({
+export const createMockPrismaService = (): MockPrismaService => ({
   // Custom pagination method
   paginator: vi.fn(),
 
@@ -61,11 +101,6 @@ export const createMockPrismaService = () => ({
   $disconnect: vi.fn(),
   $transaction: vi.fn(),
 });
-
-/**
- * Type-safe mock Prisma service type
- */
-export type MockPrismaService = ReturnType<typeof createMockPrismaService>;
 
 /**
  * Helper function to create paginated response

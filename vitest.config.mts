@@ -6,14 +6,14 @@ export default defineConfig({
   test: {
     globals: true,
     root: './',
+    exclude: ['dist/**', 'node_modules/**', 'coverage/**'],
     coverage: {
       provider: 'v8',
+      include: ['src/**/*.ts'],
       exclude: [
-        'node_modules/**',
-        'dist/**',
-        'coverage/**',
         '**/*.d.ts',
         '**/*.module.ts', // Module files usually don't need testing
+        '**/*.dto.ts',
         'src/main.ts', // Application bootstrap
         'prisma/**', // Database scripts
         '**/*.config.*',
@@ -34,10 +34,5 @@ export default defineConfig({
       '@': path.join(__dirname, 'src'),
     },
   },
-  plugins: [
-    swc.vite({
-      // Explicitly set the module type to avoid inheriting this value from a `.swcrc` config file
-      module: { type: 'es6' },
-    }),
-  ],
+  plugins: [swc.vite()],
 });

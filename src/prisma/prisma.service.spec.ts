@@ -65,9 +65,16 @@ describe('PrismaService', () => {
     };
 
     beforeEach(() => {
-      vi.spyOn(service.province, 'findMany').mockResolvedValue([...provinces]);
-
-      vi.spyOn(service.province, 'count').mockResolvedValue(provinces.length);
+      // Mock the province property directly since PrismaClient properties
+      // are dynamically created and may be undefined without a DB connection
+      Object.defineProperty(service, 'province', {
+        value: {
+          findMany: vi.fn().mockResolvedValue([...provinces]),
+          count: vi.fn().mockResolvedValue(provinces.length),
+        },
+        writable: true,
+        configurable: true,
+      });
     });
 
     afterEach(() => {
