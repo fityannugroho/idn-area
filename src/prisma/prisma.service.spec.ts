@@ -64,19 +64,17 @@ describe('PrismaService', () => {
       paginate: {},
     };
 
-    let findManySpy: ReturnType<typeof vi.fn>;
-    let countSpy: ReturnType<typeof vi.fn>;
-
     beforeEach(() => {
-      // Create mock functions for province model methods
-      findManySpy = vi.fn().mockResolvedValue([...provinces]);
-      countSpy = vi.fn().mockResolvedValue(provinces.length);
-
-      // Assign mock province model to service
-      (service as any).province = {
-        findMany: findManySpy,
-        count: countSpy,
-      };
+      // Mock the province property directly since PrismaClient properties
+      // are dynamically created and may be undefined without a DB connection
+      Object.defineProperty(service, 'province', {
+        value: {
+          findMany: vi.fn().mockResolvedValue([...provinces]),
+          count: vi.fn().mockResolvedValue(provinces.length),
+        },
+        writable: true,
+        configurable: true,
+      });
     });
 
     afterEach(() => {
@@ -86,14 +84,14 @@ describe('PrismaService', () => {
     test('call only with required params', async () => {
       const result = await service.paginator(requiredOptions);
 
-      expect(findManySpy).toHaveBeenCalledTimes(1);
-      expect(findManySpy).toHaveBeenCalledWith({
+      expect(service.province.findMany).toHaveBeenCalledTimes(1);
+      expect(service.province.findMany).toHaveBeenCalledWith({
         skip: 0,
         take: defaultPageSize || maxPageSize,
       });
 
-      expect(countSpy).toHaveBeenCalledTimes(1);
-      expect(countSpy).toHaveBeenCalledWith({});
+      expect(service.province.count).toHaveBeenCalledTimes(1);
+      expect(service.province.count).toHaveBeenCalledWith({});
 
       expect(result).toEqual({
         data: provinces,
@@ -110,8 +108,8 @@ describe('PrismaService', () => {
         paginate: { limit: 2 },
       });
 
-      expect(findManySpy).toHaveBeenCalledTimes(1);
-      expect(findManySpy).toHaveBeenCalledWith({
+      expect(service.province.findMany).toHaveBeenCalledTimes(1);
+      expect(service.province.findMany).toHaveBeenCalledWith({
         skip: 0,
         take: 2,
       });
@@ -131,8 +129,8 @@ describe('PrismaService', () => {
         paginate: { page: 2, limit: 2 },
       });
 
-      expect(findManySpy).toHaveBeenCalledTimes(1);
-      expect(findManySpy).toHaveBeenCalledWith({
+      expect(service.province.findMany).toHaveBeenCalledTimes(1);
+      expect(service.province.findMany).toHaveBeenCalledWith({
         skip: 2,
         take: 2,
       });
@@ -152,8 +150,8 @@ describe('PrismaService', () => {
         paginate: { page: 3, limit: 2 },
       });
 
-      expect(findManySpy).toHaveBeenCalledTimes(1);
-      expect(findManySpy).toHaveBeenCalledWith({
+      expect(service.province.findMany).toHaveBeenCalledTimes(1);
+      expect(service.province.findMany).toHaveBeenCalledWith({
         skip: 4,
         take: 2,
       });
@@ -173,8 +171,8 @@ describe('PrismaService', () => {
         paginate: { page: 4, limit: 2 },
       });
 
-      expect(findManySpy).toHaveBeenCalledTimes(1);
-      expect(findManySpy).toHaveBeenCalledWith({
+      expect(service.province.findMany).toHaveBeenCalledTimes(1);
+      expect(service.province.findMany).toHaveBeenCalledWith({
         skip: 6,
         take: 2,
       });
@@ -198,15 +196,15 @@ describe('PrismaService', () => {
       const args = { where: { name: 'Aceh' } };
       await service.paginator({ ...requiredOptions, args });
 
-      expect(findManySpy).toHaveBeenCalledTimes(1);
-      expect(findManySpy).toHaveBeenCalledWith({
+      expect(service.province.findMany).toHaveBeenCalledTimes(1);
+      expect(service.province.findMany).toHaveBeenCalledWith({
         skip: 0,
         take: defaultPageSize || maxPageSize,
         ...args,
       });
 
-      expect(countSpy).toHaveBeenCalledTimes(1);
-      expect(countSpy).toHaveBeenCalledWith(args);
+      expect(service.province.count).toHaveBeenCalledTimes(1);
+      expect(service.province.count).toHaveBeenCalledWith(args);
     });
   });
 });
