@@ -37,7 +37,7 @@ export class Village {
 
 export class VillageSortQuery extends SortQuery {
   @EqualsAny(['code', 'name'])
-  readonly sortBy?: 'code' | 'name';
+  declare readonly sortBy?: 'code' | 'name';
 }
 
 export class VillageFindQueries extends IntersectionType(

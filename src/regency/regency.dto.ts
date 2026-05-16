@@ -36,7 +36,7 @@ export class Regency {
 
 export class RegencySortQuery extends SortQuery {
   @EqualsAny(['code', 'name'])
-  readonly sortBy?: 'code' | 'name';
+  declare readonly sortBy?: 'code' | 'name';
 }
 
 export class RegencyFindQueries extends IntersectionType(

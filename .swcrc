@@ -11,10 +11,10 @@
       "legacyDecorator": true,
       "decoratorMetadata": true
     },
+    "target": "es2024",
     "baseUrl": "./",
     "paths": {
-      "@/*": ["src/*"],
-      "@common/*": ["common/*"]
+      "@/*": ["src/*"]
     }
   },
   "minify": false

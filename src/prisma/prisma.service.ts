@@ -19,7 +19,8 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
   async paginator<T extends Models>(
     options: PaginatorOptions<T>,
   ): Promise<PaginatedReturn<Model<T>>> {
-    const delegate: MethodDelegate<T> = this[options.model.toLowerCase()];
+    const model = options.model as string;
+    const delegate: MethodDelegate<T> = this[model.toLowerCase()];
     const { defaultPageSize, maxPageSize } = appConfig.pagination;
     const { page = 1, limit = defaultPageSize || maxPageSize } =
       options.paginate;

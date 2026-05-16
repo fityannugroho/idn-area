@@ -50,14 +50,12 @@ export class Seeder {
       island: getIslands,
     }[area]();
 
-    // @ts-expect-error prisma[area] is a valid property since area is one of the valid values.
-    const res = await this.prisma[area].createMany({ data });
+    const res = await (this.prisma as any)[area].createMany({ data });
     return res.count;
   }
 
   async deleteAreas(area: Area): Promise<number> {
-    // @ts-expect-error prisma[area] is a valid property since area is one of the valid values.
-    const res = await this.prisma[area].deleteMany();
+    const res = await (this.prisma as any)[area].deleteMany();
     return res.count;
   }
 

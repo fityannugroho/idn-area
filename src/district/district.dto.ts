@@ -33,7 +33,7 @@ export class District {
 
 export class DistrictSortQuery extends SortQuery {
   @EqualsAny(['code', 'name'])
-  readonly sortBy?: 'code' | 'name';
+  declare readonly sortBy?: 'code' | 'name';
 }
 
 export class DistrictFindQueries extends IntersectionType(
