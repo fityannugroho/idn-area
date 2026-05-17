@@ -11,8 +11,7 @@ WORKDIR /app
 FROM base AS prod-deps
 ENV HUSKY=0
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
-  pnpm install --prod --frozen-lockfile
+RUN pnpm install --prod --frozen-lockfile
 
 # Stage 3: Build
 FROM base AS build
@@ -20,8 +19,7 @@ ARG DB_PROVIDER=postgresql
 ENV DB_PROVIDER=$DB_PROVIDER
 ENV HUSKY=0
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
-  pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile
 COPY . .
 RUN pnpm run prisma:gen && pnpm run build
 
