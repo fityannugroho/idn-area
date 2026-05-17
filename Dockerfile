@@ -33,21 +33,21 @@ ENV HUSKY=0
 RUN addgroup -g 1001 -S nodejs && adduser -S nestjs -u 1001 -G nodejs
 RUN mkdir -p /data && chown nestjs:nodejs /data
 
-COPY --from=prod-deps /app/node_modules ./node_modules
-COPY --from=build /app/dist ./dist
-COPY --from=build /app/package.json ./
-COPY --from=build /app/pnpm-workspace.yaml ./
-COPY --from=build /app/pnpm-lock.yaml ./
-COPY --from=build /app/prisma ./prisma
-COPY --from=build /app/tsconfig.json ./
-COPY --from=build /app/src/common ./src/common
-
-RUN pnpm run prisma:gen
+COPY --chown=nestjs:nodejs --from=prod-deps /app/node_modules ./node_modules
+COPY --chown=nestjs:nodejs --from=build /app/dist ./dist
+COPY --chown=nestjs:nodejs --from=build /app/package.json ./
+COPY --chown=nestjs:nodejs --from=build /app/pnpm-workspace.yaml ./
+COPY --chown=nestjs:nodejs --from=build /app/pnpm-lock.yaml ./
+COPY --chown=nestjs:nodejs --from=build /app/prisma ./prisma
+COPY --chown=nestjs:nodejs --from=build /app/tsconfig.json ./
+COPY --chown=nestjs:nodejs --from=build /app/src/common ./src/common
 
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 USER nestjs
+RUN pnpm run prisma:gen
+
 WORKDIR /app
 EXPOSE 3000
 

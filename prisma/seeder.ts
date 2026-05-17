@@ -23,7 +23,7 @@ export class Seeder {
    * Check if there are data changes.
    */
   async hasDataChanges(): Promise<boolean> {
-    const packageVersion = await getInstalledPackageVersion('idn-area-data');
+    const packageVersion = getInstalledPackageVersion('idn-area-data');
 
     if (!packageVersion) {
       throw new Error(
@@ -63,7 +63,7 @@ export class Seeder {
    * Generate a log after the seeder is executed
    */
   async generateLog(): Promise<void> {
-    const packageVersion = await getInstalledPackageVersion('idn-area-data');
+    const packageVersion = getInstalledPackageVersion('idn-area-data');
 
     if (!packageVersion) {
       throw new Error(

@@ -1,68 +1,41 @@
-import { exec } from 'node:child_process';
+import { readFileSync } from 'node:fs';
 import { describe, expect, it, vi } from 'vitest';
 import { getInstalledPackageVersion } from '../package';
 
-vi.mock('node:child_process', () => ({
-  exec: vi.fn(),
+vi.mock('node:fs', () => ({
+  readFileSync: vi.fn(),
 }));
 
-beforeEach(() => {
-  vi.resetModules();
-});
-
 describe('getInstalledPackageVersion', () => {
-  it('should return the version of the installed package', async () => {
-    const mockStdout = JSON.stringify([
-      {
-        dependencies: { 'some-package': { version: '1.0.0' } },
-        devDependencies: {},
-      },
-    ]);
+  it('should return the version of the installed package', () => {
+    vi.mocked(readFileSync).mockReturnValue(
+      JSON.stringify({ version: '1.0.0' }),
+    );
 
-    vi.mocked(exec).mockImplementation((_cmd, callback) => {
-      // @ts-expect-error (mocked)
-      return callback(null, mockStdout, '');
-    });
-
-    const version = await getInstalledPackageVersion('some-package');
+    const version = getInstalledPackageVersion('some-package');
     expect(version).toBe('1.0.0');
   });
 
-  it('should return undefined if the package is not found', async () => {
-    const mockStdout = JSON.stringify([
-      {
-        dependencies: {},
-        devDependencies: {},
-      },
-    ]);
-
-    vi.mocked(exec).mockImplementation((_cmd, callback) => {
-      // @ts-expect-error (mocked)
-      return callback(null, mockStdout, '');
+  it('should return undefined if readFileSync fails', () => {
+    vi.mocked(readFileSync).mockImplementation(() => {
+      throw new Error('ENOENT');
     });
 
-    const version = await getInstalledPackageVersion('non-existent-package');
+    const version = getInstalledPackageVersion('non-existent-package');
     expect(version).toBeUndefined();
   });
 
-  it('should return undefined if there is an error in stderr', async () => {
-    vi.mocked(exec).mockImplementation((_cmd, callback) => {
-      // @ts-expect-error
-      return callback(null, '', 'Some error');
-    });
+  it('should return undefined if package.json has no version field', () => {
+    vi.mocked(readFileSync).mockReturnValue(JSON.stringify({ name: 'foo' }));
 
-    const version = await getInstalledPackageVersion('some-package');
+    const version = getInstalledPackageVersion('some-package');
     expect(version).toBeUndefined();
   });
 
-  it('should reject if exec returns an error', async () => {
-    vi.mocked(exec).mockImplementation((_cmd, callback) => {
-      // @ts-expect-error
-      return callback(new Error('exec error'), '', '');
-    });
+  it('should return undefined if package.json is invalid JSON', () => {
+    vi.mocked(readFileSync).mockReturnValue('not json');
 
-    await expect(getInstalledPackageVersion('some-package')).rejects.toThrow(
-      'exec error',
-    );
+    const version = getInstalledPackageVersion('some-package');
+    expect(version).toBeUndefined();
   });
 });
