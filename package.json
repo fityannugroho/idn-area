@@ -28,7 +28,7 @@
     "start:prod": "node dist/main",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
-    "prepare": "husky",
+    "prepare": "husky || exit 0",
     "lint:staged": "lint-staged",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -51,8 +51,10 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.15.1",
     "dotenv": "^17.4.2",
+    "prisma": "^6.19.3",
     "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.2"
+    "rxjs": "^7.8.2",
+    "tsx": "^4.22.0"
   },
   "devDependencies": {
     "@biomejs/biome": "2.4.15",
@@ -68,10 +70,8 @@
     "husky": "^9.1.7",
     "idn-area-data": "^4.0.1",
     "lint-staged": "^17.0.5",
-    "prisma": "^6.19.3",
     "source-map-support": "^0.5.21",
     "supertest": "^7.2.2",
-    "tsx": "^4.22.0",
     "typescript": "^6.0.3",
     "unplugin-swc": "^1.5.9",
     "vitest": "^4.1.6"

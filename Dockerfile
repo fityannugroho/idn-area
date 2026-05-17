@@ -1,70 +1,56 @@
-FROM node:22-alpine AS builder
-
-# Accept the database provider at build time so Prisma Client can be generated
-ARG DB_PROVIDER
-ENV DB_PROVIDER=$DB_PROVIDER
-
-# Skip husky hook setup inside build image
-ENV HUSKY=0
-
-RUN mkdir -p /app
+# Stage 1: Base image
+FROM node:22-alpine AS base
+RUN corepack enable
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+ENV CI=true
+RUN apk add --no-cache wget
 WORKDIR /app
 
-COPY package.json pnpm-lock.yaml ./
+# Stage 2: Production dependencies
+FROM base AS prod-deps
+ENV HUSKY=0
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
+  pnpm install --prod --frozen-lockfile
 
-# Install the app dependencies
-RUN corepack enable pnpm && pnpm install --frozen-lockfile
-
+# Stage 3: Build
+FROM base AS build
+ARG DB_PROVIDER=postgresql
+ENV DB_PROVIDER=$DB_PROVIDER
+ENV HUSKY=0
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
+  pnpm install --frozen-lockfile
 COPY . .
-
-# Run the prisma generator and build the application
 RUN pnpm run prisma:gen && pnpm run build
 
-# Stage 2: A minimal Docker image with node and compiled app
-FROM node:22-alpine AS runner
-
-# Propagate DB_PROVIDER for runtime (optional; can still be overridden at run)
-ARG DB_PROVIDER
+# Stage 4: Runner
+FROM base AS runner
+ARG DB_PROVIDER=postgresql
 ENV DB_PROVIDER=$DB_PROVIDER
-
-# Skip husky hook setup inside build image
 ENV HUSKY=0
+RUN addgroup -g 1001 -S nodejs && adduser -S nestjs -u 1001 -G nodejs
+RUN mkdir -p /data && chown nestjs:nodejs /data
 
-# Install wget for health check and pnpm
-RUN apk add --no-cache wget
+COPY --from=prod-deps /app/node_modules ./node_modules
+COPY --from=build /app/dist ./dist
+COPY --from=build /app/package.json ./
+COPY --from=build /app/pnpm-lock.yaml ./
+COPY --from=build /app/pnpm-workspace.yaml ./
+COPY --from=build /app/prisma ./prisma
+COPY --from=build /app/tsconfig.json ./
+COPY --from=build /app/src/common ./src/common
 
-# Create a non-root user
-RUN addgroup -g 1001 -S nodejs && adduser -S nestjs -u 1001
+RUN pnpm run prisma:gen
 
-# Set the working directory inside the container and create data directory for SQLite
-RUN mkdir -p /app /data && chown -R nestjs:nodejs /app /data
-WORKDIR /app
-
-RUN corepack enable pnpm
-
-# Switch to non-root user
-USER nestjs
-
-# Copy node_modules from builder stage
-COPY --from=builder /app/node_modules ./node_modules
-
-# Copy necessary files from builder stage
-COPY --from=builder /app/package.json ./
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/tsconfig.* ./
-COPY --from=builder /app/src/common ./src/common
-
-# Copy entrypoint script and make it executable
 COPY docker-entrypoint.sh /usr/local/bin/
-USER root
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
-USER nestjs
 
-# Expose the port that your NestJS app will listen on
+USER nestjs
+WORKDIR /app
 EXPOSE 3000
 
-# Add health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD wget --no-verbose --tries=1 --spider http://localhost:3000/health || exit 1
 
