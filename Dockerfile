@@ -36,8 +36,6 @@ RUN mkdir -p /data && chown nestjs:nodejs /data
 COPY --from=prod-deps /app/node_modules ./node_modules
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/package.json ./
-COPY --from=build /app/pnpm-lock.yaml ./
-COPY --from=build /app/pnpm-workspace.yaml ./
 COPY --from=build /app/prisma ./prisma
 COPY --from=build /app/tsconfig.json ./
 COPY --from=build /app/src/common ./src/common

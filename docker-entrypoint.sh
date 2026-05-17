@@ -1,6 +1,8 @@
 #!/bin/sh
 set -e
 
+: "${DB_PROVIDER:?DB_PROVIDER is required}"
+
 export PATH="${PATH}:/app/node_modules/.bin"
 
 case "$DB_PROVIDER" in

@@ -20,12 +20,12 @@ export class SortQuery<
 {
   @IsOptional()
   @IsString()
-  readonly sortBy?: keyof T;
+  declare readonly sortBy?: keyof T;
 
   @IsOptional()
   @EqualsAny(['asc', 'desc'])
   @ApiPropertyOptional({
     description: 'Sort the data in ascending or descending order.',
   })
-  readonly sortOrder?: SortOrder;
+  declare readonly sortOrder?: SortOrder;
 }
