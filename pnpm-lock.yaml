@@ -41,6 +41,9 @@ importers:
       dotenv:
         specifier: ^17.4.2
         version: 17.4.2
+      idn-area-data:
+        specifier: ^4.0.1
+        version: 4.0.1
       prisma:
         specifier: ^6.19.3
         version: 6.19.3(typescript@6.0.3)
@@ -87,9 +90,6 @@ importers:
       husky:
         specifier: ^9.1.7
         version: 9.1.7
-      idn-area-data:
-        specifier: ^4.0.1
-        version: 4.0.1
       lint-staged:
         specifier: ^17.0.5
         version: 17.0.5

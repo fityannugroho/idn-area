@@ -291,6 +291,26 @@ jobs:
           health_status=$(docker inspect app --format='{{.State.Health.Status}}' 2>/dev/null || echo "no-health-check")
           echo "Container health status: $health_status"
 
+      - name: Smoke test /provinces data endpoint
+        run: |
+          echo "Testing /provinces data endpoint..."
+          response=$(curl -sf http://localhost:3000/provinces)
+
+          # Check response is not empty
+          if [ -z "$response" ]; then
+            echo "❌ Data check failed - empty response from /provinces"
+            exit 1
+          fi
+
+          # Check it's a non-empty JSON array
+          length=$(echo "$response" | python3 -c "import sys,json; data=json.load(sys.stdin); print(len(data))")
+          if [ "$length" -gt 0 ]; then
+            echo "✅ Data check passed - /provinces returned ${length} provinces"
+          else
+            echo "❌ Data check failed - /provinces returned empty array"
+            exit 1
+          fi
+
       - name: Show logs on failure
         if: failure()
         run: |
