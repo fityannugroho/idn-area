@@ -1,37 +1,19 @@
-import { exec } from 'node:child_process';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 
-type Dependency = {
-  from: string;
-  version: string;
-  resolved: string;
-  path: string;
-};
-
-export async function getInstalledPackageVersion(
+export function getInstalledPackageVersion(
   packageName: string,
-): Promise<string | undefined> {
-  const { stdout, stderr } = await new Promise<{
-    stdout: string;
-    stderr: string;
-  }>((resolve, reject) => {
-    exec('pnpm list --json', (error, stdout, stderr) => {
-      if (error) {
-        reject(error);
-      }
-      resolve({ stdout, stderr });
-    });
-  });
-
-  if (stderr) {
+): string | undefined {
+  try {
+    const pkgPath = resolve(
+      process.cwd(),
+      'node_modules',
+      packageName,
+      'package.json',
+    );
+    const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8'));
+    return pkg.version;
+  } catch {
     return undefined;
   }
-
-  const [{ dependencies, devDependencies }] = JSON.parse(stdout) as [
-    {
-      dependencies: Record<string, Dependency>;
-      devDependencies: Record<string, Dependency>;
-    },
-  ];
-
-  return { ...dependencies, ...devDependencies }[packageName]?.version;
 }

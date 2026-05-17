@@ -25,7 +25,7 @@ export class Province {
 
 export class ProvinceSortQuery extends SortQuery {
   @EqualsAny(['code', 'name'])
-  readonly sortBy?: 'code' | 'name';
+  declare readonly sortBy?: 'code' | 'name';
 }
 
 export class ProvinceFindQueries extends IntersectionType(

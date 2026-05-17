@@ -9,7 +9,7 @@ export class PaginationQuery {
   @IsInt()
   @Min(1)
   @ApiPropertyOptional({ description: 'The page number.' })
-  readonly page?: number;
+  declare readonly page?: number;
 
   @Type(() => Number)
   @IsOptional()
@@ -20,5 +20,5 @@ export class PaginationQuery {
     description: 'The number of items per page.',
     example: appConfig.pagination.defaultPageSize,
   })
-  readonly limit?: number;
+  declare readonly limit?: number;
 }

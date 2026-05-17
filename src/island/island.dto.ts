@@ -68,7 +68,7 @@ export class Island {
 
 export class IslandSortQuery extends SortQuery {
   @EqualsAny(['code', 'name', 'coordinate'])
-  readonly sortBy?: 'code' | 'name' | 'coordinate';
+  declare readonly sortBy?: 'code' | 'name' | 'coordinate';
 }
 
 export class IslandFindQueries extends IntersectionType(

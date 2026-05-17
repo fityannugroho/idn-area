@@ -21,7 +21,7 @@ You can deploy this app to the cloud with a **single click** using [Railway](htt
 ## Prerequisite
 
 - [Node.js](https://nodejs.org/en) (version 22 or higher)
-- [pnpm](https://pnpm.io)
+- [pnpm](https://pnpm.io) (version 11 or higher)
 - Database provider you want to use. We currently support MongoDB, PostgreSQL, MySQL, and SQLite.
 
 ## Installation Steps
