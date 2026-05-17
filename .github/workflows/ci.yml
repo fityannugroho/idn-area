@@ -303,7 +303,7 @@ jobs:
           fi
 
           # Check it's a non-empty JSON array
-          length=$(echo "$response" | python3 -c "import sys,json; data=json.load(sys.stdin); print(len(data))")
+          length=$(echo "$response" | python3 -c "import sys,json; data=json.load(sys.stdin); print(len(data.get('data', [])))")
           if [ "$length" -gt 0 ]; then
             echo "✅ Data check passed - /provinces returned ${length} provinces"
           else
