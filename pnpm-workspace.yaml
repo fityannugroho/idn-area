@@ -10,8 +10,31 @@ allowBuilds:
   esbuild: true
   prisma: true
 
+# Versions published within the last 24h trip pnpm's minimumReleaseAge policy in
+# any build that runs before they age out. These are exact pins, so each entry
+# is a no-op once the version is older than the cutoff.
+#
+# Transitive fastify deps released 2026-10-09/10, pulled in by the fastify
+# override below and by @fastify/static@10.1.6.
 minimumReleaseAgeExclude:
+  - '@fastify/accept-negotiator@2.1.1'
+  - '@fastify/ajv-compiler@4.0.7'
+  - '@fastify/error@4.2.1'
+  - '@fastify/fast-json-stringify-compiler@5.1.1'
+  - '@fastify/forwarded@3.1.0'
+  - '@fastify/merge-json-schemas@0.2.2'
+  - '@fastify/proxy-addr@5.1.2'
+  - '@fastify/send@4.1.2'
+  - '@fastify/static@10.1.6'
+  - avvio@9.3.1
+  - fast-json-stringify@7.1.0
+  - fast-uri@4.2.2
+  - fastify-plugin@6.0.1
   - fastify@5.12.5
+  - json-schema-ref-resolver@3.0.1
+  - process-warning@5.1.1
+  - safe-regex2@5.1.2
+  - secure-json-parse@4.1.1
 
 overrides:
   # fastify: pinned by @nestjs/platform-fastify@11.2.7 at vulnerable 5.12.4; fixes GHSA-4mh8-r7rc-xpvc (moderate)
