@@ -10,13 +10,16 @@ allowBuilds:
   esbuild: true
   prisma: true
 
+# Versions published within the last 24h trip pnpm's minimumReleaseAge policy in
+# any build that runs before they age out. These are exact pins, so each entry
+# is a no-op once the version is older than the cutoff.
 minimumReleaseAgeExclude:
-  - fastify@5.12.4
+  - fastify@5.12.5
 
 overrides:
-  # fastify: pinned by @nestjs/platform-fastify@11.1.29 at vulnerable 5.11.0; fixes GHSA-w2qp-rph6-63g4 + GHSA-3m5p-2c4r-xxw2
-  fastify: 5.12.4
+  # fastify: pinned by @nestjs/platform-fastify@11.2.7 at vulnerable 5.12.4; fixes GHSA-4mh8-r7rc-xpvc (moderate)
+  fastify: 5.12.5
   # @prisma/config pins exact deepmerge-ts 7.1.5; fixes GHSA-ggr8-5vv4-36mx (high); scoped to the only parent
   '@prisma/config>deepmerge-ts': 8.0.2
-  # @nestjs/swagger wants js-yaml 5.2.1 (GHSA-pm4m-ph32-ghv5, high); 4.x edge resolves cleanly alone
-  js-yaml@5: 5.2.2
+  # @nestjs/swagger wants js-yaml 5.x (GHSA-r3ph-w7gj-g6xm, moderate); 5.4.x resolves cleanly alone
+  'js-yaml@5': 5.4.3
